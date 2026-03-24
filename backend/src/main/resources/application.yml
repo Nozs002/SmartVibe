@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: smartvibe
+
+server:
+  port: 8080

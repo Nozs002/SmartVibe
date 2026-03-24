@@ -1,0 +1,37 @@
+services:
+
+# khởi tạo service database và lưu file sql ở folder mysql/init và mysql/conf
+  mysql:
+    image: mysql:8.0
+    container_name: smartvibe-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: smartvibe
+      MYSQL_USER: smartvibe
+      MYSQL_PASSWORD: smartvibe
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql/init:/docker-entrypoint-initdb.d
+      - ./mysql/conf:/etc/mysql/conf.d
+
+# tạo trình duyệt web để quản lý database bằng docker
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: smartvibe-phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: root
+    ports:
+      - "8081:80"
+    depends_on:
+      - mysql
+
+
+volumes:
+  mysql_data:
