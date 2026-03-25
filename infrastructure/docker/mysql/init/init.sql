@@ -1,3 +1,4 @@
+SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci;
 use smartvibe;
 create table Shippers (
     ShipperID int primary key auto_increment unique,

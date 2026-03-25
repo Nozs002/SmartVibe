@@ -1,3 +1,4 @@
+SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci;
 use smartvibe;
 -- Dữ liệu bảng Shippers
 INSERT INTO Shippers (name, work_status, email, phone)
