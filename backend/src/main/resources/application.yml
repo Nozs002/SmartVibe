@@ -1,6 +1,14 @@
 spring:
   application:
     name: smartvibe
+  profiles:
+    active: dev
+  security:
+    user:
+      name: admin
+      password: admin
 
 server:
   port: 8080
+  servlet:
+    context-path: /smartvibe
