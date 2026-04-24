@@ -1,0 +1,119 @@
+/* Thiết lập nền và căn giữa toàn màn hình */
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f4f7f6;
+  font-family: sans-serif;
+}
+
+/* Khung form đăng nhập */
+.auth-box {
+  background: white;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+.auth-box h2 {
+  text-align: center;
+  margin-bottom: 24px;
+  color: #333;
+}
+
+/* Các ô nhập liệu */
+.auth-form-group {
+  margin-bottom: 16px;
+}
+
+.auth-form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #666;
+}
+
+/* Tạo hàng ngang và đẩy hai phần tử về hai phía */
+.label-wrapper {
+  display: flex;
+  justify-content: space-between; /* Đẩy Mật khẩu sang trái, Quên mật khẩu sang phải */
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.label-wrapper label {
+  margin-bottom: 0; /* Xóa lề dưới cũ để cân bằng với link */
+  font-weight: 500;
+  color: #333;
+}
+
+/* Định dạng cho dòng chữ Quên mật khẩu */
+.forgot-link {
+  font-size: 13px;
+  color: #007bff;
+  text-decoration: none; /* Bỏ gạch chân mặc định */
+}
+
+.forgot-link:hover {
+  text-decoration: underline; /* Hiện gạch chân khi di chuột vào */
+}
+
+.auth-form-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box; /* Đảm bảo padding không làm tràn khung */
+}
+
+/* Nút bấm */
+.auth-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.auth-btn:disabled {
+  background-color: #a0c4ff;
+  cursor: not-allowed;
+}
+
+/* Thông báo lỗi */
+.auth-error {
+  color: #dc3545;
+  font-size: 14px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.auth-select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: white;
+  font-size: 14px;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.auth-select:focus {
+  border-color: #007bff;
+}
+
+.auth-form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+  font-size: 14px;
+  color: #333;
+}

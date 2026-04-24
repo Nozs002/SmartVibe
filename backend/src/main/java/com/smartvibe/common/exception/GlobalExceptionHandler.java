@@ -18,7 +18,7 @@ public class GlobalExceptionHandler {
         log.error("Exception: ", exception); // in log ra console khi lỗi xảy ra
         ApiResponse apiResponse = new ApiResponse();
 
-        apiResponse.setCode(ErrorCode.UNCATEGORIZED_EXCEPTION.getCode());
+        apiResponse.setCode(9999);
         apiResponse.setMessage(ErrorCode.UNCATEGORIZED_EXCEPTION.getMessage());
 
         return ResponseEntity.badRequest().body(apiResponse);
@@ -37,21 +37,25 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     ResponseEntity<ApiResponse> handlingValidation(MethodArgumentNotValidException exception) {
-        String enumKey = exception.getFieldError().getDefaultMessage();
+        String enumKey = exception.getBindingResult().getFieldError().getDefaultMessage();
 
+        // 1. Khởi tạo một mã lỗi mặc định (ví dụ: INVALID_KEY - 1001)
         ErrorCode errorCode = ErrorCode.INVALID_KEY;
 
+        // 2. Thử map chuỗi message sang Enum. Nếu sai hoặc không khớp, dùng mã mặc
+        // định.
         try {
             errorCode = ErrorCode.valueOf(enumKey);
         } catch (IllegalArgumentException e) {
-
+            // Log lại để biết bạn đang thiếu Key nào trong ErrorCode enum
+            log.warn("Validation key '{}' not found in ErrorCode enum", enumKey);
         }
 
         ApiResponse apiResponse = new ApiResponse();
-
         apiResponse.setCode(errorCode.getCode());
         apiResponse.setMessage(errorCode.getMessage());
 
-        return ResponseEntity.status(errorCode.getStatusCode()).body(apiResponse);
+        return ResponseEntity.status(errorCode.getStatusCode()) // Dùng đúng Status từ Enum (400)
+                .body(apiResponse);
     }
 }

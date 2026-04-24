@@ -27,7 +27,7 @@ INSERT INTO branches (name, address, phone, email, operating_status, number_of_s
 -- 3. users (20 dòng: 1-10 cho Staff, 11-20 cho Customer)
 INSERT INTO users (username, password, role, address, birthday, email, description, phone, sex, identify_code, account_status) VALUES
 ('staff1', 'pass123', 'staff', 'Ha Noi', '1990-01-01', 'staff1@gmail.com', 'Nhan vien 1', '0801111111', 'male', 'ID001', 'active'),
-('staff2', 'pass123', 'system admin', 'TP HCM', '1991-02-02', 'staff2@gmail.com', 'Admin 1', '0801111112', 'female', 'ID002', 'active'),
+('admin', '123', 'system admin', 'TP HCM', '1991-02-02', 'staff2@gmail.com', 'Admin 1', '0801111112', 'female', 'ID002', 'active'),
 ('staff3', 'pass123', 'staff', 'Da Nang', '1992-03-03', 'staff3@gmail.com', 'Nhan vien 3', '0801111113', 'male', 'ID003', 'active'),
 ('staff4', 'pass123', 'staff', 'Can Tho', '1993-04-04', 'staff4@gmail.com', 'Nhan vien 4', '0801111114', 'female', 'ID004', 'inactive'),
 ('staff5', 'pass123', 'staff', 'Hai Phong', '1994-05-05', 'staff5@gmail.com', 'Nhan vien 5', '0801111115', 'male', 'ID005', 'active'),

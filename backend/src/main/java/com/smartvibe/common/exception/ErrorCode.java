@@ -20,7 +20,9 @@ public enum ErrorCode {
     USERNAME_BLANK(1010, "Tên đăng nhập không thể để trống!", HttpStatus.BAD_REQUEST),
     PASSWORD_BLANK(1011, "Password không thể để trống!", HttpStatus.BAD_REQUEST),
     EMAIL_BLANK(1012, "Email không thể để trống!", HttpStatus.BAD_REQUEST),
-    INVALID_EMAIL(1013, "Email không đúng định dạng!", HttpStatus.BAD_REQUEST),;
+    INVALID_EMAIL(1013, "Email không đúng định dạng!", HttpStatus.BAD_REQUEST),
+    INVALID_LOGIN(1014, "Tên đăng nhập hoặc mật khẩu không đúng!", HttpStatus.BAD_REQUEST),
+    PASSWORD_NOT_MATCH(1015, "Xác nhận mật khẩu không khớp!", HttpStatus.BAD_REQUEST),;
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;

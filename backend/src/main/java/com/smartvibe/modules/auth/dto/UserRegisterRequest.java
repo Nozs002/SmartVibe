@@ -1,20 +1,13 @@
-package com.smartvibe.modules.user.dto.request;
+package com.smartvibe.modules.auth.dto;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
-import com.smartvibe.common.exception.ErrorCode;
-
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 @Data
-@Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class UserCreationRequest {
+@NoArgsConstructor
+@Builder
+public class UserRegisterRequest {
     @NotBlank(message = "USERNAME_BLANK")
     @Size(min = 3, message = "USERNAME_INVALID")
     private String username;
@@ -23,9 +16,17 @@ public class UserCreationRequest {
     @Size(min = 8, message = "INVALID_PASSWORD")
     private String password;
 
+    @NotBlank(message = "CONF_PASSWORD_BLANK")
+    @Size(min = 8, message = "INVALID_CONFIRM_PASSWORD")
+    private String confirmPassword;
+
     @NotBlank(message = "EMAIL_BLANK")
     @Email(message = "INVALID_EMAIL")
     private String email;
 
+    private String role = "customer";
+
     private String phone;
+
+    private String sex;
 }

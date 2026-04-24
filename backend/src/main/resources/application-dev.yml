@@ -1,7 +1,7 @@
 spring:
   datasource:
     url: jdbc:mysql://localhost:3307/smartvibe
-    username: smartvibe
+    username: admin
     password: smartvibe
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
