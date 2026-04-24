@@ -18,4 +18,11 @@ import com.smartvibe.common.response.ApiResponse;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+
+    @GetMapping("/all")
+    public ApiResponse<List<User>> getAllUsers() {
+        ApiResponse<List<User>> response = new ApiResponse<>();
+        response.setResult(userService.getAllUsers());
+        return response;
+    }
 }

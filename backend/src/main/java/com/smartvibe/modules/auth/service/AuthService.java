@@ -3,40 +3,64 @@ package com.smartvibe.modules.auth.service;
 import com.smartvibe.modules.user.entity.User;
 import com.smartvibe.modules.user.repository.UserRepository;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.smartvibe.modules.auth.dto.UserLoginRequest;
-import com.smartvibe.modules.auth.dto.UserLoginResponse;
+import com.smartvibe.modules.auth.dto.UserResponse;
 import com.smartvibe.modules.auth.dto.UserRegisterRequest;
 
 import lombok.RequiredArgsConstructor;
 
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.JWSHeader;
+import com.nimbusds.jose.JWSObject;
+import com.nimbusds.jose.Payload;
+import com.nimbusds.jose.crypto.MACSigner;
+import com.nimbusds.jwt.JWTClaimsSet;
 import com.smartvibe.common.exception.AppException;
 import com.smartvibe.common.exception.ErrorCode;
+import com.smartvibe.common.response.AuthenticationResponse;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@RequiredArgsConstructor
+@Slf4j
 public class AuthService {
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    public UserLoginResponse login(UserLoginRequest request) {
+    // Goi ham bam mat khau
+    private final PasswordEncoder passwordEncoder;
+
+    // Chia khoa tao Token
+    protected static final String SIGNER_KEY = "Daylakhoabimatcododaitoithiru64bitdekyTokenJWTchohethongSMARTVIBE";
+
+    public AuthenticationResponse login(UserLoginRequest request) {
         Optional<User> userOpt = userRepository.findByUsername(request.getUsername());
-        if (userOpt.isEmpty() || !userOpt.get().getPassword().equals(request.getPassword())) {
+        if (userOpt.isEmpty()) {
             throw new AppException(ErrorCode.INVALID_LOGIN);
         }
         User user = userOpt.get();
-        UserLoginResponse response = UserLoginResponse.builder().username(user.getUsername()).role(user.getRole())
-                .address(user.getAddress()).birthday(user.getBirthday()).email(user.getEmail())
-                .description(user.getDescription()).avt_url(user.getAvtUrl()).personal_img(user.getPersonalImg())
-                .phone(user.getPhone()).sex(user.getSex()).identifyCode(user.getIdentifyCode())
-                .createdAt(user.getCreatedAt()).accountStatus(user.getAccountStatus()).build();
-        return response;
+
+        // kiem tra mat khau
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new AppException(ErrorCode.INVALID_LOGIN);
+        }
+
+        // neu dung mat khau -> tao token xac dinh nguoi dung
+        String token = generateToken(user);
+
+        return AuthenticationResponse.builder().token(token).authenticated(true).build();
     }
 
-    public User register(UserRegisterRequest request) {
+    // Đăng ký
+    public UserResponse register(UserRegisterRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new AppException(ErrorCode.USER_EXISTED);
         }
@@ -46,10 +70,38 @@ public class AuthService {
         if (!request.getPassword().equals(request.getConfirmPassword())) {
             throw new AppException(ErrorCode.PASSWORD_NOT_MATCH);
         }
-        User user = User.builder().username(request.getUsername()).password(request.getPassword())
-                .email(request.getEmail()).role(request.getRole() != null ? request.getRole() : "customer")
-                .phone(request.getPhone()).accountStatus("inactive")
-                .sex(request.getSex() != null ? request.getSex() : "other").build();
-        return userRepository.save(user);
+
+        // Bam mat khau
+        String encodedPassword = passwordEncoder.encode(request.getPassword());
+
+        User user = User.builder().username(request.getUsername()).password(encodedPassword).email(request.getEmail())
+                .role(request.getRole() != null ? request.getRole() : "customer").phone(request.getPhone())
+                .accountStatus("inactive").sex(request.getSex() != null ? request.getSex() : "other").build();
+        userRepository.save(user);
+        return UserResponse.builder().username(user.getUsername()).role(user.getRole()).address(user.getAddress())
+                .birthday(user.getBirthday()).email(user.getEmail()).description(user.getDescription())
+                .avt_url(user.getAvtUrl()).personal_img(user.getPersonalImg()).phone(user.getPhone()).sex(user.getSex())
+                .identifyCode(user.getIdentifyCode()).createdAt(user.getCreatedAt())
+                .accountStatus(user.getAccountStatus()).build();
+    }
+
+    // ham tao token
+    private String generateToken(User user) {
+        JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
+
+        JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder().subject(user.getUsername()).issuer("smartvibe.com")
+                .issueTime(new Date()).expirationTime(new Date(Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()))
+                .claim("scope", user.getRole()).build();
+
+        Payload payload = new Payload(jwtClaimsSet.toJSONObject());
+        JWSObject jwsObject = new JWSObject(header, payload);
+
+        try {
+            jwsObject.sign(new MACSigner(SIGNER_KEY.getBytes()));
+            return jwsObject.serialize();
+        } catch (JOSEException e) {
+            log.error("Cannot create token", e);
+            throw new RuntimeException(e);
+        }
     }
 }
