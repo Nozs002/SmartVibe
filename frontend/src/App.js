@@ -4,6 +4,10 @@ import LoginPage from './pages/Auth/LoginPage';
 import RegisterPage from './pages/Auth/RegisterPage';
 import ForgotPasswordPage from './pages/Auth/ForgotPasswordPage';
 import AccountStatusPage from './pages/Auth/AccountStatusPage';
+import OnlineOrderPage from './pages/Order/OnlineOrderPage';
+import MainLayout from './components/Layout/MainLayout';
+import UserProfilePage from './pages/User/UserProfilePage';
+import ChangePasswordPage from './pages/Auth/ChangePasswordPage';
 
 // Giả sử chúng ta có thêm trang Dashboard rỗng để test
 const Dashboard = () => (
@@ -19,9 +23,6 @@ function App() {
       <Routes>
         {/* Mặc định vào trang Login */}
         <Route path="/login" element={<LoginPage />} />
-        
-        {/* Đường dẫn cho Dashboard */}
-        <Route path="/dashboard" element={<Dashboard />} />
 
         {/* Đường dẫn cho trang Đăng Ký */}
         <Route path="/register" element={<RegisterPage />} />
@@ -32,6 +33,19 @@ function App() {
         {/* Đường dẫn cho trang Quên Mật Khẩu */}
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
+        <Route path="/" element={<MainLayout />}>
+          {/* Đường dẫn cho Dashboard */}
+          <Route path="/dashboard" element={<Dashboard />} />
+          
+          {/* Đường dẫn cho trang Order */}
+          <Route path="/online-order" element={<OnlineOrderPage />} />
+
+          {/* Đường dẫn cho trang Profile */}
+          <Route path="/profile" element={<UserProfilePage />} />
+
+          {/* Đường dẫn cho trang Change Password */}
+          <Route path="/change-password" element={<ChangePasswordPage />} />
+        </Route>
 
         {/* Nếu người dùng vào link lạ, tự động quay về Login */}
         <Route path="*" element={<Navigate to="/login" replace />} />

@@ -1,0 +1,18 @@
+.main-layout-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.layout-body {
+  display: flex;
+  flex: 1;
+}
+
+.main-content-area {
+  flex: 1;
+  margin-left: 260px; /* Bằng chiều rộng Sidebar để không bị đè */
+  padding: 30px;
+  background-color: #f4f7fe;
+  overflow-y: auto;
+}

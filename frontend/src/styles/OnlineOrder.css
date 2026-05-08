@@ -1,0 +1,98 @@
+.order-layout {
+  display: grid;
+  grid-template-columns: 200px 1fr 350px; /* Chia 3 cột cố định */
+  height: 100vh;
+  background: #f0f2f5;
+  overflow: hidden;
+}
+
+/* Sidebar bên trái */
+.category-sidebar {
+  background: #1a1a1a;
+  color: white;
+  padding: 20px;
+}
+.category-sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 30px;
+}
+.category-sidebar li {
+  padding: 12px;
+  cursor: pointer;
+  border-radius: 8px;
+  margin-bottom: 5px;
+}
+.category-sidebar li.active {
+  background: #333;
+  color: #007bff;
+}
+
+/* Vùng sản phẩm ở giữa */
+.product-section {
+  padding: 25px;
+  overflow-y: auto;
+}
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 25px;
+}
+.search-bar {
+  width: 300px;
+  padding: 10px;
+  border-radius: 20px;
+  border: 1px solid #ddd;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Ép 3 cột trên PC */
+  gap: 20px;
+}
+.item-card {
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  text-align: center;
+  transition: 0.3s;
+}
+.item-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+.item-icon {
+  font-size: 50px;
+  margin-bottom: 15px;
+}
+
+/* Bảng thanh toán bên phải */
+.billing-panel {
+  background: white;
+  border-left: 1px solid #ddd;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+.cart-list {
+  flex: 1;
+  overflow-y: auto;
+  margin-top: 20px;
+}
+.bill-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed #eee;
+}
+.pay-button {
+  background: #007bff;
+  color: white;
+  border: none;
+  width: 100%;
+  padding: 15px;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+}

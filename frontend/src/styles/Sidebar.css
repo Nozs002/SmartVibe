@@ -1,0 +1,57 @@
+.main-sidebar {
+  width: 260px;
+  background-color: #1e1e2d; /* Màu nền tối sang trọng */
+  color: #a2a3b7;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 70px); /* Trừ đi chiều cao của Navbar */
+  position: fixed;
+  left: 0;
+  top: 70px;
+  transition: all 0.3s;
+}
+
+.sidebar-menu {
+  flex: 1;
+  padding: 20px 15px;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 15px;
+  color: #a2a3b7;
+  text-decoration: none;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  transition: all 0.3s;
+}
+
+.menu-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+}
+
+.menu-item.active {
+  background: #007bff; /* Màu xanh đặc trưng SmartVibe */
+  color: #ffffff;
+}
+
+.menu-icon {
+  margin-right: 15px;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+}
+
+.menu-text {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.sidebar-footer {
+  padding: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 11px;
+  text-align: center;
+}
