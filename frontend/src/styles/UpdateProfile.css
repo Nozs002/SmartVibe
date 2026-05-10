@@ -1,0 +1,230 @@
+/* Container của Page */
+/* Container bao quanh toàn bộ trang */
+.cp-page-container {
+  display: flex;
+  justify-content: center; /* Căn giữa card theo chiều ngang */
+  align-items: flex-start; /* Đẩy card lên phía trên một chút thay vì nằm giữa màn hình */
+  min-height: calc(100vh - 70px); /* Full màn hình trừ đi chiều cao Navbar */
+  background-color: #f4f7fe; /* Màu nền nhẹ nhàng cho hệ thống quản trị */
+  padding: 40px 20px;
+  width: 100%;
+}
+
+/* Card trắng chứa Form */
+.cp-card {
+  background: #ffffff;
+  width: 100%;
+  max-width: 700px; /* Độ rộng lý tưởng để form không quá loãng */
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); /* Hiệu ứng bóng đổ nhẹ hiện đại */
+  transition: transform 0.3s ease;
+}
+
+/* Hiệu ứng hover nhẹ cho card (Tùy chọn) */
+.cp-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Đảm bảo responsive trên màn hình nhỏ */
+@media (max-width: 768px) {
+  .cp-page-container {
+    padding: 20px 10px;
+  }
+
+  .cp-card {
+    padding: 20px;
+    border-radius: 0; /* Trên mobile nên để phẳng để tối ưu diện tích */
+  }
+}
+
+/* Container chính của Form */
+.update-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+/* Phần Avatar */
+.avatar-section {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.avatar-wrapper {
+  position: relative;
+  width: 110px;
+  height: 110px;
+  margin: 0 auto 15px;
+}
+
+.avatar-wrapper img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #007bff;
+  background-color: #fff;
+  /* Tránh lỗi ảnh vỡ hiển thị text placeholder xấu */
+  font-size: 10px;
+  color: transparent;
+}
+
+.upload-icon {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  background: #007bff;
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 2px solid white;
+  transition: all 0.3s ease;
+}
+
+.upload-icon:hover {
+  background: #0056b3;
+  transform: scale(1.1);
+}
+
+/* Tiêu đề Chỉnh sửa hồ sơ */
+.avatar-section h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+/* Bố cục Grid cho các ô nhập liệu */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Chia làm 2 cột */
+  gap: 20px;
+  width: 100%;
+}
+
+/* Ô nào chiếm hết 2 cột (Địa chỉ, Giới thiệu) */
+.full-width {
+  grid-column: span 2;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #444;
+}
+
+.form-group select {
+  width: 100% !important; /* Buộc select phải giãn hết cột */
+  height: 45px;
+  padding: 0 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+  outline: none;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+/* Khung chứa input và icon */
+.input-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.input-box svg {
+  position: absolute;
+  left: 15px;
+  color: #888;
+  font-size: 16px;
+}
+
+.input-box input,
+.input-box select,
+.form-group textarea {
+  width: 100%;
+  padding: 12px 15px 12px 45px; /* Padding trái 45px để tránh icon */
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  outline: none;
+  background-color: #fff;
+}
+
+/* Riêng textarea không có icon bên trái */
+.form-group textarea {
+  padding-left: 15px;
+  resize: none; /* Khóa không cho kéo dãn tự do */
+}
+
+.input-box input:focus,
+.input-box select:focus,
+.form-group textarea:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+/* Ô Email bị khóa */
+.input-readonly {
+  background-color: #f5f5f5 !important;
+  color: #888;
+  cursor: not-allowed;
+  width: 100%; /* QUAN TRỌNG */
+  height: 43px; /* Cho bằng chiều cao các ô khác */
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding-left: 15px !important;
+  box-sizing: border-box;
+}
+
+/* Nút Lưu thay đổi */
+.btn-save-profile {
+  width: 100%;
+  padding: 14px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+  transition: background 0.3s ease;
+}
+
+.btn-save-profile:hover {
+  background-color: #218838;
+}
+
+.btn-save-profile svg {
+  font-size: 18px;
+}
+
+/* Responsive cho màn hình điện thoại */
+@media (max-width: 600px) {
+  .form-grid {
+    grid-template-columns: 1fr; /* Chuyển về 1 cột trên mobile */
+  }
+  .full-width {
+    grid-column: span 1;
+  }
+}

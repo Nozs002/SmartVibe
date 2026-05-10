@@ -1,69 +1,52 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { FaBell, FaUserCircle, FaSignOutAlt, FaSearch } from 'react-icons/fa'; // Cần cài react-icons
-import '../../styles/Navbar.css';
+import { FaShoppingCart, FaSearch } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import '../../styles/Navbar.css';
 
 const Navbar = () => {
-  const navigate = useNavigate();
-  
-  // Code an toàn để tránh lỗi JSON parse khi chưa đăng nhập
   const userData = localStorage.getItem('user');
   const user = (userData && userData !== "undefined") ? JSON.parse(userData) : { username: 'Guest' };
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    navigate('/login');
-  };
-
   return (
     <nav className="top-navbar">
-      {/* PHẦN TRÁI: LOGO */}
+      {/* PHẦN TRÁI: Ô TÌM KIẾM */}
       <div className="nav-left">
-        <Link to="/dashboard" className="logo-text">
-          SMART<span>VIBE</span>
-        </Link>
-      </div>
-
-      {/* PHẦN GIỮA: Ô TÌM KIẾM */}
-      <div className="nav-center">
         <div className="search-box">
           <FaSearch className="search-icon" />
-          <input type="text" placeholder="Tìm kiếm sản phẩm, linh kiện..." />
+          <input type="text" placeholder="Tìm kiếm..." />
+        </div>
+      </div>
+
+      {/* PHẦN GIỮA: TABS */}
+      <div className="nav-center">
+        <div className="nav-tabs">
+          <button className="tab active">Dashboard</button>
+          <button className="tab">Website</button>
         </div>
       </div>
 
       {/* PHẦN PHẢI: ICON & USER */}
       <div className="nav-right">
-        <div className="nav-icon-btn">
-          <FaBell />
-          <span className="badge">3</span>
+        <div className="nav-cart-btn">
+          <span>Cart</span>
+          <FaShoppingCart className="icon-cart" />
         </div>
         
+        {/* KHU VỰC USER CÓ DROPDOWN */}
         <div className="user-section">
-          <div className="user-info">
-            <span className="user-name">{user.username}</span>
-            <span className="user-role">{user.role || 'Member'}</span>
-          </div>
-          <FaUserCircle className="avatar-icon" />
-          
+          <img 
+            src={user.avatar || "https://ui-avatars.com/api/?name=AD&background=f3f4f6"} 
+            alt="avatar" 
+            className="avatar-img"
+          />
+          <span className="user-name">{user.username}</span>
+
+          {/* Menu thả xuống */}
           <div className="user-dropdown">
             <ul>
-              <li>
-                <Link to="/profile" style={{ textDecoration: 'none', color: 'inherit', display: 'block', width: '100%' }}>
-                    Hồ sơ
-                </Link>
-              </li>
-              <li>
-                <Link to="/change-password" style={{ textDecoration: 'none', color: 'inherit', display: 'block', width: '100%' }}>
-                    Bảo mật
-                </Link>
-              </li>
-              <li>Cài đặt</li>
-              <li className="logout-item" onClick={handleLogout}>
-                <FaSignOutAlt /> Thoát
-              </li>
+              <li><Link to="/profile">Hồ sơ</Link></li>
+              <li><Link to="/change-password">Bảo mật</Link></li>
+              <li><Link to="/settings">Cài đặt</Link></li>
             </ul>
           </div>
         </div>

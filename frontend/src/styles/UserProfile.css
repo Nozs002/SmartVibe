@@ -102,3 +102,273 @@
 .price {
   color: #d9534f !important;
 }
+
+.profile-header {
+  display: flex;
+  justify-content: space-between; /* Đẩy tên sang trái, nút sang phải */
+  align-items: center;
+  padding: 30px;
+  background: #ffffff;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.btn-edit-profile {
+  background-color: #f8f9fa;
+  color: #007bff;
+  border: 1px solid #007bff;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.btn-edit-profile:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+.price {
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+.capitalize {
+  text-transform: capitalize;
+}
+
+.avatar-section {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.avatar-wrapper {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 10px;
+}
+
+.avatar-wrapper img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #007bff;
+}
+
+.upload-icon {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: #007bff;
+  color: white;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 2px solid white;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.full-width {
+  grid-column: span 2;
+}
+
+.input-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-box svg {
+  position: absolute;
+  left: 12px;
+  color: #888;
+}
+
+.input-box input,
+.input-box select,
+textarea {
+  width: 100%;
+  padding: 10px 10px 10px 35px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  outline: none;
+}
+
+.input-readonly {
+  background: #f0f0f0;
+  cursor: not-allowed;
+}
+
+.btn-save-profile {
+  width: 100%;
+  padding: 12px;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  margin-top: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.avatar-section {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.avatar-wrapper {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 10px;
+}
+
+.avatar-wrapper img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #007bff;
+}
+
+.upload-icon {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: #007bff;
+  color: white;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 2px solid white;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.full-width {
+  grid-column: span 2;
+}
+
+.input-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-box svg {
+  position: absolute;
+  left: 12px;
+  color: #888;
+}
+
+.input-box input,
+.input-box select,
+textarea {
+  width: 100%;
+  padding: 10px 10px 10px 35px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  outline: none;
+}
+
+.input-readonly {
+  background: #f0f0f0;
+  cursor: not-allowed;
+}
+
+.btn-save-profile {
+  width: 100%;
+  padding: 12px;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  margin-top: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+/* about me */
+/* Container tổng của section */
+.about-section {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+}
+
+/* Tùy chỉnh Header có thanh màu xanh bên trái */
+.about-section h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.2rem;
+  color: #1a1a1a;
+  margin-bottom: 20px;
+  padding-left: 15px;
+  /* Thanh màu xanh lề trái */
+  border-left: 4px solid #007bff;
+  line-height: 1;
+}
+
+/* Icon trong tiêu đề */
+.about-section h3 svg {
+  color: #444;
+  font-size: 1.1rem;
+}
+
+/* Phần nội dung văn bản */
+.about-content p {
+  font-size: 15px;
+  line-height: 1.6; /* Tạo khoảng cách dòng cho dễ đọc */
+  color: #444;
+  text-align: justify; /* Căn đều hai bên nếu văn bản dài */
+  margin: 0;
+  padding-left: 5px; /* Để văn bản không quá sát lề */
+}
+
+/* Hiệu ứng responsive */
+@media (max-width: 768px) {
+  .about-section h3 {
+    font-size: 1.1rem;
+  }
+  .about-content p {
+    font-size: 14px;
+  }
+}

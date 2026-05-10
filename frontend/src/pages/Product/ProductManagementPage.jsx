@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import ProductCard from '../../modules/Product/ProductCard';
 import '../../styles/ProductGrid.css';
 
-const OnlineOrderPage = () => {
+const ProductManagementPage = () => {
+  // Dữ liệu mẫu (Sau này sẽ fetch từ API Spring Boot)
   const [products] = useState([
     { id: 1, name: 'iPhone 15 Pro', category: 'Điện thoại', price: 28000000, stock: 15, image: '' },
     { id: 2, name: 'MacBook M3', category: 'Laptop', price: 45000000, stock: 5, image: '' },
@@ -10,19 +11,19 @@ const OnlineOrderPage = () => {
   ]);
 
   return (
-    <div className="online-order-page">
-      <div className="hero-banner">
-        <h2>Sản phẩm công nghệ mới nhất</h2>
-        <p>Ưu đãi hấp dẫn dành cho thành viên SmartVibe</p>
+    <div className="management-page">
+      <div className="page-header">
+        <h2>Quản lý sản phẩm</h2>
+        <button className="btn-add-new">+ Thêm sản phẩm mới</button>
       </div>
-
+      
       <div className="product-grid">
         {products.map(product => (
-          <ProductCard key={product.id} product={product} type="shopping" />
+          <ProductCard key={product.id} product={product} type="management" />
         ))}
       </div>
     </div>
   );
 };
 
-export default OnlineOrderPage;
+export default ProductManagementPage;

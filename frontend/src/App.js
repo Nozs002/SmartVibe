@@ -8,12 +8,17 @@ import OnlineOrderPage from './pages/Order/OnlineOrderPage';
 import MainLayout from './components/Layout/MainLayout';
 import UserProfilePage from './pages/User/UserProfilePage';
 import ChangePasswordPage from './pages/Auth/ChangePasswordPage';
+import UpdateProfilePage from './pages/Auth/UpdateProfilePage'; 
+import ProductManagementPage from './pages/Product/ProductManagementPage';
+import OrderManagementPage from './pages/Order/OrderManagementPage';
+import UserManagementPage from './pages/User/UserManagementPage';
+
+
 
 // Giả sử chúng ta có thêm trang Dashboard rỗng để test
 const Dashboard = () => (
   <div style={{ padding: '20px' }}>
     <h1>Chào mừng bạn đến với Dashboard SmartVibe!</h1>
-    <p>Đây là nơi quản lý hệ thống sau khi đăng nhập thành công.</p>
   </div>
 );
 
@@ -33,6 +38,7 @@ function App() {
         {/* Đường dẫn cho trang Quên Mật Khẩu */}
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
+        {/* Đường dẫn cho Main Layout */}
         <Route path="/" element={<MainLayout />}>
           {/* Đường dẫn cho Dashboard */}
           <Route path="/dashboard" element={<Dashboard />} />
@@ -45,9 +51,21 @@ function App() {
 
           {/* Đường dẫn cho trang Change Password */}
           <Route path="/change-password" element={<ChangePasswordPage />} />
+
+          {/* Đường dẫn cho trang Update Profile */}
+          <Route path="/update-profile" element={<UpdateProfilePage />} />
+
+          {/* Đường dẫn cho trang Product Management */}
+          <Route path="/products" element={<ProductManagementPage />} />
+
+          {/* Đường dẫn cho trang Order Management */}
+          <Route path="/order-management" element={<OrderManagementPage />} />
+
+          {/* Đường dẫn cho trang User Management */}
+          <Route path="/user-management" element={<UserManagementPage />} />
         </Route>
 
-        {/* Nếu người dùng vào link lạ, tự động quay về Login */}
+        {/* Nếu người dùng vào trang khác, quay về Login */}
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </Router>

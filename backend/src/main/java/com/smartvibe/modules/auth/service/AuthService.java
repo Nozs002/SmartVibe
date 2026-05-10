@@ -27,6 +27,8 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.smartvibe.common.exception.AppException;
 import com.smartvibe.common.exception.ErrorCode;
 import com.smartvibe.common.response.AuthenticationResponse;
+import com.smartvibe.common.security.JwtAuthenticationFilter;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -89,9 +91,14 @@ public class AuthService {
     private String generateToken(User user) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 
+        // subject: Lưu user.getUsername()
+        // issuer: Nguồn phát hành là smartvibe.com.
+        // issueTime: Thời điểm tạo token.
+        // expirationTime: Thời điểm hết hạn (1 giờ sau khi tạo).
+        // scope: Lưu user.getRole().
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder().subject(user.getUsername()).issuer("smartvibe.com")
                 .issueTime(new Date()).expirationTime(new Date(Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()))
-                .claim("scope", user.getRole()).build();
+                .claim("userId", user.getId()).claim("email", user.getEmail()).claim("scope", user.getRole()).build();
 
         Payload payload = new Payload(jwtClaimsSet.toJSONObject());
         JWSObject jwsObject = new JWSObject(header, payload);

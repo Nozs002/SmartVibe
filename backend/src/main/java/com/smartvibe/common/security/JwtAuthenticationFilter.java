@@ -41,7 +41,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     String role = claims.getStringClaim("scope");
 
                     // Spring Security yêu cầu chữ ROLE_ đứng trước quyền (Ví dụ: ROLE_CUSTOMER)
-                    var authority = new SimpleGrantedAuthority("ROLE_" + role.toUpperCase());
+                    String formattedRole = role.replace(" ", "_").toUpperCase();
+                    var authority = new SimpleGrantedAuthority("ROLE_" + formattedRole);
 
                     // 5. Cấp giấy phép đi lại trong hệ thống (Authentication Token)
                     var authentication = new UsernamePasswordAuthenticationToken(username, null,

@@ -1,18 +1,28 @@
+/* Container bọc toàn bộ ứng dụng */
 .main-layout-container {
   display: flex;
-  flex-direction: column;
-  height: 100vh;
+  min-height: 100vh;
+  background-color: #f3f4f6; /* Nền xám nhạt để làm nổi bật các Card trắng */
 }
 
-.layout-body {
-  display: flex;
+/* Vùng bao chứa Navbar và Nội dung trang */
+.content-wrapper {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-left: 260px;
+  transition: margin-left 0.3s ease; /* Thêm hiệu ứng trượt mượt mà */
 }
 
+/* Khi Sidebar thu nhỏ, content giãn ra */
+.content-wrapper.collapsed {
+  margin-left: 80px;
+}
+
+/* Khu vực hiển thị nội dung chính thay đổi theo Route */
 .main-content-area {
   flex: 1;
-  margin-left: 260px; /* Bằng chiều rộng Sidebar để không bị đè */
-  padding: 30px;
+  padding: 40px;
   background-color: #f4f7fe;
   overflow-y: auto;
 }

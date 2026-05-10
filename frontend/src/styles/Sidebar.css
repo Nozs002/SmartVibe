@@ -1,39 +1,71 @@
 .main-sidebar {
   width: 260px;
-  background-color: #1e1e2d; /* Màu nền tối sang trọng */
-  color: #a2a3b7;
+  background-color: #ffffff; /* Nền trắng như ảnh mẫu */
+  color: #6b7280;
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 70px); /* Trừ đi chiều cao của Navbar */
+  height: 100vh; /* Chiếm toàn bộ chiều cao màn hình */
   position: fixed;
   left: 0;
-  top: 70px;
-  transition: all 0.3s;
+  top: 0;
+  border-right: 1px solid #f3f4f6;
+  padding: 20px;
+  transition: width 0.3s ease; /* Hiệu ứng mượt */
+  overflow: hidden;
+  z-index: 1001;
+  box-sizing: border-box;
+}
+
+.main-sidebar.collapsed {
+  width: 80px;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30px;
+}
+
+.sidebar-logo {
+  font-size: 22px;
+  font-weight: 800;
+  color: #111827;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 0;
+  padding-left: 10px;
+}
+
+.sidebar-logo span:not(.logo-icon) {
+  color: #000000; /* Có thể đổi màu thương hiệu */
 }
 
 .sidebar-menu {
   flex: 1;
-  padding: 20px 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 
 .menu-item {
   display: flex;
   align-items: center;
   padding: 12px 15px;
-  color: #a2a3b7;
+  color: #6b7280;
   text-decoration: none;
-  border-radius: 8px;
-  margin-bottom: 8px;
-  transition: all 0.3s;
+  border-radius: 12px;
+  transition: all 0.2s ease;
 }
 
 .menu-item:hover {
-  background: rgba(255, 255, 255, 0.05);
-  color: #ffffff;
+  background: #f9fafb;
+  color: #111827;
 }
 
 .menu-item.active {
-  background: #007bff; /* Màu xanh đặc trưng SmartVibe */
+  background: #111827; /* Nền đen chữ trắng giống thiết kế Fantar */
   color: #ffffff;
 }
 
@@ -46,12 +78,63 @@
 
 .menu-text {
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .sidebar-footer {
-  padding: 20px;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-  font-size: 11px;
-  text-align: center;
+  margin-top: auto; /* Đẩy footer xuống tận cùng */
+  padding-top: 20px;
+}
+
+.btn-logout {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 12px 15px;
+  background: transparent;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  color: #111827;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-logout:hover {
+  background: #f9fafb;
+}
+
+.toggle-btn {
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 8px;
+  transition: background 0.2s;
+
+  display: flex;
+  align-items: center;
+}
+
+.toggle-btn:hover {
+  background: #f3f4f6;
+  color: #111827;
+}
+
+.main-sidebar.collapsed .sidebar-header {
+  justify-content: center;
+}
+.main-sidebar.collapsed .sidebar-logo {
+  display: none; /* Ẩn hẳn logo để chừa chỗ cho nút toggle (hoặc có thể giữ lại icon ») */
+}
+.main-sidebar.collapsed .menu-item,
+.main-sidebar.collapsed .btn-logout {
+  justify-content: center;
+  padding: 12px 0;
+}
+.main-sidebar.collapsed .menu-icon {
+  margin-right: 0;
+  font-size: 22px; /* Tăng size icon lên chút cho cân đối */
 }
