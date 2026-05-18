@@ -1,46 +1,82 @@
 import React from 'react';
-import { FaEdit, FaTrash, FaCartPlus, FaEye } from 'react-icons/fa';
+import '../../styles/Product.css';
 
-const ProductCard = ({ product, type }) => {
-  // Format giá tiền theo VNĐ
-  const formatPrice = (price) => {
-    return price.toLocaleString('vi-VN') + ' VNĐ';
+const ProductCard = ({ product, role = 'customer', onViewDetail, onActionClick }) => {
+  
+  // Xử lý sự kiện click vào nút hành động
+  const handleAction = (actionType) => {
+    if (onActionClick) {
+      onActionClick(actionType, product);
+    }
+  };
+
+  // Render nút bấm dựa trên Role để tái sử dụng
+  const renderButtons = () => {
+    switch (role) {
+      case 'manager':
+        return (
+          <>
+            <button className="btn-action btn-outline" onClick={() => handleAction('edit')}>
+              Chỉnh sửa
+            </button>
+            <button className="btn-action btn-danger" onClick={() => handleAction('discontinue')}>
+              Ngừng bán
+            </button>
+          </>
+        );
+      case 'staff':
+        return (
+          <>
+            <button className="btn-action btn-outline" onClick={() => handleAction('check_stock')}>
+              Kiểm kho
+            </button>
+            <button className="btn-action btn-primary" onClick={() => handleAction('create_pos')}>
+              Lên đơn POS
+            </button>
+          </>
+        );
+      case 'customer':
+      default:
+        return (
+          <>
+            <button className="btn-action btn-outline" onClick={() => handleAction('add_to_cart')}>
+              Add to Cart
+            </button>
+            <button className="btn-action btn-dark" onClick={() => handleAction('buy_now')}>
+              Buy Now
+            </button>
+          </>
+        );
+    }
   };
 
   return (
     <div className="product-card">
-      <div className="product-image">
-        <img src={product.image || 'https://via.placeholder.com/200'} alt={product.name} />
-        {product.stock <= 0 && <span className="out-of-stock-label">Hết hàng</span>}
-      </div>
-      
-      <div className="product-info">
-        <h4 className="product-name">{product.name}</h4>
-        <p className="product-category">{product.category}</p>
-        <p className="product-price">{formatPrice(product.price)}</p>
-        {type === 'management' && (
-          <p className="product-stock">Kho: <strong>{product.stock}</strong></p>
-        )}
+      {/* Box hình ảnh - Click để xem chi tiết */}
+      <div className="product-image-wrapper" onClick={() => onViewDetail && onViewDetail(product)}>
+        <span className="product-badge">{product.categoryName || 'Other'}</span>
+        <img 
+          src={product.thumbnail || '/placeholder-image.png'} 
+          alt={product.name} 
+          className="product-image"
+        />
       </div>
 
-      <div className="product-actions">
-        {type === 'management' ? (
-          <>
-            <button className="btn-edit" title="Sửa sản phẩm"><FaEdit /> Sửa</button>
-            <button className="btn-delete" title="Xóa sản phẩm"><FaTrash /> Xóa</button>
-          </>
-        ) : (
-          <>
-            <button className="btn-view" title="Xem chi tiết"><FaEye /> Chi tiết</button>
-            <button 
-              className="btn-add-cart" 
-              disabled={product.stock <= 0}
-              title="Thêm vào giỏ hàng"
-            >
-              <FaCartPlus /> Thêm
-            </button>
-          </>
-        )}
+      <div className="product-info">
+        {/* Tên sản phẩm - Click để xem chi tiết */}
+        <h3 className="product-title" onClick={() => onViewDetail && onViewDetail(product)}>
+          {product.name}
+        </h3>
+        
+        <div className="product-meta">
+          <div className="product-price">
+            {Number(product.basePrice).toLocaleString()}đ
+          </div>
+        </div>
+
+        <div className="product-actions">
+          {renderButtons()}
+        </div>
       </div>
     </div>
   );

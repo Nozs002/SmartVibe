@@ -1,27 +1,131 @@
-import React, { useState } from 'react';
-import ProductCard from '../../modules/Product/ProductCard';
-import '../../styles/ProductGrid.css';
+import React, { useState, useEffect, useMemo } from 'react';
+import ProductFilterBar from '../../modules/Product/ProductFilterBar';
+import ProductList from '../../modules/Product/ProductList';
+import { getData } from '../../services/api';
+import '../../styles/Product.css';
 
 const ProductManagementPage = () => {
-  // Dữ liệu mẫu (Sau này sẽ fetch từ API Spring Boot)
-  const [products] = useState([
-    { id: 1, name: 'iPhone 15 Pro', category: 'Điện thoại', price: 28000000, stock: 15, image: '' },
-    { id: 2, name: 'MacBook M3', category: 'Laptop', price: 45000000, stock: 5, image: '' },
-    { id: 3, name: 'AirPods Pro 2', category: 'Phụ kiện', price: 5500000, stock: 0, image: '' },
-  ]);
+  // 1. Data gốc từ Database
+  const [products, setProducts] = useState([]);
+  
+  // THÊM MỚI: State lưu danh sách Category lấy từ API
+  const [categories, setCategories] = useState([]); 
+  
+  // 2. States quản lý bộ lọc
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [sortBy, setSortBy] = useState('popular');
+
+  // Giả lập Fetch Data từ Database
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await getData('/categories/all'); 
+        
+        setCategories(response); 
+      } catch (error) {
+        console.error("Lỗi lấy danh mục:", error);
+      }
+    };
+    
+    fetchCategories();
+
+    const fetchProducts = async () => {
+      try {
+        const response = await getData('/products/all');
+        setProducts(response);
+      } catch (error){
+        console.error("Lỗi lấy sản phẩm:", error);
+      }
+    }
+    fetchProducts();
+  }, []);
+
+  // 3. Logic: Lọc (Filter) và Sắp xếp (Sort) dữ liệu dựa trên State
+  // useMemo sẽ chạy lại khi một trong các dependencies(products, searchTerm, selectedCategory, sortBy) thay đổi
+  const filteredAndSortedProducts = useMemo(() => {
+    // copy mảng products để tránh thay đổi mảng gốc
+    let result = [...products];
+
+    // Lọc theo Từ khóa tìm kiếm
+    if (searchTerm.trim() !== '') {
+      result = result.filter(p => 
+        p.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    // Lọc theo Danh mục
+    if (selectedCategory && selectedCategory !== 'all') {
+      
+      const targetCatId = String(selectedCategory);
+      
+      // mảng category id hợp lệ
+      const validCategoryIds = [targetCatId];
+
+      // Lọc tất cả các category con của category đang chọn
+      categories.forEach(cat => {
+        if (cat.parentId && String(cat.parentId) === targetCatId) {
+          validCategoryIds.push(String(cat.id));
+        }
+      });
+      result = result.filter(p => {
+        return p.categoryId && validCategoryIds.includes(String(p.categoryId));
+      });
+    }
+
+    // Sắp xếp
+    switch (sortBy) {
+      case 'price_asc':
+        result.sort((a, b) => Number(a.basePrice) - Number(b.basePrice));
+        break;
+      case 'price_desc':
+        result.sort((a, b) => Number(b.basePrice) - Number(a.basePrice));
+        break;
+      case 'best_selling':
+        result.sort((a, b) => (b.sold || 0) - (a.sold || 0));
+        break;
+      case 'newest':
+        result.sort((a, b) => Number(b.id) - Number(a.id));
+        break;
+      case 'default':
+        result.sort((a, b) => Number(a.id) - Number(b.id));
+        break;
+      default:
+        result.sort((a, b) => Number(a.id) - Number(b.id));
+        break;
+    }
+
+    return result;
+  }, [products, searchTerm, selectedCategory, sortBy]);
+
+  // Handle Event của Card
+  const handleProductAction = (actionType, product) => {
+    console.log(`Bấm nút ${actionType} trên sản phẩm ${product.name}`);
+  };
 
   return (
-    <div className="management-page">
-      <div className="page-header">
-        <h2>Quản lý sản phẩm</h2>
-        <button className="btn-add-new">+ Thêm sản phẩm mới</button>
-      </div>
-      
-      <div className="product-grid">
-        {products.map(product => (
-          <ProductCard key={product.id} product={product} type="management" />
-        ))}
-      </div>
+    <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '24px' }}>
+      <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '20px' }}>
+        Danh sách sản phẩm
+      </h1>
+
+      {/* Gọi Component Thanh Công Cụ */}
+      <ProductFilterBar 
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+        selectedCategory={selectedCategory}
+        onCategoryChange={setSelectedCategory}
+        sortBy={sortBy}
+        onSortChange={setSortBy}
+        categories={categories.filter(cat => cat.parentId === null)}
+      />
+
+      {/* Truyền dữ liệu ĐÃ QUA LỌC vào ProductList */}
+      <ProductList 
+        products={filteredAndSortedProducts} 
+        role="manager" 
+        onProductAction={handleProductAction}
+      />
     </div>
   );
 };

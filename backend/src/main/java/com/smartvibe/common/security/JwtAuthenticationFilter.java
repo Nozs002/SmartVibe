@@ -24,6 +24,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
+        if (request.getMethod().equals("OPTIONS")) {
+            response.setStatus(HttpServletResponse.SC_OK);
+            return; // Dừng tại đây, không đi vào check Token nữa
+        }
         // 1. Lấy thẻ từ trong Header có tên là "Authorization"
         String authHeader = request.getHeader("Authorization");
 
@@ -36,24 +40,33 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             if (claims != null) {
                 try {
-                    // 4. Nếu thẻ xịn -> Lấy thông tin Tên và Quyền ra
+                    // In ra để xem có chạy vào đây không
+                    System.out.println("=== BẮT ĐẦU ĐỌC TOKEN ===");
+
                     String username = claims.getSubject();
                     String role = claims.getStringClaim("scope");
 
-                    // Spring Security yêu cầu chữ ROLE_ đứng trước quyền (Ví dụ: ROLE_CUSTOMER)
+                    System.out.println("Username từ Token: " + username);
+                    System.out.println("Role gốc từ Token: " + role);
+
                     String formattedRole = role.replace(" ", "_").toUpperCase();
                     var authority = new SimpleGrantedAuthority("ROLE_" + formattedRole);
 
-                    // 5. Cấp giấy phép đi lại trong hệ thống (Authentication Token)
+                    System.out.println("Quyền cấp phát: " + authority.getAuthority());
+
                     var authentication = new UsernamePasswordAuthenticationToken(username, null,
                             Collections.singletonList(authority));
 
-                    // 6. Ghi danh vào Sổ Nam Tào (SecurityContextHolder)
                     SecurityContextHolder.getContext().setAuthentication(authentication);
+                    System.out.println("=== ĐÃ GHI DANH THÀNH CÔNG VÀO SECURITY CONTEXT ===");
 
                 } catch (Exception e) {
-                    // Lỗi đọc thẻ thì bỏ qua, hệ thống sẽ tự chặn ở bước sau
+                    // ĐÂY LÀ DÒNG QUAN TRỌNG NHẤT: Bắt hệ thống phải in ra lỗi
+                    System.err.println("=== LỖI KHI XỬ LÝ TOKEN ===");
+                    e.printStackTrace();
                 }
+            } else {
+                System.err.println("=== LỖI: CLAIMS LÀ NULL ===");
             }
         }
 

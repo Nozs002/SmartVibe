@@ -12,19 +12,13 @@ import UpdateProfilePage from './pages/Auth/UpdateProfilePage';
 import ProductManagementPage from './pages/Product/ProductManagementPage';
 import OrderManagementPage from './pages/Order/OrderManagementPage';
 import UserManagementPage from './pages/User/UserManagementPage';
-
-
-
-// Giả sử chúng ta có thêm trang Dashboard rỗng để test
-const Dashboard = () => (
-  <div style={{ padding: '20px' }}>
-    <h1>Chào mừng bạn đến với Dashboard SmartVibe!</h1>
-  </div>
-);
+import DashboardPage from './pages/DashboardPage';
+import ScrollToTop from './components/ScrollToTop';
 
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <Routes>
         {/* Mặc định vào trang Login */}
         <Route path="/login" element={<LoginPage />} />
@@ -41,7 +35,7 @@ function App() {
         {/* Đường dẫn cho Main Layout */}
         <Route path="/" element={<MainLayout />}>
           {/* Đường dẫn cho Dashboard */}
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
           
           {/* Đường dẫn cho trang Order */}
           <Route path="/online-order" element={<OnlineOrderPage />} />

@@ -1,228 +1,228 @@
-SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE smartvibe;
--- 1. shippers (10 dòng)
-INSERT INTO shippers (name, work_status, email, phone) VALUES
-('Nguyen Van A', 'active', 'shippera@gmail.com', '0901111111'),
-('Tran Van B', 'busy', 'shipperb@gmail.com', '0901111112'),
-('Le Thi C', 'inactive', 'shipperc@gmail.com', '0901111113'),
-('Pham Van D', 'maintenance', 'shipperd@gmail.com', '0901111114'),
-('Hoang Van E', 'active', 'shippere@gmail.com', '0901111115'),
-('Vu Thi F', 'active', 'shipperf@gmail.com', '0901111116'),
-('Ngo Van G', 'busy', 'shipperg@gmail.com', '0901111117'),
-('Duong Thi H', 'active', 'shipperh@gmail.com', '0901111118'),
-('Ly Van I', 'inactive', 'shipperi@gmail.com', '0901111119'),
-('Bui Van K', 'active', 'shipperk@gmail.com', '0901111120');
--- 2. branches (10 dòng)
-INSERT INTO branches (name, address, phone, email, operating_status, number_of_staff, capacity, type) VALUES
-('Kho Tong Mien Bac', 'Ha Noi', '0241111111', 'khomb@smartvibe.vn', 'open', 50, 10000, 'head_warehouse'),
-('Kho Tong Mien Nam', 'TP HCM', '0281111111', 'khomn@smartvibe.vn', 'open', 60, 15000, 'head_warehouse'),
-('Chi Nhanh Cau Giay', 'Cau Giay, Ha Noi', '0242222222', 'caugiay@smartvibe.vn', 'open', 15, 500, 'retail_branch'),
-('Chi Nhanh Dong Da', 'Dong Da, Ha Noi', '0243333333', 'dongda@smartvibe.vn', 'open', 10, 300, 'retail_branch'),
-('Chi Nhanh Quan 1', 'Quan 1, TP HCM', '0282222222', 'quan1@smartvibe.vn', 'open', 20, 800, 'retail_branch'),
-('Chi Nhanh Quan 3', 'Quan 3, TP HCM', '0283333333', 'quan3@smartvibe.vn', 'maintenance', 12, 400, 'retail_branch'),
-('Chi Nhanh Da Nang', 'Hai Chau, Da Nang', '02336111111', 'danang@smartvibe.vn', 'open', 15, 600, 'retail_branch'),
-('Chi Nhanh Can Tho', 'Ninh Kieu, Can Tho', '0292111111', 'cantho@smartvibe.vn', 'open', 10, 300, 'retail_branch'),
-('Chi Nhanh Hai Phong', 'Le Chan, Hai Phong', '0225111111', 'haiphong@smartvibe.vn', 'close', 8, 200, 'retail_branch'),
-('Chi Nhanh Hue', 'Phu Nhuan, Hue', '0234111111', 'hue@smartvibe.vn', 'open', 9, 250, 'retail_branch');
--- 3. users (20 dòng: 1-10 cho Staff, 11-20 cho Customer)
-INSERT INTO users (username, password, role, address, birthday, email, description, phone, sex, identify_code, account_status) VALUES
-('staff1', 'pass123', 'staff', 'Ha Noi', '1990-01-01', 'staff1@gmail.com', 'Nhan vien 1', '0801111111', 'male', 'ID001', 'active'),
-('admin', '123', 'system admin', 'TP HCM', '1991-02-02', 'staff2@gmail.com', 'Admin 1', '0801111112', 'female', 'ID002', 'active'),
-('staff3', 'pass123', 'staff', 'Da Nang', '1992-03-03', 'staff3@gmail.com', 'Nhan vien 3', '0801111113', 'male', 'ID003', 'active'),
-('staff4', 'pass123', 'staff', 'Can Tho', '1993-04-04', 'staff4@gmail.com', 'Nhan vien 4', '0801111114', 'female', 'ID004', 'inactive'),
-('staff5', 'pass123', 'staff', 'Hai Phong', '1994-05-05', 'staff5@gmail.com', 'Nhan vien 5', '0801111115', 'male', 'ID005', 'active'),
-('staff6', 'pass123', 'staff', 'Ha Noi', '1995-06-06', 'staff6@gmail.com', 'Nhan vien 6', '0801111116', 'female', 'ID006', 'active'),
-('staff7', 'pass123', 'staff', 'TP HCM', '1996-07-07', 'staff7@gmail.com', 'Nhan vien 7', '0801111117', 'male', 'ID007', 'active'),
-('staff8', 'pass123', 'staff', 'Da Nang', '1997-08-08', 'staff8@gmail.com', 'Nhan vien 8', '0801111118', 'female', 'ID008', 'banned'),
-('staff9', 'pass123', 'staff', 'Can Tho', '1998-09-09', 'staff9@gmail.com', 'Nhan vien 9', '0801111119', 'male', 'ID009', 'active'),
-('staff10', 'pass123', 'staff', 'Hai Phong', '1999-10-10', 'staff10@gmail.com', 'Nhan vien 10', '0801111120', 'female', 'ID010', 'active'),
-('customer1', 'pass123', 'customer', 'Ha Noi', '2000-01-01', 'cus1@gmail.com', 'Khach hang 1', '0701111111', 'male', 'ID011', 'active'),
-('customer2', 'pass123', 'customer', 'TP HCM', '2001-02-02', 'cus2@gmail.com', 'Khach hang 2', '0701111112', 'female', 'ID012', 'active'),
-('customer3', 'pass123', 'customer', 'Da Nang', '2002-03-03', 'cus3@gmail.com', 'Khach hang 3', '0701111113', 'male', 'ID013', 'inactive'),
-('customer4', 'pass123', 'customer', 'Can Tho', '2003-04-04', 'cus4@gmail.com', 'Khach hang 4', '0701111114', 'female', 'ID014', 'active'),
-('customer5', 'pass123', 'customer', 'Hai Phong', '2004-05-05', 'cus5@gmail.com', 'Khach hang 5', '0701111115', 'male', 'ID015', 'active'),
-('customer6', 'pass123', 'customer', 'Ha Noi', '1990-11-11', 'cus6@gmail.com', 'Khach hang 6', '0701111116', 'female', 'ID016', 'active'),
-('customer7', 'pass123', 'customer', 'TP HCM', '1991-12-12', 'cus7@gmail.com', 'Khach hang 7', '0701111117', 'male', 'ID017', 'banned'),
-('customer8', 'pass123', 'customer', 'Da Nang', '1992-10-10', 'cus8@gmail.com', 'Khach hang 8', '0701111118', 'female', 'ID018', 'active'),
-('customer9', 'pass123', 'customer', 'Can Tho', '1993-09-09', 'cus9@gmail.com', 'Khach hang 9', '0701111119', 'male', 'ID019', 'active'),
-('customer10', 'pass123', 'customer', 'Hai Phong', '1994-08-08', 'cus10@gmail.com', 'Khach hang 10', '0701111120', 'other', 'ID020', 'active');
--- 4. staffs (10 dòng)
-INSERT INTO staffs (type, work_status, description, basic_salary, allowance, bonus, deduction, user_id, branch_id) VALUES
-('manager', 'working', 'Quan ly kho', 15000000.00, 2000000.00, 500000.00, 0, 1, 1),
-('warehouse', 'working', 'Thu kho', 8000000.00, 500000.00, 200000.00, 0, 2, 2),
-('sales', 'working', 'Nhan vien ban hang', 7000000.00, 500000.00, 1000000.00, 0, 3, 3),
-('technical', 'resigned', 'Ky thuat vien', 10000000.00, 1000000.00, 0, 0, 4, 4),
-('manager', 'working', 'Cua hang truong', 12000000.00, 1500000.00, 500000.00, 100000.00, 5, 5),
-('warehouse', 'on_leave', 'Nhan vien kho', 7500000.00, 500000.00, 0, 0, 6, 6),
-('sales', 'working', 'Nhan vien ban hang', 7000000.00, 500000.00, 800000.00, 0, 7, 7),
-('technical', 'working', 'Ky thuat vien', 10000000.00, 1000000.00, 500000.00, 0, 8, 8),
-('sales', 'working', 'Nhan vien ban hang', 7000000.00, 500000.00, 1500000.00, 0, 9, 9),
-('manager', 'working', 'Cua hang truong', 12000000.00, 1500000.00, 1000000.00, 0, 10, 10);
--- 5. customers (10 dòng)
-INSERT INTO customers (type, user_id) VALUES
-('vip', 11),
-('normal', 12),
-('gold', 13),
-('diamond', 14),
-('normal', 15),
-('vip', 16),
-('gold', 17),
-('normal', 18),
-('diamond', 19),
-('normal', 20);
--- 6. products (10 dòng)
-INSERT INTO products (name, is_serialized, description, supplier) VALUES
-('Laptop Dell XPS 15', true, 'Laptop cao cap', 'Dell VN'),
-('MacBook Pro M2', true, 'Apple Laptop', 'Apple VN'),
-('Ban Phim Co Keychron', false, 'Ban phim co khong day', 'Keychron VN'),
-('Chuot Logitech MX Master 3', false, 'Chuot van phong cao cap', 'Logitech'),
-('Man Hinh LG 27 inch', true, 'Man hinh 4K', 'LG VN'),
-('Tai nghe Sony WH-1000XM5', true, 'Tai nghe chong on', 'Sony VN'),
-('Ban lam viec IKEA', false, 'Ban go cong nghiep', 'IKEA'),
-('Ghe Cong Thai Hoc Herman Miller', false, 'Ghe cao cap', 'Herman Miller'),
-('O cung SSD Samsung 1TB', true, 'SSD NVMe', 'Samsung VN'),
-('Ram Corsair 16GB', true, 'Ram DDR4', 'Corsair');
--- 7. product_items (10 dòng)
-INSERT INTO product_items (serial, status, product_id, branch_id) VALUES
-('SN-DELL-001', 'in stock', 1, 1),
-('SN-MAC-001', 'sold', 2, 2),
-('SN-KEY-001', 'in stock', 3, 3),
-('SN-LOG-001', 'defective', 4, 4),
-('SN-LG-001', 'in stock', 5, 5),
-('SN-SONY-001', 'sold', 6, 6),
-('SN-IKEA-001', 'in stock', 7, 7),
-('SN-HERM-001', 'in stock', 8, 8),
-('SN-SAM-001', 'sold', 9, 9),
-('SN-COR-001', 'in stock', 10, 10);
--- 8. audit_logs (10 dòng)
-INSERT INTO audit_logs (activity, user_id) VALUES
-('log_in', 1),
-('change_info', 2),
-('log_out', 1),
-('log_in', 3),
-('log_in', 11),
-('change_info', 12),
-('log_out', 11),
-('log_in', 4),
-('log_in', 15),
-('log_out', 15);
--- 9. orders (10 dòng)
-INSERT INTO orders (type, note, delivery_location, phone, order_status, delivery_status, account_payment, payment_method, payment_status, discount_percent, staff_id, customer_id, shipper_id, branch_id) VALUES
-('online', 'Giao buoi sang', 'Ha Noi', '0701111111', 'completed', 'delivered', 'ACC001', 'bank', 'paid', 5.00, 3, 1, 1, 3),
-('POS', NULL, 'Tai cua hang', '0701111112', 'completed', 'delivered', NULL, 'cash', 'paid', 0, 5, 2, NULL, 5),
-('online', 'Goi truoc khi giao', 'Da Nang', '0701111113', 'pending', 'not shipped', NULL, 'cash', 'unpaid', 10.00, 7, 3, 2, 7),
-('online', NULL, 'Can Tho', '0701111114', 'confirmed', 'shipping', 'ACC002', 'bank', 'paid', 15.00, 9, 4, 3, 9),
-('POS', 'Khach quen', 'Tai cua hang', '0701111115', 'completed', 'delivered', NULL, 'cash', 'paid', 0, 3, 5, NULL, 3),
-('online', NULL, 'Ha Noi', '0701111116', 'cancelled', 'failed', NULL, 'bank', 'refunded', 0, 5, 6, 4, 5),
-('POS', NULL, 'Tai cua hang', '0701111117', 'completed', 'delivered', 'ACC003', 'bank', 'paid', 5.00, 7, 7, NULL, 7),
-('online', 'Giao hang gio hanh chinh', 'Da Nang', '0701111118', 'pending', 'not shipped', NULL, 'cash', 'unpaid', 0, 9, 8, 5, 9),
-('online', NULL, 'Can Tho', '0701111119', 'completed', 'delivered', 'ACC004', 'bank', 'paid', 20.00, 3, 9, 6, 3),
-('POS', NULL, 'Tai cua hang', '0701111120', 'completed', 'delivered', NULL, 'cash', 'paid', 0, 5, 10, NULL, 5);
--- 10. order_details (10 dòng)
-INSERT INTO order_details (quantity, price, order_id, product_id, product_serial) VALUES
-(1, 30000000.00, 1, 1, 'SN-DELL-001'),
-(1, 35000000.00, 2, 2, 'SN-MAC-001'),
-(2, 2000000.00, 3, 3, 'SN-KEY-001'),
-(1, 2500000.00, 4, 4, 'SN-LOG-001'),
-(1, 10000000.00, 5, 5, 'SN-LG-001'),
-(1, 8000000.00, 6, 6, 'SN-SONY-001'),
-(3, 1500000.00, 7, 7, 'SN-IKEA-001'),
-(1, 40000000.00, 8, 8, 'SN-HERM-001'),
-(2, 2500000.00, 9, 9, 'SN-SAM-001'),
-(4, 1500000.00, 10, 10, 'SN-COR-001');
--- 11. support_tickets (10 dòng)
-INSERT INTO support_tickets (status, description, customer_id, product_serial, staff_id, order_detail_id) VALUES
-('resolved', 'Loi man hinh da duoc thay the', 1, 'SN-DELL-001', 4, 1),
-('in progress', 'Pin tut nhanh', 2, 'SN-MAC-001', 8, 2),
-('pending', 'Loi ket noi bluetooth', 3, 'SN-KEY-001', NULL, 3),
-('closed', 'Chuot bi double click, da doi moi', 4, 'SN-LOG-001', 4, 4),
-('resolved', 'Ho tro lap dat', 5, 'SN-LG-001', 8, 5),
-('pending', 'Tai nghe bi re', 6, 'SN-SONY-001', NULL, 6),
-('resolved', 'Thieu oc vit da bo sung', 7, 'SN-IKEA-001', 4, 7),
-('in progress', 'Ghe keu cot ket', 8, 'SN-HERM-001', 8, 8),
-('closed', 'Khong nhan o cung, da bao hanh', 9, 'SN-SAM-001', 4, 9),
-('pending', 'Ram khong dung bus', 10, 'SN-COR-001', NULL, 10);
--- 12. stock_documents (10 dòng)
-INSERT INTO stock_documents (supplier, status, type, branch_id, staff_id) VALUES
-('Dell VN', 'completed', 'import', 1, 1),
-('Apple VN', 'pending', 'import', 2, 2),
-('Kho Tong', 'completed', 'export', 1, 1),
-('Logitech', 'completed', 'import', 3, 5),
-('Kho Tong', 'cancelled', 'export', 2, 2),
-('Sony VN', 'completed', 'import', 5, 5),
-('IKEA', 'pending', 'import', 7, 7),
-('Herman Miller', 'completed', 'import', 9, 9),
-('Kho Tong', 'completed', 'export', 1, 1),
-('Corsair', 'completed', 'import', 10, 10);
--- 13. stock_document_details (10 dòng)
-INSERT INTO stock_document_details (quantity, price, product_id, document_id) VALUES
-(50, 25000000.00, 1, 1),
-(30, 30000000.00, 2, 2),
-(10, 25000000.00, 1, 3),
-(100, 1500000.00, 4, 4),
-(20, 30000000.00, 2, 5),
-(50, 6000000.00, 6, 6),
-(20, 1000000.00, 7, 7),
-(10, 30000000.00, 8, 8),
-(5, 25000000.00, 9, 9),
-(100, 1000000.00, 10, 10);
--- 14. adjustment_tickets (10 dòng)
-INSERT INTO adjustment_tickets (status, description, staff_id, branch_id) VALUES
-('resolved', 'Chenh lech do kiem kho', 1, 1),
-('pending', 'Thieu hang chua ro nguyen nhan', 2, 2),
-('in progress', 'Hang hu hong do van chuyen', 5, 3),
-('closed', 'Dieu chinh do cap nhat sai', 5, 4),
-('resolved', 'Du hang sau kiem ke', 7, 5),
-('pending', 'Cho quan ly xac nhan', 6, 6),
-('in progress', 'Chenh lech ton kho he thong', 7, 7),
-('closed', 'Hang huy do het han', 8, 8),
-('resolved', 'Cap nhat lai ma hang', 9, 9),
-('pending', 'Kiem tra lai dot nhap hang', 10, 10);
--- 15. stock_transfers (10 dòng)
-INSERT INTO stock_transfers (status, from_branch_id, to_branch_id) VALUES
-('completed', 1, 3),
-('shipping', 2, 5),
-('pending', 1, 4),
-('completed', 2, 6),
-('cancelled', 1, 7),
-('completed', 1, 8),
-('shipping', 2, 9),
-('pending', 2, 10),
-('completed', 3, 4),
-('completed', 5, 6);
--- 16. stock_transfer_details (10 dòng)
-INSERT INTO stock_transfer_details (quantity, transfer_id, product_id) VALUES
-(10, 1, 1),
-(5, 2, 2),
-(20, 3, 3),
-(15, 4, 4),
-(10, 5, 5),
-(8, 6, 6),
-(12, 7, 7),
-(5, 8, 8),
-(20, 9, 9),
-(50, 10, 10);
--- 17. inventories (10 dòng)
-INSERT INTO inventories (quantity_available, branch_id, product_id) VALUES
-(100, 1, 1),
-(50, 2, 2),
-(30, 3, 3),
-(25, 4, 4),
-(40, 5, 5),
-(15, 6, 6),
-(60, 7, 7),
-(10, 8, 8),
-(80, 9, 9),
-(120, 10, 10);
--- 18. inventory_transactions (10 dòng)
-INSERT INTO inventory_transactions (transaction_type, quantity_changed, reference_type, reference_id, inventory_id) VALUES
-('import', 50, 'document', 1, 1),
-('export', -10, 'stock transfer', 1, 1),
-('sale', -1, 'order', 1, 1),
-('import', 30, 'document', 2, 2),
-('transfer in', 10, 'stock transfer', 1, 3),
-('adjustment', -2, 'adjustment', 3, 4),
-('sale', -1, 'order', 2, 5),
-('transfer out', -5, 'stock transfer', 10, 5),
-('return', 1, 'order', 6, 6),
-('import', 100, 'document', 10, 10);
+-- SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci;
+-- USE smartvibe;
+-- -- 1. shippers (10 dòng)
+-- INSERT INTO shippers (name, work_status, email, phone) VALUES
+-- ('Nguyen Van A', 'active', 'shippera@gmail.com', '0901111111'),
+-- ('Tran Van B', 'busy', 'shipperb@gmail.com', '0901111112'),
+-- ('Le Thi C', 'inactive', 'shipperc@gmail.com', '0901111113'),
+-- ('Pham Van D', 'maintenance', 'shipperd@gmail.com', '0901111114'),
+-- ('Hoang Van E', 'active', 'shippere@gmail.com', '0901111115'),
+-- ('Vu Thi F', 'active', 'shipperf@gmail.com', '0901111116'),
+-- ('Ngo Van G', 'busy', 'shipperg@gmail.com', '0901111117'),
+-- ('Duong Thi H', 'active', 'shipperh@gmail.com', '0901111118'),
+-- ('Ly Van I', 'inactive', 'shipperi@gmail.com', '0901111119'),
+-- ('Bui Van K', 'active', 'shipperk@gmail.com', '0901111120');
+-- -- 2. branches (10 dòng)
+-- INSERT INTO branches (name, address, phone, email, operating_status, number_of_staff, capacity, type) VALUES
+-- ('Kho Tong Mien Bac', 'Ha Noi', '0241111111', 'khomb@smartvibe.vn', 'open', 50, 10000, 'head_warehouse'),
+-- ('Kho Tong Mien Nam', 'TP HCM', '0281111111', 'khomn@smartvibe.vn', 'open', 60, 15000, 'head_warehouse'),
+-- ('Chi Nhanh Cau Giay', 'Cau Giay, Ha Noi', '0242222222', 'caugiay@smartvibe.vn', 'open', 15, 500, 'retail_branch'),
+-- ('Chi Nhanh Dong Da', 'Dong Da, Ha Noi', '0243333333', 'dongda@smartvibe.vn', 'open', 10, 300, 'retail_branch'),
+-- ('Chi Nhanh Quan 1', 'Quan 1, TP HCM', '0282222222', 'quan1@smartvibe.vn', 'open', 20, 800, 'retail_branch'),
+-- ('Chi Nhanh Quan 3', 'Quan 3, TP HCM', '0283333333', 'quan3@smartvibe.vn', 'maintenance', 12, 400, 'retail_branch'),
+-- ('Chi Nhanh Da Nang', 'Hai Chau, Da Nang', '02336111111', 'danang@smartvibe.vn', 'open', 15, 600, 'retail_branch'),
+-- ('Chi Nhanh Can Tho', 'Ninh Kieu, Can Tho', '0292111111', 'cantho@smartvibe.vn', 'open', 10, 300, 'retail_branch'),
+-- ('Chi Nhanh Hai Phong', 'Le Chan, Hai Phong', '0225111111', 'haiphong@smartvibe.vn', 'close', 8, 200, 'retail_branch'),
+-- ('Chi Nhanh Hue', 'Phu Nhuan, Hue', '0234111111', 'hue@smartvibe.vn', 'open', 9, 250, 'retail_branch');
+-- -- 3. users (20 dòng: 1-10 cho Staff, 11-20 cho Customer)
+-- INSERT INTO users (username, password, role, address, birthday, email, description, phone, sex, identify_code, account_status) VALUES
+-- ('staff1', 'pass123', 'staff', 'Ha Noi', '1990-01-01', 'staff1@gmail.com', 'Nhan vien 1', '0801111111', 'male', 'ID001', 'active'),
+-- ('admin', '123', 'system admin', 'TP HCM', '1991-02-02', 'staff2@gmail.com', 'Admin 1', '0801111112', 'female', 'ID002', 'active'),
+-- ('staff3', 'pass123', 'staff', 'Da Nang', '1992-03-03', 'staff3@gmail.com', 'Nhan vien 3', '0801111113', 'male', 'ID003', 'active'),
+-- ('staff4', 'pass123', 'staff', 'Can Tho', '1993-04-04', 'staff4@gmail.com', 'Nhan vien 4', '0801111114', 'female', 'ID004', 'inactive'),
+-- ('staff5', 'pass123', 'staff', 'Hai Phong', '1994-05-05', 'staff5@gmail.com', 'Nhan vien 5', '0801111115', 'male', 'ID005', 'active'),
+-- ('staff6', 'pass123', 'staff', 'Ha Noi', '1995-06-06', 'staff6@gmail.com', 'Nhan vien 6', '0801111116', 'female', 'ID006', 'active'),
+-- ('staff7', 'pass123', 'staff', 'TP HCM', '1996-07-07', 'staff7@gmail.com', 'Nhan vien 7', '0801111117', 'male', 'ID007', 'active'),
+-- ('staff8', 'pass123', 'staff', 'Da Nang', '1997-08-08', 'staff8@gmail.com', 'Nhan vien 8', '0801111118', 'female', 'ID008', 'banned'),
+-- ('staff9', 'pass123', 'staff', 'Can Tho', '1998-09-09', 'staff9@gmail.com', 'Nhan vien 9', '0801111119', 'male', 'ID009', 'active'),
+-- ('staff10', 'pass123', 'staff', 'Hai Phong', '1999-10-10', 'staff10@gmail.com', 'Nhan vien 10', '0801111120', 'female', 'ID010', 'active'),
+-- ('customer1', 'pass123', 'customer', 'Ha Noi', '2000-01-01', 'cus1@gmail.com', 'Khach hang 1', '0701111111', 'male', 'ID011', 'active'),
+-- ('customer2', 'pass123', 'customer', 'TP HCM', '2001-02-02', 'cus2@gmail.com', 'Khach hang 2', '0701111112', 'female', 'ID012', 'active'),
+-- ('customer3', 'pass123', 'customer', 'Da Nang', '2002-03-03', 'cus3@gmail.com', 'Khach hang 3', '0701111113', 'male', 'ID013', 'inactive'),
+-- ('customer4', 'pass123', 'customer', 'Can Tho', '2003-04-04', 'cus4@gmail.com', 'Khach hang 4', '0701111114', 'female', 'ID014', 'active'),
+-- ('customer5', 'pass123', 'customer', 'Hai Phong', '2004-05-05', 'cus5@gmail.com', 'Khach hang 5', '0701111115', 'male', 'ID015', 'active'),
+-- ('customer6', 'pass123', 'customer', 'Ha Noi', '1990-11-11', 'cus6@gmail.com', 'Khach hang 6', '0701111116', 'female', 'ID016', 'active'),
+-- ('customer7', 'pass123', 'customer', 'TP HCM', '1991-12-12', 'cus7@gmail.com', 'Khach hang 7', '0701111117', 'male', 'ID017', 'banned'),
+-- ('customer8', 'pass123', 'customer', 'Da Nang', '1992-10-10', 'cus8@gmail.com', 'Khach hang 8', '0701111118', 'female', 'ID018', 'active'),
+-- ('customer9', 'pass123', 'customer', 'Can Tho', '1993-09-09', 'cus9@gmail.com', 'Khach hang 9', '0701111119', 'male', 'ID019', 'active'),
+-- ('customer10', 'pass123', 'customer', 'Hai Phong', '1994-08-08', 'cus10@gmail.com', 'Khach hang 10', '0701111120', 'other', 'ID020', 'active');
+-- -- 4. staffs (10 dòng)
+-- INSERT INTO staffs (type, work_status, description, basic_salary, allowance, bonus, deduction, user_id, branch_id) VALUES
+-- ('manager', 'working', 'Quan ly kho', 15000000.00, 2000000.00, 500000.00, 0, 1, 1),
+-- ('warehouse', 'working', 'Thu kho', 8000000.00, 500000.00, 200000.00, 0, 2, 2),
+-- ('sales', 'working', 'Nhan vien ban hang', 7000000.00, 500000.00, 1000000.00, 0, 3, 3),
+-- ('technical', 'resigned', 'Ky thuat vien', 10000000.00, 1000000.00, 0, 0, 4, 4),
+-- ('manager', 'working', 'Cua hang truong', 12000000.00, 1500000.00, 500000.00, 100000.00, 5, 5),
+-- ('warehouse', 'on_leave', 'Nhan vien kho', 7500000.00, 500000.00, 0, 0, 6, 6),
+-- ('sales', 'working', 'Nhan vien ban hang', 7000000.00, 500000.00, 800000.00, 0, 7, 7),
+-- ('technical', 'working', 'Ky thuat vien', 10000000.00, 1000000.00, 500000.00, 0, 8, 8),
+-- ('sales', 'working', 'Nhan vien ban hang', 7000000.00, 500000.00, 1500000.00, 0, 9, 9),
+-- ('manager', 'working', 'Cua hang truong', 12000000.00, 1500000.00, 1000000.00, 0, 10, 10);
+-- -- 5. customers (10 dòng)
+-- INSERT INTO customers (type, user_id) VALUES
+-- ('vip', 11),
+-- ('normal', 12),
+-- ('gold', 13),
+-- ('diamond', 14),
+-- ('normal', 15),
+-- ('vip', 16),
+-- ('gold', 17),
+-- ('normal', 18),
+-- ('diamond', 19),
+-- ('normal', 20);
+-- -- 6. products (10 dòng)
+-- INSERT INTO products (name, is_serialized, description, supplier) VALUES
+-- ('Laptop Dell XPS 15', true, 'Laptop cao cap', 'Dell VN'),
+-- ('MacBook Pro M2', true, 'Apple Laptop', 'Apple VN'),
+-- ('Ban Phim Co Keychron', false, 'Ban phim co khong day', 'Keychron VN'),
+-- ('Chuot Logitech MX Master 3', false, 'Chuot van phong cao cap', 'Logitech'),
+-- ('Man Hinh LG 27 inch', true, 'Man hinh 4K', 'LG VN'),
+-- ('Tai nghe Sony WH-1000XM5', true, 'Tai nghe chong on', 'Sony VN'),
+-- ('Ban lam viec IKEA', false, 'Ban go cong nghiep', 'IKEA'),
+-- ('Ghe Cong Thai Hoc Herman Miller', false, 'Ghe cao cap', 'Herman Miller'),
+-- ('O cung SSD Samsung 1TB', true, 'SSD NVMe', 'Samsung VN'),
+-- ('Ram Corsair 16GB', true, 'Ram DDR4', 'Corsair');
+-- -- 7. product_items (10 dòng)
+-- INSERT INTO product_items (serial, status, product_id, branch_id) VALUES
+-- ('SN-DELL-001', 'in stock', 1, 1),
+-- ('SN-MAC-001', 'sold', 2, 2),
+-- ('SN-KEY-001', 'in stock', 3, 3),
+-- ('SN-LOG-001', 'defective', 4, 4),
+-- ('SN-LG-001', 'in stock', 5, 5),
+-- ('SN-SONY-001', 'sold', 6, 6),
+-- ('SN-IKEA-001', 'in stock', 7, 7),
+-- ('SN-HERM-001', 'in stock', 8, 8),
+-- ('SN-SAM-001', 'sold', 9, 9),
+-- ('SN-COR-001', 'in stock', 10, 10);
+-- -- 8. audit_logs (10 dòng)
+-- INSERT INTO audit_logs (activity, user_id) VALUES
+-- ('log_in', 1),
+-- ('change_info', 2),
+-- ('log_out', 1),
+-- ('log_in', 3),
+-- ('log_in', 11),
+-- ('change_info', 12),
+-- ('log_out', 11),
+-- ('log_in', 4),
+-- ('log_in', 15),
+-- ('log_out', 15);
+-- -- 9. orders (10 dòng)
+-- INSERT INTO orders (type, note, delivery_location, phone, order_status, delivery_status, account_payment, payment_method, payment_status, discount_percent, staff_id, customer_id, shipper_id, branch_id) VALUES
+-- ('online', 'Giao buoi sang', 'Ha Noi', '0701111111', 'completed', 'delivered', 'ACC001', 'bank', 'paid', 5.00, 3, 1, 1, 3),
+-- ('POS', NULL, 'Tai cua hang', '0701111112', 'completed', 'delivered', NULL, 'cash', 'paid', 0, 5, 2, NULL, 5),
+-- ('online', 'Goi truoc khi giao', 'Da Nang', '0701111113', 'pending', 'not shipped', NULL, 'cash', 'unpaid', 10.00, 7, 3, 2, 7),
+-- ('online', NULL, 'Can Tho', '0701111114', 'confirmed', 'shipping', 'ACC002', 'bank', 'paid', 15.00, 9, 4, 3, 9),
+-- ('POS', 'Khach quen', 'Tai cua hang', '0701111115', 'completed', 'delivered', NULL, 'cash', 'paid', 0, 3, 5, NULL, 3),
+-- ('online', NULL, 'Ha Noi', '0701111116', 'cancelled', 'failed', NULL, 'bank', 'refunded', 0, 5, 6, 4, 5),
+-- ('POS', NULL, 'Tai cua hang', '0701111117', 'completed', 'delivered', 'ACC003', 'bank', 'paid', 5.00, 7, 7, NULL, 7),
+-- ('online', 'Giao hang gio hanh chinh', 'Da Nang', '0701111118', 'pending', 'not shipped', NULL, 'cash', 'unpaid', 0, 9, 8, 5, 9),
+-- ('online', NULL, 'Can Tho', '0701111119', 'completed', 'delivered', 'ACC004', 'bank', 'paid', 20.00, 3, 9, 6, 3),
+-- ('POS', NULL, 'Tai cua hang', '0701111120', 'completed', 'delivered', NULL, 'cash', 'paid', 0, 5, 10, NULL, 5);
+-- -- 10. order_details (10 dòng)
+-- INSERT INTO order_details (quantity, price, order_id, product_id, product_serial) VALUES
+-- (1, 30000000.00, 1, 1, 'SN-DELL-001'),
+-- (1, 35000000.00, 2, 2, 'SN-MAC-001'),
+-- (2, 2000000.00, 3, 3, 'SN-KEY-001'),
+-- (1, 2500000.00, 4, 4, 'SN-LOG-001'),
+-- (1, 10000000.00, 5, 5, 'SN-LG-001'),
+-- (1, 8000000.00, 6, 6, 'SN-SONY-001'),
+-- (3, 1500000.00, 7, 7, 'SN-IKEA-001'),
+-- (1, 40000000.00, 8, 8, 'SN-HERM-001'),
+-- (2, 2500000.00, 9, 9, 'SN-SAM-001'),
+-- (4, 1500000.00, 10, 10, 'SN-COR-001');
+-- -- 11. support_tickets (10 dòng)
+-- INSERT INTO support_tickets (status, description, customer_id, product_serial, staff_id, order_detail_id) VALUES
+-- ('resolved', 'Loi man hinh da duoc thay the', 1, 'SN-DELL-001', 4, 1),
+-- ('in progress', 'Pin tut nhanh', 2, 'SN-MAC-001', 8, 2),
+-- ('pending', 'Loi ket noi bluetooth', 3, 'SN-KEY-001', NULL, 3),
+-- ('closed', 'Chuot bi double click, da doi moi', 4, 'SN-LOG-001', 4, 4),
+-- ('resolved', 'Ho tro lap dat', 5, 'SN-LG-001', 8, 5),
+-- ('pending', 'Tai nghe bi re', 6, 'SN-SONY-001', NULL, 6),
+-- ('resolved', 'Thieu oc vit da bo sung', 7, 'SN-IKEA-001', 4, 7),
+-- ('in progress', 'Ghe keu cot ket', 8, 'SN-HERM-001', 8, 8),
+-- ('closed', 'Khong nhan o cung, da bao hanh', 9, 'SN-SAM-001', 4, 9),
+-- ('pending', 'Ram khong dung bus', 10, 'SN-COR-001', NULL, 10);
+-- -- 12. stock_documents (10 dòng)
+-- INSERT INTO stock_documents (supplier, status, type, branch_id, staff_id) VALUES
+-- ('Dell VN', 'completed', 'import', 1, 1),
+-- ('Apple VN', 'pending', 'import', 2, 2),
+-- ('Kho Tong', 'completed', 'export', 1, 1),
+-- ('Logitech', 'completed', 'import', 3, 5),
+-- ('Kho Tong', 'cancelled', 'export', 2, 2),
+-- ('Sony VN', 'completed', 'import', 5, 5),
+-- ('IKEA', 'pending', 'import', 7, 7),
+-- ('Herman Miller', 'completed', 'import', 9, 9),
+-- ('Kho Tong', 'completed', 'export', 1, 1),
+-- ('Corsair', 'completed', 'import', 10, 10);
+-- -- 13. stock_document_details (10 dòng)
+-- INSERT INTO stock_document_details (quantity, price, product_id, document_id) VALUES
+-- (50, 25000000.00, 1, 1),
+-- (30, 30000000.00, 2, 2),
+-- (10, 25000000.00, 1, 3),
+-- (100, 1500000.00, 4, 4),
+-- (20, 30000000.00, 2, 5),
+-- (50, 6000000.00, 6, 6),
+-- (20, 1000000.00, 7, 7),
+-- (10, 30000000.00, 8, 8),
+-- (5, 25000000.00, 9, 9),
+-- (100, 1000000.00, 10, 10);
+-- -- 14. adjustment_tickets (10 dòng)
+-- INSERT INTO adjustment_tickets (status, description, staff_id, branch_id) VALUES
+-- ('resolved', 'Chenh lech do kiem kho', 1, 1),
+-- ('pending', 'Thieu hang chua ro nguyen nhan', 2, 2),
+-- ('in progress', 'Hang hu hong do van chuyen', 5, 3),
+-- ('closed', 'Dieu chinh do cap nhat sai', 5, 4),
+-- ('resolved', 'Du hang sau kiem ke', 7, 5),
+-- ('pending', 'Cho quan ly xac nhan', 6, 6),
+-- ('in progress', 'Chenh lech ton kho he thong', 7, 7),
+-- ('closed', 'Hang huy do het han', 8, 8),
+-- ('resolved', 'Cap nhat lai ma hang', 9, 9),
+-- ('pending', 'Kiem tra lai dot nhap hang', 10, 10);
+-- -- 15. stock_transfers (10 dòng)
+-- INSERT INTO stock_transfers (status, from_branch_id, to_branch_id) VALUES
+-- ('completed', 1, 3),
+-- ('shipping', 2, 5),
+-- ('pending', 1, 4),
+-- ('completed', 2, 6),
+-- ('cancelled', 1, 7),
+-- ('completed', 1, 8),
+-- ('shipping', 2, 9),
+-- ('pending', 2, 10),
+-- ('completed', 3, 4),
+-- ('completed', 5, 6);
+-- -- 16. stock_transfer_details (10 dòng)
+-- INSERT INTO stock_transfer_details (quantity, transfer_id, product_id) VALUES
+-- (10, 1, 1),
+-- (5, 2, 2),
+-- (20, 3, 3),
+-- (15, 4, 4),
+-- (10, 5, 5),
+-- (8, 6, 6),
+-- (12, 7, 7),
+-- (5, 8, 8),
+-- (20, 9, 9),
+-- (50, 10, 10);
+-- -- 17. inventories (10 dòng)
+-- INSERT INTO inventories (quantity_available, branch_id, product_id) VALUES
+-- (100, 1, 1),
+-- (50, 2, 2),
+-- (30, 3, 3),
+-- (25, 4, 4),
+-- (40, 5, 5),
+-- (15, 6, 6),
+-- (60, 7, 7),
+-- (10, 8, 8),
+-- (80, 9, 9),
+-- (120, 10, 10);
+-- -- 18. inventory_transactions (10 dòng)
+-- INSERT INTO inventory_transactions (transaction_type, quantity_changed, reference_type, reference_id, inventory_id) VALUES
+-- ('import', 50, 'document', 1, 1),
+-- ('export', -10, 'stock transfer', 1, 1),
+-- ('sale', -1, 'order', 1, 1),
+-- ('import', 30, 'document', 2, 2),
+-- ('transfer in', 10, 'stock transfer', 1, 3),
+-- ('adjustment', -2, 'adjustment', 3, 4),
+-- ('sale', -1, 'order', 2, 5),
+-- ('transfer out', -5, 'stock transfer', 10, 5),
+-- ('return', 1, 'order', 6, 6),
+-- ('import', 100, 'document', 10, 10);

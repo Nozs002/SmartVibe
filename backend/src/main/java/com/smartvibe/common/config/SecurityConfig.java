@@ -12,6 +12,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+// THÊM 3 DÒNG IMPORT NÀY CHO CORS
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import java.util.Arrays;
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity // Bật tính năng phân quyền bằng Annotation (@PreAuthorize)
@@ -22,16 +28,36 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable()) // Vẫn tắt CSRF để test Postman
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource())).csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        // CHỈ MỞ CỬA 2 ĐƯỜNG NÀY (Đăng ký và Đăng nhập)
-                        .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
-                        //TẤT CẢ CÁC ĐƯỜNG KHÁC BẮT BUỘC PHẢI CÓ THẺ XỊN
+                        // 1. THÊM DÒNG NÀY ĐỂ MỞ CỬA CHO REQUEST KIỂM TRA CORS CỦA TRÌNH DUYỆT
+                        .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
+
+                        // 2. CÁC API KHÔNG CẦN ĐĂNG NHẬP
+                        .requestMatchers("/api/auth/register", "/api/auth/login", "/api/categories/all",
+                                "/api/products/all")
+                        .permitAll()
+
+                        // 3. TẤT CẢ CÁC API CÒN LẠI BẮT BUỘC CÓ TOKEN
                         .anyRequest().authenticated())
-                // Nhét ông bảo vệ của chúng ta đứng TRƯỚC ông bảo vệ mặc định của Spring
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+
+    // 2. THÊM BEAN NÀY ĐỂ CẤU HÌNH CHI TIẾT LUẬT CORS CHO REACT
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000")); // Mở cửa cho React ở cổng 3000
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Bắt buộc phải có
+                                                                                                   // OPTIONS
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration); // Áp dụng luật này cho toàn bộ API
+        return source;
     }
 
     // 5. Cấu hình mã hóa mật khẩu (BCrypt)

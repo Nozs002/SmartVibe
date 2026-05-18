@@ -1,190 +1,202 @@
 import React, { useState } from 'react';
-import OrderManagementForm from '../../modules/Order/OrderManagementForm';
+import '../../styles/Order.css'; // Import file CSS
 
-const OrderManagementPage = () => {
-  const [orders, setOrders] = useState([
-    { id: 1, customerName: 'Nguyễn Văn A', product: 'Laptop Dell XPS', quantity: 1, status: 'Hoàn thành' },
-    { id: 2, customerName: 'Trần Thị B', product: 'Bàn phím cơ', quantity: 2, status: 'Chờ xử lý' },
-  ]);
+// --- COMPONENT: Thẻ Thống Kê ---
+const StatCard = ({ title, value, icon, color }) => (
+  <div className="stat-card">
+    <div className="stat-icon" style={{ backgroundColor: color }}>{icon}</div>
+    <div className="stat-info">
+      <p>{title}</p>
+      <h3>{value}</h3>
+    </div>
+  </div>
+);
 
-  const [isFormVisible, setIsFormVisible] = useState(false);
-  const [editingOrder, setEditingOrder] = useState(null);
-
-  const handleSaveOrder = (orderData) => {
-    if (editingOrder) {
-      setOrders(orders.map((o) => (o.id === editingOrder.id ? { ...orderData, id: o.id } : o)));
-    } else {
-      const newOrder = { ...orderData, id: Date.now() };
-      setOrders([...orders, newOrder]);
-    }
-    setIsFormVisible(false);
-    setEditingOrder(null);
-  };
-
-  const handleDeleteOrder = (id) => {
-    if (window.confirm("Bạn có chắc chắn muốn xóa đơn hàng này?")) {
-      setOrders(orders.filter((o) => o.id !== id));
-    }
-  };
-
-  const handleEditClick = (order) => {
-    setEditingOrder(order);
-    setIsFormVisible(true);
-  };
+// --- COMPONENT: Modal Chi Tiết Đơn Hàng ---
+const OrderDetailsModal = ({ order, onClose }) => {
+  if (!order) return null;
 
   return (
-    <div style={styles.pageContainer}>
-      <h2 style={styles.headerTitle}>Quản lý Đơn hàng</h2>
-      
-      {!isFormVisible && (
-        <button onClick={() => setIsFormVisible(true)} style={styles.btnAdd}>
-          + Thêm Đơn Hàng
-        </button>
-      )}
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-content" onClick={e => e.stopPropagation()}>
+        <button className="modal-close" onClick={onClose}>✕</button>
+        <h3 style={{ marginTop: 0 }}>Order #{order.id}</h3>
+        
+        <div className="modal-grid">
+          <div className="info-block">
+            <h4>📄 Order Information</h4>
+            <div className="info-row"><span>Date:</span> <strong>{order.date}</strong></div>
+            <div className="info-row">
+              <span>Status:</span> 
+              <span className={`badge badge-${order.status.toLowerCase()}`}>{order.status}</span>
+            </div>
+            <div className="info-row"><span>Payment:</span> <strong>{order.paymentMethod}</strong></div>
+            <div className="info-row">
+              <span>Payment Status:</span> 
+              <span className={`badge badge-${order.paymentStatus.toLowerCase()}`}>{order.paymentStatus}</span>
+            </div>
+          </div>
 
-      {isFormVisible && (
-        <OrderManagementForm 
-          onSubmit={handleSaveOrder} 
-          onCancel={() => {
-            setIsFormVisible(false);
-            setEditingOrder(null);
-          }}
-          initialData={editingOrder} 
-        />
-      )}
+          <div className="info-block">
+            <h4>👤 Customer Information</h4>
+            <div className="info-row"><span>Name:</span> <strong>{order.customerName}</strong></div>
+            <div className="info-row"><span>Email:</span> <strong>{order.email}</strong></div>
+            <div className="info-row"><span>ID:</span> <strong>{order.customerId}</strong></div>
+          </div>
+        </div>
 
-      {/* Bọc table trong 1 container để tạo nền trắng giống hình */}
-      <div style={styles.tableWrapper}>
-        <table style={styles.table}>
-          <thead>
-            <tr>
-              <th style={styles.th}>Mã ĐH</th>
-              <th style={styles.th}>Khách hàng</th>
-              <th style={styles.th}>Sản phẩm</th>
-              <th style={styles.th}>Số lượng</th>
-              <th style={styles.th}>Trạng thái</th>
-              <th style={styles.th}>Hành động</th>
-            </tr>
-          </thead>
-          <tbody>
-            {orders.length === 0 ? (
-              <tr><td colSpan="6" style={{ textAlign: 'center', padding: '24px', color: '#6b7280' }}>Chưa có đơn hàng nào.</td></tr>
-            ) : (
-              orders.map((order) => (
-                <tr key={order.id} style={styles.tr}>
-                  <td style={styles.td}>#{order.id.toString().slice(-4)}</td>
-                  <td style={styles.td}>{order.customerName}</td>
-                  <td style={styles.td}>{order.product}</td>
-                  <td style={styles.td}>{order.quantity}</td>
-                  <td style={styles.td}>
-                    <span style={getStatusStyle(order.status)}>{order.status}</span>
-                  </td>
-                  <td style={styles.td}>
-                    <button onClick={() => handleEditClick(order)} style={styles.btnEdit}>Sửa</button>
-                    <button onClick={() => handleDeleteOrder(order.id)} style={styles.btnDelete}>Xóa</button>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+        <div className="info-block" style={{ marginTop: '24px' }}>
+          <h4>📍 Shipping Address</h4>
+          <strong>{order.customerName}</strong>
+          <p style={{ margin: '4px 0', color: '#637381', fontSize: '14px' }}>{order.address}</p>
+        </div>
+
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '24px' }}>
+          <button className="btn-primary" onClick={() => window.print()}>🖨️ Print Order</button>
+        </div>
       </div>
     </div>
   );
 };
 
-// Hàm hỗ trợ đổi màu text trạng thái giống hình
-const getStatusStyle = (status) => {
-  let color = '#374151'; // Default
-  if (status === 'Hoàn thành') color = '#059669'; // Xanh lá đậm
-  if (status === 'Chờ xử lý') color = '#d97706'; // Cam đậm
-  if (status === 'Đã hủy') color = '#dc2626'; // Đỏ
-  if (status === 'Đang giao') color = '#2563eb'; // Xanh dương
-  return { color, fontWeight: '600' };
-};
+// --- COMPONENT CHÍNH: Trang Quản Lý ---
+const OrderManagementPage = () => {
+  const [selectedOrder, setSelectedOrder] = useState(null);
 
-// CSS Dashboard Style
-const styles = {
-  pageContainer: { 
-    padding: '30px', 
-    fontFamily: '"Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
-    backgroundColor: '#f4f6f9', // Màu nền tổng thể xám nhạt như trong ảnh
-    minHeight: '100vh',
-    color: '#333'
-  },
-  headerTitle: {
-    fontSize: '24px',
-    fontWeight: '700',
-    color: '#111827',
-    marginBottom: '20px',
-    marginTop: '0'
-  },
-  btnAdd: { 
-    marginBottom: '20px', 
-    padding: '10px 18px', 
-    backgroundColor: '#0088cc', // Xanh dương giống ảnh
-    color: 'white', 
-    border: 'none', 
-    borderRadius: '4px', 
-    cursor: 'pointer',
-    fontSize: '14px',
-    fontWeight: '500'
-  },
-  tableWrapper: {
-    backgroundColor: '#ffffff', // Bảng nền trắng
-    borderRadius: '8px',
-    border: '1px solid #e5e7eb', // Viền mờ quanh bảng
-    overflowX: 'auto'
-  },
-  table: { 
-    width: '100%', 
-    borderCollapse: 'collapse', 
-  },
-  th: { 
-    borderBottom: '1px solid #e5e7eb', 
-    borderRight: '1px solid #e5e7eb', // Các cột có viền dọc mờ
-    padding: '14px 16px', 
-    backgroundColor: '#f9fafb', // Nền header xám rất nhạt
-    textAlign: 'left',
-    color: '#111827',
-    fontWeight: '600',
-    fontSize: '14px'
-  },
-  tr: {
-    borderBottom: '1px solid #e5e7eb',
-  },
-  td: { 
-    padding: '14px 16px',
-    borderRight: '1px solid #e5e7eb',
-    fontSize: '14px',
-    color: '#374151',
-    backgroundColor: '#ffffff'
-  },
-  btnEdit: { 
-    marginRight: '8px', 
-    padding: '6px 12px', 
-    cursor: 'pointer', 
-    backgroundColor: '#ffc107', // Màu vàng
-    color: '#000', 
-    border: 'none', 
-    borderRadius: '4px',
-    fontSize: '13px',
-    fontWeight: '500'
-  },
-  btnDelete: { 
-    padding: '6px 12px', 
-    cursor: 'pointer', 
-    backgroundColor: '#ef4444', // Màu đỏ
-    color: 'white', 
-    border: 'none', 
-    borderRadius: '4px',
-    fontSize: '13px',
-    fontWeight: '500'
-  }
-};
+  // Mock data dựa trên ảnh
+  const stats = [
+    { title: 'Pending', value: 0, icon: '⏱️', color: '#f59e0b' },
+    { title: 'Processing', value: 1, icon: '🔄', color: '#3b82f6' },
+    { title: 'Completed', value: 1, icon: '✅', color: '#10b981' },
+    { title: 'Revenue', value: '2.200 đ', icon: '💰', color: '#8b5cf6' },
+  ];
 
-// Loại bỏ border-right cho cột cuối cùng để bảng trông gọn gàng hơn
-styles.th.borderRight = '1px solid #f3f4f6';
-styles.td.borderRight = '1px solid #f3f4f6';
+  const orders = [
+    { 
+      id: 'ORD-20250726-6110', 
+      customerId: '#36',
+      customerName: 'Tuong Phung', 
+      email: 'baochau.936@gmail.com', 
+      status: 'Delivered', 
+      paymentMethod: 'SePay - Online Banking',
+      paymentStatus: 'Completed', 
+      items: 1,
+      total: '2.200 đ', 
+      date: 'Jul 26, 2025 4:46 PM', 
+      address: '16 phố lộc 5, Hòa Minh, Liên Chiểu, Đà Nẵng, DN 550000\n📞 0935388228' 
+    },
+    { 
+      id: 'ORD-20250725-4189', 
+      customerId: '#9',
+      customerName: 'Guest', 
+      email: 'No email provided', 
+      status: 'Processing', 
+      paymentMethod: 'SePay - Online Banking',
+      paymentStatus: 'Pending', 
+      items: 1,
+      total: '825.000 đ', 
+      date: 'Jul 25, 2025 10:15 AM', 
+      address: 'Guest Address...' 
+    },
+  ];
+
+  const getStatusBadge = (status) => {
+    const className = `badge badge-${status.toLowerCase()}`;
+    return <span className={className}>{status}</span>;
+  };
+
+  return (
+    <div className="order-container">
+      {/* Header */}
+      <div className="order-header">
+        <div className="text-sub" style={{ marginBottom: '8px' }}>Dashboard / All Orders</div>
+        <h2>Manage Orders</h2>
+        <p>Theo dõi và quản lý tất cả đơn hàng</p>
+      </div>
+
+      {/* Thống kê */}
+      <div className="stats-grid">
+        {stats.map((s, i) => <StatCard key={i} {...s} />)}
+      </div>
+
+      {/* Bộ lọc */}
+      <div className="filter-bar">
+        <div className="filter-group">
+          <label>Search</label>
+          <input className="filter-input" placeholder="Order number or product..." />
+        </div>
+        <div className="filter-group">
+          <label>Status</label>
+          <select className="filter-input">
+            <option>All Status</option>
+            <option>Pending</option>
+            <option>Processing</option>
+            <option>Delivered</option>
+          </select>
+        </div>
+        <div className="filter-group">
+          <label>From Date</label>
+          <input className="filter-input" type="date" />
+        </div>
+        <div className="filter-group">
+          <label>To Date</label>
+          <input className="filter-input" type="date" />
+        </div>
+      </div>
+
+      {/* Bảng dữ liệu */}
+      <div className="order-table-container">
+        <table>
+          <thead>
+            <tr>
+              <th style={{ width: '40px' }}><input type="checkbox" /></th>
+              <th>Order</th>
+              <th>Customer</th>
+              <th>Status</th>
+              <th>Payment</th>
+              <th>Total</th>
+              <th style={{ textAlign: 'right' }}>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {orders.map(order => (
+              <tr key={order.id}>
+                <td><input type="checkbox" /></td>
+                <td>
+                  <strong>{order.id}</strong><br />
+                  <span className="text-sub">ID: {order.customerId} • {order.date.split(' ')[0]} {order.date.split(' ')[1]} {order.date.split(' ')[2]}</span>
+                </td>
+                <td>
+                  <strong>{order.customerName}</strong><br />
+                  <span className="text-sub">{order.email}</span>
+                </td>
+                <td>{getStatusBadge(order.status)}</td>
+                <td>
+                  <span style={{ fontSize: '13px', marginRight: '6px' }}>SePay</span>
+                  {getStatusBadge(order.paymentStatus)}
+                </td>
+                <td>
+                  <span className="text-sub">{order.items} items</span><br />
+                  <strong>{order.total}</strong>
+                </td>
+                <td style={{ textAlign: 'right' }}>
+                  <button className="btn-icon" onClick={() => setSelectedOrder(order)} title="View Details">👁️</button>
+                  <button className="btn-icon" title="Print">🖨️</button>
+                  <button className="btn-icon" style={{ color: '#ef4444' }} title="Delete">🗑️</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Modal Render */}
+      <OrderDetailsModal 
+        order={selectedOrder} 
+        onClose={() => setSelectedOrder(null)} 
+      />
+    </div>
+  );
+};
 
 export default OrderManagementPage;

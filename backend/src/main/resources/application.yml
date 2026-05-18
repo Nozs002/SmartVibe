@@ -3,10 +3,10 @@ spring:
     name: smartvibe
   profiles:
     active: dev
-  security:
-    user:
-      name: admin
-      password: admin
+  # security:
+  #   user:
+  #     name: admin
+  #     password: admin
 
 server:
   port: 8080
