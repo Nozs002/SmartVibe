@@ -22,7 +22,12 @@ public enum ErrorCode {
     EMAIL_BLANK(1012, "Email không thể để trống!", HttpStatus.BAD_REQUEST),
     INVALID_EMAIL(1013, "Email không đúng định dạng!", HttpStatus.BAD_REQUEST),
     INVALID_LOGIN(1014, "Tên đăng nhập hoặc mật khẩu không đúng!", HttpStatus.BAD_REQUEST),
-    PASSWORD_NOT_MATCH(1015, "Xác nhận mật khẩu không khớp!", HttpStatus.BAD_REQUEST),;
+    PASSWORD_NOT_MATCH(1015, "Xác nhận mật khẩu không khớp!", HttpStatus.BAD_REQUEST),
+    CART_ALREADY_EXISTS(1016, "Giỏ hàng đã tồn tại!", HttpStatus.BAD_REQUEST),
+    CART_NOT_FOUND(1017, "Giỏ hàng không tồn tại!", HttpStatus.NOT_FOUND),
+    CUSTOMER_NOT_FOUND(1018, "Customer không tồn tại!", HttpStatus.NOT_FOUND),
+    STAFF_NOT_FOUND(1019, "Staff không tồn tại!", HttpStatus.NOT_FOUND),
+    CART_ITEM_NOT_FOUND(1020, "CartItem không tồn tại!", HttpStatus.NOT_FOUND);
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;

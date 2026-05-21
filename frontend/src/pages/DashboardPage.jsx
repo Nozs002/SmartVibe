@@ -1,6 +1,6 @@
 import React from 'react';
-import { useState, useNavigate, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link , useNavigate} from 'react-router-dom';
 import '../styles/Dashboard.css'; 
 
 const AdminDashboard = () => (
@@ -452,14 +452,44 @@ const TechDashboard = () => (
 );
 
 const DashboardPage = () => {
-  const [userRole, setUserRole] = useState('admin'); 
+  const [userRole, setUserRole] = useState('admin');
 
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user'));
+
+    if (user) {
+      const role = user.role;
+      if(role === 'admin') {
+        setUserRole('admin');
+      }
+      else if(role === 'staff') {
+        const staff = JSON.parse(localStorage.getItem('staff'));
+        if(staff) {
+          if(staff.type === 'manager') {
+            setUserRole('manager');
+          }
+          else if(staff.type === 'tech') {
+            setUserRole('tech');
+          }
+          else if(staff.type === 'sales') {
+            setUserRole('sales');
+          }
+          else {
+            setUserRole('warehouse');
+          }
+        }
+      }
+      else if(role === 'customer') {
+        setUserRole('customer');
+      }
+    }
+  }, []);
 
   const renderDashboardByRole = () => {
     switch (userRole) {
         case 'admin':
             return <AdminDashboard />;
-        case 'staff':
+        case 'warehouse':
             return <StaffDashboard />;
         case 'customer':
             return <CustomerDashboard />;
@@ -479,7 +509,7 @@ const DashboardPage = () => {
       <div style={{ marginBottom: '20px', display: 'flex', gap: '10px' }}>
         <span>Test UI: </span>
         <button onClick={() => setUserRole('admin')} className="btn-sm">View as Admin</button>
-        <button onClick={() => setUserRole('staff')} className="btn-sm">View as Staff</button>
+        <button onClick={() => setUserRole('warehouse')} className="btn-sm">View as Warehouse</button>
         <button onClick={() => setUserRole('customer')} className="btn-sm">View as Customer</button>
         <button onClick={() => setUserRole('manager')} className="btn-sm">View as Manager</button>
         <button onClick={() => setUserRole('tech')} className="btn-sm">View as Tech Staff</button>

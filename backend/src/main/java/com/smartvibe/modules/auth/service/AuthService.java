@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 
 import com.smartvibe.modules.auth.dto.UserLoginRequest;
 import com.smartvibe.modules.auth.dto.UserResponse;
+import com.smartvibe.modules.staff.dto.StaffDTO;
+import com.smartvibe.modules.customer.dto.CustomerDTO;
 import com.smartvibe.modules.auth.dto.UserRegisterRequest;
 
 import lombok.RequiredArgsConstructor;
@@ -28,6 +30,10 @@ import com.smartvibe.common.exception.AppException;
 import com.smartvibe.common.exception.ErrorCode;
 import com.smartvibe.common.response.AuthenticationResponse;
 import com.smartvibe.common.security.JwtAuthenticationFilter;
+import com.smartvibe.modules.customer.repository.CustomerRepository;
+import com.smartvibe.modules.staff.repository.StaffRepository;
+import com.smartvibe.modules.customer.entity.Customer;
+import com.smartvibe.modules.staff.entity.Staff;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -39,6 +45,8 @@ public class AuthService {
 
     // Goi ham bam mat khau
     private final PasswordEncoder passwordEncoder;
+    private final CustomerRepository customerRepository;
+    private final StaffRepository staffRepository;
 
     // Chia khoa tao Token
     protected static final String SIGNER_KEY = "Daylakhoabimatcododaitoithiru64bitdekyTokenJWTchohethongSMARTVIBE";
@@ -58,7 +66,35 @@ public class AuthService {
         // neu dung mat khau -> tao token xac dinh nguoi dung
         String token = generateToken(user);
 
-        return AuthenticationResponse.builder().token(token).authenticated(true).build();
+        UserResponse userResponse = UserResponse.builder().username(user.getUsername()).role(user.getRole())
+                .address(user.getAddress()).birthday(user.getBirthday()).email(user.getEmail())
+                .description(user.getDescription()).avt_url(user.getAvtUrl()).personal_img(user.getPersonalImg())
+                .phone(user.getPhone()).sex(user.getSex()).identifyCode(user.getIdentifyCode())
+                .createdAt(user.getCreatedAt()).accountStatus(user.getAccountStatus()).build();
+
+        StaffDTO staff = new StaffDTO();
+        CustomerDTO customer = new CustomerDTO();
+        if (user.getRole().equals("staff")) {
+            Optional<Staff> staffOpt = staffRepository.findByUserId(user.getId());
+            if (staffOpt.isEmpty()) {
+                throw new AppException(ErrorCode.STAFF_NOT_FOUND);
+            }
+            staff = StaffDTO.builder().id(staffOpt.get().getId()).type(staffOpt.get().getType())
+                    .branchId(staffOpt.get().getBranchId()).workStatus(staffOpt.get().getWorkStatus())
+                    .description(staffOpt.get().getDescription()).basicSalary(staffOpt.get().getBasicSalary())
+                    .allowance(staffOpt.get().getAllowance()).bonus(staffOpt.get().getBonus())
+                    .deduction(staffOpt.get().getDeduction()).userId(staffOpt.get().getUserId()).build();
+        } else if (user.getRole().equals("customer")) {
+            Optional<Customer> customerOpt = customerRepository.findByUserId(user.getId());
+            if (customerOpt.isEmpty()) {
+                throw new AppException(ErrorCode.CUSTOMER_NOT_FOUND);
+            }
+            customer = CustomerDTO.builder().id(customerOpt.get().getId()).type(customerOpt.get().getType())
+                    .userId(customerOpt.get().getUserId()).build();
+        }
+
+        return AuthenticationResponse.builder().token(token).authenticated(true).user(userResponse).staff(staff)
+                .customer(customer).build();
     }
 
     // Đăng ký

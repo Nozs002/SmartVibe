@@ -1,6 +1,6 @@
 package com.smartvibe.modules.product.controller;
 
-import com.smartvibe.modules.product.dto.CategoryDTO;
+import com.smartvibe.modules.cart.dto.CategoryDTO;
 import com.smartvibe.modules.product.service.CategoryService;
 
 import org.springframework.security.access.prepost.PreAuthorize;

@@ -1,6 +1,6 @@
 package com.smartvibe.modules.product.service;
 
-import com.smartvibe.modules.product.dto.CategoryDTO;
+import com.smartvibe.modules.cart.dto.CategoryDTO;
 import com.smartvibe.modules.product.entity.Category;
 import com.smartvibe.modules.product.repository.CategoryRepository;
 

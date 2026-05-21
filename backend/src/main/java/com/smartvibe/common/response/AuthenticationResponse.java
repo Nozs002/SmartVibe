@@ -2,6 +2,9 @@ package com.smartvibe.common.response;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import com.smartvibe.modules.customer.dto.CustomerDTO;
+import com.smartvibe.modules.auth.dto.UserResponse;
+import com.smartvibe.modules.staff.dto.StaffDTO;
 
 @Data
 @Builder
@@ -9,6 +12,9 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AuthenticationResponse {
-    String token;
-    boolean authenticated;
+    private String token;
+    private boolean authenticated;
+    private CustomerDTO customer;
+    private UserResponse user;
+    private StaffDTO staff;
 }

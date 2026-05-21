@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:8080/smartvibe/api', // Thay đổi baseURL ở đây
+  baseURL: 'http://localhost:8080/smartvibe/api', 
   timeout: 5000, 
   headers: {
     'Content-Type': 'application/json'
@@ -33,7 +33,7 @@ export const getData = async (url) => {
 // Xuất các hàm cho POST, PUT, DELETE để giao diện dùng (Clean Code)
 export const postData = async (url, data) => {
     const response = await api.post(url, data);
-    return response.data.result || response.data;
+    return response.data;
 };
 
 export const putData = async (url, data) => {
@@ -41,9 +41,18 @@ export const putData = async (url, data) => {
     return response.data.result || response.data;
 };
 
-export const deleteData = async (url) => {
-    const response = await api.delete(url);
-    return response.data;
+export const deleteData = async (url, payload) => {
+    const response = await api.delete(url, {data: payload});
+    return response.data.result || response.data;
+};
+
+export const getDataWithCondition = async (url, params = {}) => {
+  try {
+    const response = await api.get(url, { params });
+    return response.data.result; 
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Lấy dữ liệu thất bại!');
+  }
 };
 
 export default api;

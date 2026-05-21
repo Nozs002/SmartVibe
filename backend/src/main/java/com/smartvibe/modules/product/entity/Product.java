@@ -31,10 +31,10 @@ public class Product {
     @Column(name = "name", unique = true, nullable = false)
     private String name;
 
-    @JoinColumn(name = "category_id")
+    @Column(name = "category_id")
     private Long categoryId;
 
-    @JoinColumn(name = "brand_id")
+    @Column(name = "brand_id")
     private Long brandId;
 
     @Column(name = "is_serialized", nullable = false)

@@ -1,4 +1,4 @@
-package com.smartvibe.modules.product.dto;
+package com.smartvibe.modules.cart.dto;
 
 import lombok.*;
 

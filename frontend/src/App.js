@@ -14,6 +14,8 @@ import OrderManagementPage from './pages/Order/OrderManagementPage';
 import UserManagementPage from './pages/User/UserManagementPage';
 import DashboardPage from './pages/DashboardPage';
 import ScrollToTop from './components/ScrollToTop';
+import CartPage from './pages/Order/CartPage';
+import CheckoutPage from './pages/Order/CheckoutPage';
 
 function App() {
   return (
@@ -57,6 +59,13 @@ function App() {
 
           {/* Đường dẫn cho trang User Management */}
           <Route path="/user-management" element={<UserManagementPage />} />
+
+          {/* Đường dẫn cho trang Cart */}
+          <Route path="/cart" element={<CartPage />} />
+
+          {/* Đường dẫn cho trang Checkout */}
+          <Route path="/checkout" element={<CheckoutPage />} />
+
         </Route>
 
         {/* Nếu người dùng vào trang khác, quay về Login */}

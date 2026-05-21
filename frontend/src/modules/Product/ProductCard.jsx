@@ -1,7 +1,7 @@
 import React from 'react';
 import '../../styles/Product.css';
 
-const ProductCard = ({ product, role = 'customer', onViewDetail, onActionClick }) => {
+const ProductCard = ({ product, role = 'customer', handleAddToCart, onViewDetail, onActionClick }) => {
   
   // Xử lý sự kiện click vào nút hành động
   const handleAction = (actionType) => {
@@ -39,7 +39,7 @@ const ProductCard = ({ product, role = 'customer', onViewDetail, onActionClick }
       default:
         return (
           <>
-            <button className="btn-action btn-outline" onClick={() => handleAction('add_to_cart')}>
+            <button className="btn-action btn-outline" onClick={() => handleAddToCart(product)}>
               Add to Cart
             </button>
             <button className="btn-action btn-dark" onClick={() => handleAction('buy_now')}>

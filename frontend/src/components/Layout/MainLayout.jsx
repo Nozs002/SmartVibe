@@ -6,7 +6,7 @@ import '../../styles/MainLayout.css';
 
 const MainLayout = () => {
   // Trạng thái thu nhỏ Sidebar (mặc định là false - mở rộng)
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
 
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);

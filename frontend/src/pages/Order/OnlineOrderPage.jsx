@@ -2,24 +2,26 @@ import React, { useState, useEffect, useMemo } from 'react';
 import ProductCard from '../../modules/Product/ProductCard';
 import '../../styles/Product.css';
 import ProductFilterBar from '../../modules/Product/ProductFilterBar';
-import { getData } from '../../services/api';
+import { getData, getDataWithCondition, putData, deleteData, postData } from '../../services/api';
+import CartSidebar from '../../modules/Order/CartSidebar';
 
 
 
 const OnlineOrderPage = () => {
 
-    // 1. Data gốc từ Database
+    // Data gốc từ Database
     const [products, setProducts] = useState([]);
-    
-    // THÊM MỚI: State lưu danh sách Category lấy từ API
     const [categories, setCategories] = useState([]); 
     
-    // 2. States quản lý bộ lọc
+    //  States quản lý bộ lọc
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('all');
     const [sortBy, setSortBy] = useState('popular');
-  
-    // Giả lập Fetch Data từ Database
+
+    //  States quản lý giỏ hàng
+    const [cartItems, setCartItems] = useState([]);
+    const [isCartOpen, setIsCartOpen] = useState(false);
+
     useEffect(() => {
       const fetchCategories = async () => {
         try {
@@ -42,6 +44,20 @@ const OnlineOrderPage = () => {
             }
           }
           fetchProducts();
+
+      const customer = JSON.parse(localStorage.getItem('customer'));
+          if (!customer) {
+            return;
+          }
+          const fetchCartItems = async () => {
+            try {
+              const response = await getDataWithCondition('/cart/getCartItem', {customerId: customer.id });
+              setCartItems(response);
+            } catch (error) {
+              console.error('Error fetching cart items:', error);
+            }
+          };
+          fetchCartItems();
     }, []);
   
     // Lọc (Filter) và Sắp xếp (Sort) dữ liệu dựa trên State
@@ -101,6 +117,77 @@ const OnlineOrderPage = () => {
       return result;
     }, [products, searchTerm, selectedCategory, sortBy]);
 
+    // giỏ hàng
+    const handleAddToCart = async (product) => {
+        const currentItem = cartItems.find(item => item.id === product.id);
+        const customer = JSON.parse(localStorage.getItem('customer'));
+        if (!customer) {
+            alert('Vui lòng đăng nhập trước!');
+            return;
+        }
+        if (currentItem) {
+            await handleUpdateQuantity(currentItem.id, 1);
+        } else {
+            const newCartItemPayload = {
+                cartId: Number(customer.id), // Ép kiểu sang số (Long trong Java)
+                quantity: 1,                 // Mặc định thêm mới là 1
+                productDTO: {
+                    id: product.id,
+                    sku: product.sku,
+                    name: product.name,
+                    categoryId: product.categoryId,
+                    brandId: product.brandId,
+                    description: product.description,
+                    basePrice: product.basePrice,
+                    imageUrl: product.imageUrl,
+                    warrantyMonths: product.warrantyMonths,
+                    specifications: product.specifications
+                }
+            };
+            const response = await postData('/cart/addCartItem', newCartItemPayload);
+            const newCartItem = response.result;
+            setCartItems(prev => [...prev, newCartItem]);
+        }
+
+        setIsCartOpen(true);
+    };
+
+    const handleUpdateQuantity = async (id, delta) => {
+      try {
+            const currentItem = cartItems.find(item => item.id === id);
+            if (!currentItem) return;
+            const newQuantity = currentItem.quantity + delta;
+            if (newQuantity < 1) return;
+            currentItem.quantity = newQuantity;
+      
+            // CALL BACKEND
+            await putData('/cart/updateQuantity', currentItem);
+      
+            // UPDATE FRONTEND
+            setCartItems(prev =>
+              prev.map(item =>
+                item.id === id
+                  ? { ...item, quantity: newQuantity }
+                  : item
+              )
+            );
+      
+          } catch (error) {
+            console.error(error);
+          }
+    };
+
+    const handleRemoveItem = async (id) => {
+      try {
+        const currentItem = cartItems.find(item => item.id === id);
+        if (!currentItem) return;
+        await deleteData('/cart/deleteCartItem', currentItem);
+        setCartItems(prev => prev.filter(item => item.id !== id));
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
   return (
     <div className="online-order-page">
       <div className="hero-banner">
@@ -120,9 +207,16 @@ const OnlineOrderPage = () => {
 
       <div className="product-grid">
         {filteredAndSortedProducts.map(product => (
-          <ProductCard key={product.id} product={product} type="shopping" />
+          <ProductCard key={product.id} product={product} handleAddToCart={handleAddToCart} type="shopping" />
         ))}
       </div>
+      <CartSidebar 
+                isCartOpen={isCartOpen}
+                setIsCartOpen={setIsCartOpen}
+                cartItems={cartItems}
+                onUpdateQuantity={handleUpdateQuantity}
+                onRemoveItem={handleRemoveItem}
+            />
     </div>
   );
 };

@@ -2,6 +2,7 @@ import React from 'react';
 import { FaShoppingCart, FaSearch } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import '../../styles/Navbar.css';
+import '../../styles/CartPage.css';
 
 const Navbar = () => {
   const userData = localStorage.getItem('user');
@@ -27,10 +28,10 @@ const Navbar = () => {
 
       {/* PHẦN PHẢI: ICON & USER */}
       <div className="nav-right">
-        <div className="nav-cart-btn">
-          <span>Cart</span>
+        <Link to="/cart" className="nav-cart-btn">
+          <span>Giỏ Hàng</span>
           <FaShoppingCart className="icon-cart" />
-        </div>
+        </Link>
         
         {/* KHU VỰC USER CÓ DROPDOWN */}
         <div className="user-section">

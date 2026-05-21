@@ -11,6 +11,8 @@ export const login = async (username, password) => {
     if (data) {
       localStorage.setItem('user', JSON.stringify(data.user));
       localStorage.setItem('token', data.token);
+      localStorage.setItem('staff', JSON.stringify(data.staff));
+      localStorage.setItem('customer', JSON.stringify(data.customer));
     }
     return data;
   } catch (error) {
