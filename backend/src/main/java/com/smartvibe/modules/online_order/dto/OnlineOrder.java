@@ -1,10 +1,12 @@
 package com.smartvibe.modules.online_order.dto;
 
 import com.smartvibe.modules.customer.dto.CustomerDTO;
+import com.smartvibe.modules.cart.dto.CartItemDTO;
 
 import java.math.BigDecimal;
 
 import lombok.*;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -27,4 +29,5 @@ public class OnlineOrder {
     private String shippingProvider;
     private String trackingCode;
     private BigDecimal shippingFee;
+    private List<CartItemDTO> cartItemDTO;
 }

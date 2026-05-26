@@ -66,8 +66,8 @@ public class AuthService {
         // neu dung mat khau -> tao token xac dinh nguoi dung
         String token = generateToken(user);
 
-        UserResponse userResponse = UserResponse.builder().username(user.getUsername()).role(user.getRole())
-                .address(user.getAddress()).birthday(user.getBirthday()).email(user.getEmail())
+        UserResponse userResponse = UserResponse.builder().username(user.getUsername()).fullname(user.getFullname())
+                .role(user.getRole()).address(user.getAddress()).birthday(user.getBirthday()).email(user.getEmail())
                 .description(user.getDescription()).avt_url(user.getAvtUrl()).personal_img(user.getPersonalImg())
                 .phone(user.getPhone()).sex(user.getSex()).identifyCode(user.getIdentifyCode())
                 .createdAt(user.getCreatedAt()).accountStatus(user.getAccountStatus()).build();
@@ -133,7 +133,7 @@ public class AuthService {
         // expirationTime: Thời điểm hết hạn (1 giờ sau khi tạo).
         // scope: Lưu user.getRole().
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder().subject(user.getUsername()).issuer("smartvibe.com")
-                .issueTime(new Date()).expirationTime(new Date(Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()))
+                .issueTime(new Date()).expirationTime(new Date(Instant.now().plus(8, ChronoUnit.HOURS).toEpochMilli()))
                 .claim("userId", user.getId()).claim("email", user.getEmail()).claim("scope", user.getRole()).build();
 
         Payload payload = new Payload(jwtClaimsSet.toJSONObject());

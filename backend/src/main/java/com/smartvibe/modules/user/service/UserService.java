@@ -28,7 +28,7 @@ public class UserService {
                         .birthday(user.getBirthday()).email(user.getEmail()).description(user.getDescription())
                         .avtUrl(user.getAvtUrl()).personalImg(user.getPersonalImg()).phone(user.getPhone())
                         .sex(user.getSex()).identifyCode(user.getIdentifyCode()).accountStatus(user.getAccountStatus())
-                        .createdAt(user.getCreatedAt()).build())
+                        .fullname(user.getFullname()).createdAt(user.getCreatedAt()).build())
                 .toList();
     }
 }

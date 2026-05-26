@@ -2,6 +2,9 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { Link , useNavigate} from 'react-router-dom';
 import '../styles/Dashboard.css'; 
+import { 
+  FaTruck, FaCartPlus, FaCompass
+} from 'react-icons/fa';
 
 const AdminDashboard = () => (
   <>
@@ -90,142 +93,6 @@ const AdminDashboard = () => (
   </>
 );
 
-// const ManagerDashboard = () => (
-//   <>
-//     <div className="welcome-banner" style={{ background: 'linear-gradient(135deg, #3b82f6, #06b6d4)' }}>
-//       <div className="welcome-text">
-//         <h1>Welcome back, Manager! 👋</h1>
-//         <p>Đây là những gì đang diễn ra tại cửa hàng của bạn hôm nay.</p>
-//       </div>
-//       <div className="orders-today">
-//         <h2>152</h2><span>Đơn hàng hôm nay</span>
-//       </div>
-//     </div>
-//     <div className="stats-grid">
-//         <div className="stat-card">
-//             <div className="stat-info">
-//                 <p>Doanh thu mới nhất</p>
-//                 <h3>10.000.000.000 đ</h3>
-//                 <span className="trend green">+ today</span>
-//             </div>
-//             <div className="stat-icon" style={{ background: '#d1fae5', color: '#10b981' }}>
-//                 <i className="fa-solid fa-dollar-sign"></i>
-//             </div>
-//         </div>
-        
-//         <div className="stat-card">
-//             <div className="stat-info">
-//                 <p>Đơn hàng mới nhất</p>
-//                 <h3>2</h3>
-//                 <span className="trend blue">+0 today</span>
-//             </div>
-//             <div className="stat-icon" style={{ background: '#dbeafe', color: '#3b82f6' }}>
-//                 <i className="fa-solid fa-file-alt"></i>
-//             </div>
-//         </div>
-        
-//         <div className="stat-card">
-//             <div className="stat-info">
-//                 <p>Tổng sản phẩm</p>
-//                 <h3>10</h3>
-//                 <span className="trend green">Tất cả đang có</span>
-//             </div>
-//             <div className="stat-icon" style={{ background: '#ede9fe', color: '#8b5cf6' }}>
-//                 <i className="fa-solid fa-bag-shopping"></i>
-//             </div>
-//         </div>
-        
-//         <div className="stat-card">
-//             <div className="stat-info">
-//                 <p>Khách hàng mới nhất</p>
-//                 <h3>7</h3>
-//                 <span className="trend blue">+2 today</span>
-//             </div>
-//             <div className="stat-icon" style={{ background: '#e0e7ff', color: '#6366f1' }}>
-//                 <i className="fa-solid fa-user-group"></i>
-//             </div>
-//             </div>
-//       </div>
-
-//       {/* Middle Row */}
-//       <div className="middle-row">
-//         <div className="card">
-//           <div className="card-header">
-//             <span className="card-title">Sales Overview</span>
-//             <div style={{ background: '#f4f7fe', padding: '4px', borderRadius: '8px' }}>
-//               <button className="btn-sm" style={{ background: '#4318FF', color: 'white', marginRight: '5px' }}>7 Days</button>
-//               <button className="btn-sm" style={{ color: '#8f9bba', background: 'transparent' }}>30 Days</button>
-//             </div>
-//           </div>
-//           <div className="chart-placeholder">
-//             <i className="fa-solid fa-chart-column" style={{ fontSize: '40px', marginBottom: '15px', color: '#cbd5e1' }}></i>
-//             <p>Sales chart will be here</p>
-//             <span style={{ fontSize: '12px', opacity: 0.7, marginTop: '5px' }}>Chart.js integration coming soon</span>
-//           </div>
-//         </div>
-
-//         <div className="card">
-//           <div className="card-header"><span className="card-title">Quick Actions</span></div>
-//           <Link to="/employee-management" className="action-btn btn-blue"><i className="fa-solid fa-plus"></i>Quản lý nhân viên</Link>
-//           <Link to="/order-management" className="action-btn btn-green"><i className="fa-solid fa-file-invoice"></i> Quản lý đơn hàng</Link>
-//           <Link to="/user-management" className="action-btn btn-purple"><i className="fa-solid fa-users"></i> Quản lý khách hàng</Link>
-//           <Link to="/product-management" className="action-btn btn-yellow"><i className="fa-solid fa-chart-simple"></i> Quản lý sản phẩm</Link>
-//           <Link to="/report-management" className="action-btn btn-indigo"><i className="fa-solid fa-chart-simple"></i> Xem báo cáo</Link>
-//         </div>
-//       </div>
-
-//       {/* Bottom Row */}
-//       <div className="bottom-row">
-//         <div className="card">
-//           <div className="card-header"><span className="card-title">Đơn hàng theo trạng thái</span></div>
-//           <div className="status-grid">
-//             <div className="status-card pending">
-//               <h4>0</h4><p>Chờ xử lý</p>
-//             </div>
-//             <div className="status-card processing">
-//               <h4>1</h4><p>Đang xử lý đơn hàng</p>
-//             </div>
-//             <div className="status-card completed">
-//               <h4>1</h4><p>Hoàn thành</p>
-//             </div>
-//             <div className="status-card others">
-//               <h4>0</h4><p>Khác</p>
-//             </div>
-//           </div>
-//         </div>
-
-//         <div className="card">
-//           <div className="card-header">
-//             <span className="card-title">Đơn hàng mới nhất</span>
-//             <Link to="/order-management" className="btn-sm">Xem tất cả</Link>
-//           </div>
-//           <div className="order-list">
-//             <div className="order-item">
-//               <div className="order-info">
-//                 <h5>ORD-20250728-6110</h5>
-//                 <p>Tuong Phung</p>
-//               </div>
-//               <div className="order-status-right">
-//                 <h5>2.200 đ</h5>
-//                 <span className="badge green">Hoàn thành</span>
-//               </div>
-//             </div>
-//             <div className="order-item">
-//               <div className="order-info">
-//                 <h5>ORD-20250728-4189</h5>
-//                 <p>Khách hàng 1</p>
-//               </div>
-//               <div className="order-status-right">
-//                 <h5>825.000 đ</h5>
-//                 <span className="badge blue">Chờ xử lý</span>
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//   </>
-// );
-
 // STAFF
 const StaffDashboard = () => (
   <>
@@ -264,23 +131,33 @@ const StaffDashboard = () => (
 );
 
 //CUSTOMER
-const CustomerDashboard = () => (
+const CustomerDashboard = ({customer, onNavigate, user}) => (
   <>
     <div className="welcome-banner" style={{ background: 'linear-gradient(135deg, #10b981, #047857)' }}>
       <div className="welcome-text">
-        <h1>Xin chào, Khách hàng! 🎉</h1>
+        <h1>Xin chào, {user.fullname || "Khách Hàng"}! 🎉</h1>
         <p>Khám phá các sản phẩm mới và theo dõi đơn hàng của bạn.</p>
       </div>
     </div>
 
     <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(2, 1fr)' }}>
       <div className="stat-card">
-        <div className="stat-info"><p>Điểm tích lũy</p><h3>1,250 pt</h3><span className="trend green">Thành viên Vàng</span></div>
+        <div className="stat-info">
+          <p>Điểm tích lũy</p>
+          {/* <h3>1,250 pt</h3> */}
+          <span className="trend green">Thành viên {customer.type}</span>
+          </div>
         <div className="stat-icon" style={{ background: '#fef3c7', color: '#f59e0b' }}><i className="fa-solid fa-star"></i></div>
       </div>
       <div className="stat-card">
-        <div className="stat-info"><p>Đơn hàng đang giao</p><h3>1</h3><span className="trend blue">Dự kiến giao: Hôm nay</span></div>
-        <div className="stat-icon" style={{ background: '#dbeafe', color: '#3b82f6' }}><i className="fa-solid fa-truck"></i></div>
+        <div className="stat-info">
+          <p>Đơn hàng đang giao</p>
+          <h3>1</h3>
+          <span className="trend blue">Dự kiến giao: Hôm nay</span>
+        </div>
+        <div className="stat-icon" style={{ background: '#dbeafe', color: '#3b82f6' }}>
+          <FaTruck />
+        </div>
       </div>
     </div>
 
@@ -296,8 +173,8 @@ const CustomerDashboard = () => (
       </div>
       <div className="card">
         <div className="card-header"><span className="card-title">Gợi ý cho bạn</span></div>
-        <button className="action-btn btn-blue"><i className="fa-solid fa-mug-hot"></i> Đặt lại đơn cũ</button>
-        <button className="action-btn btn-purple"><i className="fa-solid fa-compass"></i> Xem Menu Mới</button>
+        <button className="action-btn btn-blue" onClick={() => onNavigate('/cart')}><FaCartPlus style={{ marginRight: '6px' }} /> Đặt đơn hàng mới</button>
+        <button className="action-btn btn-purple" onClick={() => onNavigate('/online-order')}><FaCompass style={{ marginRight: '6px' }} /> Khám phá sản phẩm mới</button>
       </div>
     </div>
   </>
@@ -452,7 +329,11 @@ const TechDashboard = () => (
 );
 
 const DashboardPage = () => {
+  const navigate = useNavigate();
   const [userRole, setUserRole] = useState('admin');
+  const customer = JSON.parse(localStorage.getItem("customer") || {});
+  const user = JSON.parse(localStorage.getItem("user") || {});
+
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -492,7 +373,7 @@ const DashboardPage = () => {
         case 'warehouse':
             return <StaffDashboard />;
         case 'customer':
-            return <CustomerDashboard />;
+            return <CustomerDashboard customer={customer} onNavigate={navigate} user={user} />;
         case 'manager':
             return <ManagerDashboard />;
         case 'tech':
@@ -506,7 +387,7 @@ const DashboardPage = () => {
 
   return (
     <div className="dashboard-container">
-      <div style={{ marginBottom: '20px', display: 'flex', gap: '10px' }}>
+      {/* <div style={{ marginBottom: '20px', display: 'flex', gap: '10px' }}>
         <span>Test UI: </span>
         <button onClick={() => setUserRole('admin')} className="btn-sm">View as Admin</button>
         <button onClick={() => setUserRole('warehouse')} className="btn-sm">View as Warehouse</button>
@@ -514,7 +395,7 @@ const DashboardPage = () => {
         <button onClick={() => setUserRole('manager')} className="btn-sm">View as Manager</button>
         <button onClick={() => setUserRole('tech')} className="btn-sm">View as Tech Staff</button>
         <button onClick={() => setUserRole('sales')} className="btn-sm">View as Sales</button>
-      </div>
+      </div> */}
 
       {/*hiển thị Dashboard*/}
       {renderDashboardByRole()}

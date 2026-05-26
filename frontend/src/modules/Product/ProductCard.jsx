@@ -1,7 +1,7 @@
 import React from 'react';
 import '../../styles/Product.css';
 
-const ProductCard = ({ product, role = 'customer', handleAddToCart, onViewDetail, onActionClick }) => {
+const ProductCard = ({ product, role = 'customer', onViewDetail, onActionClick }) => {
   
   // Xử lý sự kiện click vào nút hành động
   const handleAction = (actionType) => {
@@ -37,12 +37,13 @@ const ProductCard = ({ product, role = 'customer', handleAddToCart, onViewDetail
         );
       case 'customer':
       default:
+        const isOutOfStock = product.stock <= 0;
         return (
           <>
-            <button className="btn-action btn-outline" onClick={() => handleAddToCart(product)}>
+            <button className="btn-action btn-outline" onClick={() => handleAction('add_to_cart')} disabled={isOutOfStock}>
               Add to Cart
             </button>
-            <button className="btn-action btn-dark" onClick={() => handleAction('buy_now')}>
+            <button className="btn-action btn-dark" onClick={() => handleAction('buy_now')} disabled={isOutOfStock}>
               Buy Now
             </button>
           </>
@@ -70,7 +71,14 @@ const ProductCard = ({ product, role = 'customer', handleAddToCart, onViewDetail
         
         <div className="product-meta">
           <div className="product-price">
-            {Number(product.basePrice).toLocaleString()}đ
+            {Number(product.price).toLocaleString()}đ
+          </div>
+          <div className="product-stock">
+            {product.stock > 0 ? (
+              <span className="text-in-stock">Tồn kho: {product.stock}</span>
+            ) : (
+              <span className="text-out-of-stock">Hết hàng</span>
+            )}
           </div>
         </div>
 

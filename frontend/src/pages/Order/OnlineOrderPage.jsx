@@ -1,64 +1,69 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import ProductCard from '../../modules/Product/ProductCard';
+import { useNavigate } from 'react-router-dom';
+
 import '../../styles/Product.css';
 import ProductFilterBar from '../../modules/Product/ProductFilterBar';
 import { getData, getDataWithCondition, putData, deleteData, postData } from '../../services/api';
 import CartSidebar from '../../modules/Order/CartSidebar';
+import ProductList from '../../modules/Product/ProductList';
 
 
 
 const OnlineOrderPage = () => {
+  const navigate = useNavigate();
 
-    // Data gốc từ Database
-    const [products, setProducts] = useState([]);
-    const [categories, setCategories] = useState([]); 
-    
-    //  States quản lý bộ lọc
-    const [searchTerm, setSearchTerm] = useState('');
-    const [selectedCategory, setSelectedCategory] = useState('all');
-    const [sortBy, setSortBy] = useState('popular');
-
-    //  States quản lý giỏ hàng
-    const [cartItems, setCartItems] = useState([]);
-    const [isCartOpen, setIsCartOpen] = useState(false);
-
-    useEffect(() => {
-      const fetchCategories = async () => {
-        try {
-          const response = await getData('/categories/all'); 
-          
-          setCategories(response); 
-        } catch (error) {
-          console.error("Lỗi lấy danh mục:", error);
-        }
-      };
-      
-      fetchCategories();
+  // Data gốc từ Database
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]); 
   
-      const fetchProducts = async () => {
-            try {
-              const response = await getData('/products/all');
-              setProducts(response);
-            } catch (error){
-              console.error("Lỗi lấy sản phẩm:", error);
-            }
-          }
-          fetchProducts();
+  //  States quản lý bộ lọc
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [sortBy, setSortBy] = useState('popular');
 
-      const customer = JSON.parse(localStorage.getItem('customer'));
-          if (!customer) {
-            return;
+  //  States quản lý giỏ hàng
+  const [cartItems, setCartItems] = useState([]);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await getData('/categories/all'); 
+        
+        setCategories(response); 
+      } catch (error) {
+        console.error("Lỗi lấy danh mục:", error);
+      }
+    };
+    
+    fetchCategories();
+
+    const fetchProducts = async () => {
+          try {
+            const response = await getData('/products/all');
+            setProducts(response);
+          } catch (error){
+            console.error("Lỗi lấy sản phẩm:", error);
           }
-          const fetchCartItems = async () => {
-            try {
-              const response = await getDataWithCondition('/cart/getCartItem', {customerId: customer.id });
-              setCartItems(response);
-            } catch (error) {
-              console.error('Error fetching cart items:', error);
-            }
-          };
-          fetchCartItems();
-    }, []);
+        }
+        fetchProducts();
+
+    const customer = JSON.parse(localStorage.getItem('customer'));
+    if (!customer) {
+      return;
+    }
+    const fetchCartItems = async () => {
+      try {
+        const response = await getDataWithCondition('/cart/getCartItem', {customerId: customer.id });
+        setCartItems(response);
+      } catch (error) {
+        console.error('Error fetching cart items:', error);
+      }
+    };
+    fetchCartItems();
+
+  }, []);
   
     // Lọc (Filter) và Sắp xếp (Sort) dữ liệu dựa trên State
     // useMemo sẽ chạy lại khi một trong các dependencies(products, searchTerm, selectedCategory, sortBy) thay đổi
@@ -95,10 +100,10 @@ const OnlineOrderPage = () => {
         // Sắp xếp
         switch (sortBy) {
           case 'price_asc':
-            result.sort((a, b) => Number(a.basePrice) - Number(b.basePrice));
+            result.sort((a, b) => Number(a.price) - Number(b.price));
             break;
           case 'price_desc':
-            result.sort((a, b) => Number(b.basePrice) - Number(a.basePrice));
+            result.sort((a, b) => Number(b.price) - Number(a.price));
             break;
           case 'best_selling':
             result.sort((a, b) => (b.sold || 0) - (a.sold || 0));
@@ -119,7 +124,8 @@ const OnlineOrderPage = () => {
 
     // giỏ hàng
     const handleAddToCart = async (product) => {
-        const currentItem = cartItems.find(item => item.id === product.id);
+      try{
+        const currentItem = cartItems.find(item => item.productDTO.id === product.id);
         const customer = JSON.parse(localStorage.getItem('customer'));
         if (!customer) {
             alert('Vui lòng đăng nhập trước!');
@@ -138,18 +144,35 @@ const OnlineOrderPage = () => {
                     categoryId: product.categoryId,
                     brandId: product.brandId,
                     description: product.description,
-                    basePrice: product.basePrice,
+                    isSerialized: product.isSerialized || false,
+                    price: product.price,
                     imageUrl: product.imageUrl,
                     warrantyMonths: product.warrantyMonths,
-                    specifications: product.specifications
+                    specifications: product.specifications,
+                    stock: product.stock
                 }
             };
             const response = await postData('/cart/addCartItem', newCartItemPayload);
             const newCartItem = response.result;
-            setCartItems(prev => [...prev, newCartItem]);
+            const exists = cartItems.some(
+                item => item.productDTO.id === newCartItem.productDTO.id
+            );
+            if (!exists) {
+                setCartItems(prev => [...prev, newCartItem]);
+            } else{
+              setCartItems(prev => prev.map(item =>
+                  item.productDTO.id === newCartItem.productDTO.id
+                      ? newCartItem
+                      : item
+              ));
+            }
         }
 
         setIsCartOpen(true);
+      } catch(error) {
+        const errrorMessage = error.response?.data?.message || "Đã xảy ra lỗi";
+        alert(errrorMessage);
+      }
     };
 
     const handleUpdateQuantity = async (id, delta) => {
@@ -188,6 +211,23 @@ const OnlineOrderPage = () => {
       }
     };
 
+  const handleCustomerActions = (actionType, product) => {
+    if (actionType === 'add_to_cart') {
+      handleAddToCart(product); 
+    } else if (actionType === 'buy_now') {
+      // Xử lý mua ngay
+    }
+  };
+
+  const handleGoToCheckout = () => {
+    if (cartItems.length === 0) return;
+
+    // Chuyển hướng sang trang thanh toán kèm theo dữ liệu thông qua state
+    navigate('/checkout', { 
+      state: { cartItems: cartItems} 
+    });
+  };
+
   return (
     <div className="online-order-page">
       <div className="hero-banner">
@@ -205,18 +245,20 @@ const OnlineOrderPage = () => {
         categories={categories.filter(cat => cat.parentId === null)}
       />
 
-      <div className="product-grid">
-        {filteredAndSortedProducts.map(product => (
-          <ProductCard key={product.id} product={product} handleAddToCart={handleAddToCart} type="shopping" />
-        ))}
-      </div>
+      <ProductList 
+        products={filteredAndSortedProducts} 
+        role="customer" 
+        onProductAction={handleCustomerActions}
+      />
+
       <CartSidebar 
-                isCartOpen={isCartOpen}
-                setIsCartOpen={setIsCartOpen}
-                cartItems={cartItems}
-                onUpdateQuantity={handleUpdateQuantity}
-                onRemoveItem={handleRemoveItem}
-            />
+        isCartOpen={isCartOpen}
+        setIsCartOpen={setIsCartOpen}
+        cartItems={cartItems}
+        onUpdateQuantity={handleUpdateQuantity}
+        onRemoveItem={handleRemoveItem}
+        handleGoToCheckout={handleGoToCheckout}
+      />
     </div>
   );
 };

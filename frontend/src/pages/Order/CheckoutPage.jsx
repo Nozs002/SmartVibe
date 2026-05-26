@@ -1,59 +1,100 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { postData } from '../../services/api';
 import OrderForm from '../../modules/Order/OrderForm';
 import '../../styles/OrderDetail.css';
+import OrderSuccessModal from '../../modules/Order/OrderSuccessModal';
 
 const CheckoutPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const MOCK_CART_ITEMS = [
-  { 
-    id: 101, 
-    name: 'Bàn phím cơ Keychron K8 Pro', 
-    quantity: 1, 
-    price: 2150000 
-  },
-  { 
-    id: 102, 
-    name: 'Chuột không dây Logitech MX Master 3S', 
-    quantity: 2, 
-    price: 2450000 
-  },
-  { 
-    id: 103, 
-    name: 'Màn hình Dell UltraSharp 27 inch 4K', 
-    quantity: 1, 
-    price: 11500000 
-  }
-];
   
-  // Lấy danh sách cartItems được truyền từ giỏ hàng sang (nếu dùng react-router-dom)
-  // Nếu không có, ta dùng state rỗng (hoặc mock data để test)
-  const [cartItems, setCartItems] = useState(location.state?.cartItems || MOCK_CART_ITEMS);
-  
-  const [shippingFee, setShippingFee] = useState(30000); // Mock phí ship mặc định
-  const [discountPercent, setDiscountPercent] = useState(0); 
+  // Lấy danh sách cartItems được truyền từ giỏ hàng sang
+  const [cartItems, setCartItems] = useState(location.state?.cartItems || [/*{
+      id: 38,
+      cartId: 1,
+      quantity: 1,
+      productDTO: {
+        id: 1,
+        name: "Laptop Dell XPS 15 (Bản Test)",
+        price: 35000000,
+        isSerialized: true,
+        sku: "SKU-1"
+      }
+    },
+    }*/]);
+  const [shippingFee, setShippingFee] = useState(0);
 
+  const customer = JSON.parse(localStorage.getItem('customer') || '{}');
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [successOrderData, setSuccessOrderData] = useState(null);
+
+  let discountPercent = 0;
+
+    switch (customer.type) {
+      case 'member': 
+        discountPercent = 2; 
+        break;
+      case 'vip': 
+        discountPercent = 5; 
+        break;
+      case 'gold': 
+        discountPercent = 8; 
+        break;
+      case 'diamond':
+        discountPercent = 10;
+        break;
+      default: discountPercent = 0; break;
+    }
   // Tính toán
-  const subTotal = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
+  const subTotal = cartItems.reduce((total, item) => total + (item.productDTO.price * item.quantity), 0);
+
+  const initialValues = useMemo(() => {
+    return {
+      customerId: customer.id || '',
+      customerName: user.fullname || '',
+      discountPercent: discountPercent,
+      type: 'online',
+      note: '',
+      phone: user.phone || '',
+      deliveryLocation: user.address || '',
+      orderStatus: 'pending',
+      deliveryStatus: 'not shipped',
+      accountPayment: '',
+      paymentMethod: 'cash',
+      paymentStatus: 'unpaid',
+      trackingCode: '',
+      shippingProvider: '',
+      shippingFee: shippingFee,
+      customerType: customer.type || '',
+  }; 
+  }, [customer.id, user.fullname, user.phone, user.address, discountPercent, shippingFee, customer.type]);
+
   const discountAmount = subTotal * (discountPercent / 100);
   const grandTotal = subTotal - discountAmount + shippingFee;
 
   const handlePlaceOrder = async (formData) => {
-    // Chuẩn bị payload khớp với cấu trúc Database của bạn
-    const orderPayload = {
+    const data = {
       ...formData,
-      type: 'online', // Đặt hàng từ web luôn là online
-      discount_percent: discountPercent,
-      shipping_fee: shippingFee,
-      // order_status, delivery_status, payment_status thường được backend gán mặc định
-      cartItems: cartItems // Gửi kèm list item để backend lưu vào bảng order_details (nếu có)
-    };
+      customer: customer,
+      cartItemDTO: cartItems,
+    }
+    const response = await postData('/online_order/create', data);
+    
+    if (response) {
+      setSuccessOrderData(response); 
+      console.log(response);
+      setIsModalOpen(true);
+    } else {
+      alert('Lỗi khi tạo đơn hàng. Vui lòng thử lại.');
+    } 
+  };
 
-    console.log("Dữ liệu gửi lên API tạo đơn:", orderPayload);
-    // TODO: Call API (VD: axios.post('/api/orders', orderPayload))
-    alert("Đặt hàng thành công!");
-    navigate('/success');
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    navigate('/dashboard');
   };
 
   if (cartItems.length === 0) {
@@ -66,8 +107,11 @@ const CheckoutPage = () => {
         <h2>Thanh toán</h2>
         {/* Tái sử dụng OrderForm cho mode checkout */}
         <OrderForm 
+          initialValues={initialValues}
           mode="checkout" 
           onSubmit={handlePlaceOrder} 
+          isReadOnly={false}
+          setShippingFee={setShippingFee}
         />
       </div>
 
@@ -75,9 +119,9 @@ const CheckoutPage = () => {
         <h3>Đơn hàng của bạn</h3>
         <div className="cart-items-list">
           {cartItems.map((item, index) => (
-            <div key={index} className="cart-item">
-              <span>{item.name} (x{item.quantity})</span>
-              <span>{(item.price * item.quantity).toLocaleString()} ₫</span>
+            <div key={item.productDTO.productId} className="cart-item">
+              <span>{item.productDTO.name} (x{item.quantity})</span>
+              <span>{(item.productDTO.price * item.quantity).toLocaleString()} ₫</span>
             </div>
           ))}
         </div>
@@ -104,6 +148,12 @@ const CheckoutPage = () => {
           <span style={{ color: '#d9534f' }}>{grandTotal.toLocaleString()} ₫</span>
         </div>
       </div>
+
+      <OrderSuccessModal 
+        isOpen={isModalOpen} 
+        onClose={handleCloseModal} 
+        orderData={successOrderData} 
+      />
     </div>
   );
 };

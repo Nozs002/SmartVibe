@@ -21,9 +21,10 @@ public class ProductDTO {
     private boolean isSerialized;
 
     private String description;
-    private BigDecimal basePrice;
+    private BigDecimal price;
     private int warrantyMonths;
     private Map<String, Object> specifications;
     private String thumbnail;
     private String status;
+    private Long stock;
 }

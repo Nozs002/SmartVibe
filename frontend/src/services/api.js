@@ -33,7 +33,7 @@ export const getData = async (url) => {
 // Xuất các hàm cho POST, PUT, DELETE để giao diện dùng (Clean Code)
 export const postData = async (url, data) => {
     const response = await api.post(url, data);
-    return response.data;
+    return response.data.result;
 };
 
 export const putData = async (url, data) => {

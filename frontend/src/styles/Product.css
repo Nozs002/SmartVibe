@@ -18,6 +18,7 @@
   padding: 16px;
   border-radius: 24px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+  height: 100%;
 }
 
 /* Phần hình ảnh */
@@ -62,24 +63,28 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
+  flex: 1;
 }
 
 .product-title {
-  font-size: 18px;
+  font-size: 1rem;
   font-weight: 600;
-  color: #111111;
   margin: 0;
-  cursor: pointer;
-  white-space: nowrap;
+  color: #374151;
+  /* Nếu tên quá dài sẽ tự biến thành dấu ... */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
+  cursor: pointer;
 }
 
 .product-meta {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
+  margin: auto 0 16px 0;
+  gap: 8px;
 }
 
 .product-rating {
@@ -96,9 +101,13 @@
 }
 
 .product-price {
-  font-size: 20px;
+  font-size: 1.15rem;
   font-weight: 700;
-  color: #111111;
+  color: #111827;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Phần nút bấm (Actions) */
@@ -108,8 +117,36 @@
   width: 100%;
 }
 
+.product-stock {
+  font-size: 0.85rem;
+}
+
+/* Gộp chung để code ngắn hơn */
+.text-in-stock,
+.text-out-of-stock {
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-weight: 500;
+
+  /* BỔ SUNG 3 DÒNG NÀY */
+  white-space: nowrap;
+  flex-shrink: 0;
+  font-size: 0.75rem;
+}
+
+.text-in-stock {
+  background-color: #f0fdf4;
+  color: #16a34a;
+}
+
+.text-out-of-stock {
+  background-color: #fef2f2;
+  color: #dc2626;
+}
+
 .btn-action {
   flex: 1;
+  white-space: nowrap;
   padding: 10px 0;
   border-radius: 30px;
   font-size: 13px;
@@ -248,48 +285,3 @@
 .sort-select:hover {
   background-color: #fcfcfc;
 }
-
-/* Phần phân trang mini bên phải */
-/* .pagination-mini {
-  margin-left: auto; 
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.page-info {
-  font-size: 14px;
-}
-
-.page-info .current {
-  color: #ee4d2d;
-}
-
-.page-controls {
-  display: flex;
-  border: 1px solid #ddd;
-  border-radius: 2px;
-  overflow: hidden;
-}
-
-.page-btn {
-  background-color: #fff;
-  border: none;
-  padding: 8px 12px;
-  cursor: pointer;
-  border-left: 1px solid #ddd;
-}
-
-.page-btn:first-child {
-  border-left: none;
-}
-
-.page-btn:hover:not(:disabled) {
-  background-color: #f9f9f9;
-}
-
-.page-btn:disabled {
-  color: #ccc;
-  cursor: not-allowed;
-  background-color: #fdfdfd;
-} */

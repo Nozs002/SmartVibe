@@ -16,6 +16,7 @@ public class UserResponse {
     private long id;
     private String username;
     private String password;
+    private String fullname;
     private String role;
     private String address;
     private LocalDate birthday;

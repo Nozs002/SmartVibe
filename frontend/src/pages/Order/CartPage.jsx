@@ -83,15 +83,8 @@ const CartPage = () => {
     if (selectedIds.length === 0) return;
 
     // Lọc ra danh sách các item cụ thể được check chọn từ giỏ hàng
-    // và chuẩn hóa cấu trúc dữ liệu gửi đi sao cho khớp với form đơn hàng nhận
     const itemsToBuy = cartItems
-      .filter(item => selectedIds.includes(item.id))
-      .map(item => ({
-        id: item.productDTO.id, // ID sản phẩm
-        name: item.productDTO.name,
-        quantity: item.quantity,
-        price: item.productDTO.basePrice
-      }));
+      .filter(item => selectedIds.includes(item.id));
 
     // Chuyển hướng sang trang thanh toán kèm theo dữ liệu thông qua state
     navigate('/checkout', { 
@@ -102,7 +95,7 @@ const CartPage = () => {
   // Tính toán tổng tiền của CÁC SẢN PHẨM ĐƯỢC CHỌN
   const selectedItems = (cartItems || []).filter(item => selectedIds.includes(item.id));
   const totalItemsCount = selectedItems.reduce((sum, item) => sum + item.quantity, 0);
-  const totalPrice = selectedItems.reduce((sum, item) => sum + (item.productDTO.basePrice * item.quantity), 0);
+  const totalPrice = selectedItems.reduce((sum, item) => sum + (item.productDTO.price * item.quantity), 0);
 
   return (
     <div className="cart-page-wrapper">
@@ -148,7 +141,7 @@ const CartPage = () => {
                   <span className="item-name">{item.productDTO.name}</span>
                 </div>
 
-                <div className="col-price">{item.productDTO.basePrice.toLocaleString()} ₫</div>
+                <div className="col-price">{item.productDTO.price.toLocaleString()} ₫</div>
 
                 <div className="col-quantity">
                   <div className="qty-controls">
@@ -159,7 +152,7 @@ const CartPage = () => {
                 </div>
 
                 <div className="col-total highlight-price">
-                  {(item.productDTO.basePrice * item.quantity).toLocaleString()} ₫
+                  {(item.productDTO.price * item.quantity).toLocaleString()} ₫
                 </div>
 
                 <div className="col-action">
@@ -170,7 +163,6 @@ const CartPage = () => {
           )}
         </div>
 
-        {/* KHU VỰC VOUCHER TƯƠNG TỰ SHOPEE (Chỉ giao diện) */}
         <div className="cart-voucher-section">
           <div className="voucher-left">
             <span className="voucher-icon">🎟️</span> SmartVibe Voucher

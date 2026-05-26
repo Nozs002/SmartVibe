@@ -76,10 +76,10 @@ const ProductManagementPage = () => {
     // Sắp xếp
     switch (sortBy) {
       case 'price_asc':
-        result.sort((a, b) => Number(a.basePrice) - Number(b.basePrice));
+        result.sort((a, b) => Number(a.price) - Number(b.price));
         break;
       case 'price_desc':
-        result.sort((a, b) => Number(b.basePrice) - Number(a.basePrice));
+        result.sort((a, b) => Number(b.price) - Number(a.price));
         break;
       case 'best_selling':
         result.sort((a, b) => (b.sold || 0) - (a.sold || 0));
@@ -98,9 +98,15 @@ const ProductManagementPage = () => {
     return result;
   }, [products, searchTerm, selectedCategory, sortBy]);
 
-  // Handle Event của Card
-  const handleProductAction = (actionType, product) => {
-    console.log(`Bấm nút ${actionType} trên sản phẩm ${product.name}`);
+  // Hàm xử lý chung cho mọi nút bấm ở role="manager"
+  const handleManagerActions = (actionType, product) => {
+    if (actionType === 'edit') {
+      // Mở modal chỉnh sửa sản phẩm
+      console.log("Chỉnh sửa sản phẩm:", product.id);
+    } else if (actionType === 'discontinue') {
+      // Gọi API ngừng bán
+      console.log("Ngừng bán sản phẩm:", product.id);
+    }
   };
 
   return (
@@ -124,7 +130,7 @@ const ProductManagementPage = () => {
       <ProductList 
         products={filteredAndSortedProducts} 
         role="manager" 
-        onProductAction={handleProductAction}
+        onProductAction={handleManagerActions}
       />
     </div>
   );

@@ -21,6 +21,7 @@ public class User {
 
     private String username;
     private String password;
+    private String fullname;
 
     @Column(columnDefinition = "ENUM('staff', 'customer', 'system admin')")
     private String role;

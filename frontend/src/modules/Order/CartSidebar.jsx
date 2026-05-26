@@ -7,12 +7,13 @@ const CartSidebar = ({
     setIsCartOpen, 
     cartItems, 
     onUpdateQuantity, 
-    onRemoveItem 
+    onRemoveItem, 
+    handleGoToCheckout
 }) => {
     
     // Tính toán tổng tiền và tổng số lượng ngay trong component con
     const totalCartItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-    const totalCartPrice = cartItems.reduce((sum, item) => sum + (Number(item.productDTO.basePrice) * item.quantity), 0);
+    const totalCartPrice = cartItems.reduce((sum, item) => sum + (Number(item.productDTO.price) * item.quantity), 0);
 
     return (
         <>
@@ -44,7 +45,7 @@ const CartSidebar = ({
                                 <img src={item.productDTO.imageUrl} alt={item.productDTO.name} className="cart-item-img" />
                                 <div className="cart-item-info">
                                     <h4>{item.productDTO.name}</h4>
-                                    <p className="cart-item-price">{Number(item.productDTO.basePrice).toLocaleString()} đ</p>
+                                    <p className="cart-item-price">{Number(item.productDTO.price).toLocaleString()} đ</p>
                                     
                                     <div className="cart-item-actions">
                                         <div className="quantity-controls">
@@ -65,7 +66,8 @@ const CartSidebar = ({
                         <span>Tổng cộng:</span>
                         <strong>{totalCartPrice.toLocaleString()} đ</strong>
                     </div>
-                    <button className="checkout-btn" disabled={cartItems.length === 0}>
+                    <button className="checkout-btn" disabled={cartItems.length === 0}
+                    onClick={() => handleGoToCheckout()}>
                         Mua Ngay
                     </button>
                 </div>

@@ -4,11 +4,11 @@ import '../../styles/UpdateProfile.css'; // Sử dụng file css chung hoặc ri
 
 const UpdateProfileForm = () => {
     const [formData, setFormData] = useState({
-        email: 'staff2@gmail.com',
+        email: '',
         phone: '',
         address: '',
         birthday: '',
-        sex: 'other',
+        sex: '',
         description: ''
     });
 

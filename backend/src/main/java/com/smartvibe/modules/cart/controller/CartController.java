@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.smartvibe.common.response.ApiResponse;
 import com.smartvibe.modules.cart.dto.CartItemDTO;
-import com.smartvibe.modules.cart.entity.Cart;
 import com.smartvibe.modules.cart.service.CartService;
 
 @RestController

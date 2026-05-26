@@ -2,34 +2,38 @@ import React, { useState, useEffect } from 'react';
 import '../../styles/OrderDetail.css';
 
 const OrderForm = ({ 
-  initialValues, 
+  initialValues = {}, 
   onSubmit, 
   mode = 'checkout', // 'checkout' | 'admin'
-  isReadOnly = false 
+  isReadOnly,
+  setShippingFee,
 }) => {
-  const [formData, setFormData] = useState({
-    phone: '',
-    delivery_location: '',
-    note: '',
-    payment_method: 'cash',
-    shipping_provider: '',
-    // Các trường dành cho admin quản lý
-    order_status: 'pending',
-    delivery_status: 'not shipped',
-    payment_status: 'unpaid',
-    tracking_code: '',
-    ...initialValues
-  });
-
-  useEffect(() => {
-    if (initialValues) {
-      setFormData(prev => ({ ...prev, ...initialValues }));
-    }
-  }, [initialValues]);
+  const [formData, setFormData] = useState(initialValues);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleChangeShippingProvider = (e) => {
+    const value = e.target.value;
+    let shippingFee = 0;
+    if (value === 'GHTK') {
+      shippingFee = 50000;
+    } else if (value === 'GHN') {
+      shippingFee = 100000;
+    } else if (value === 'ViettelPost') {
+      shippingFee = 80000;
+    }
+
+    if(formData.customerType == 'vip')
+      shippingFee = shippingFee * 0.7;
+    else if(formData.customerType == 'gold')
+      shippingFee = shippingFee * 0.5;
+    else if(formData.customerType == 'diamond')
+      shippingFee = 0;
+    setFormData(prev => ({ ...prev, shippingProvider: value, shippingFee: shippingFee }));
+    setShippingFee(shippingFee);
   };
 
   const handleSubmit = (e) => {
@@ -46,20 +50,20 @@ const OrderForm = ({
           <label>Người nhận hàng *</label>
           <input 
             type="text" 
-            name="phone" 
-            value={formData.phone} 
+            name="customerName" 
+            value={formData.customerName} 
             onChange={handleChange} 
             readOnly={isReadOnly}
             required
-            placeholder="Họ và tên"
+            placeholder="Nhập họ và tên người nhận"
           />
         </div>
         <div className="form-group">
           <label>Số điện thoại *</label>
           <input 
             type="text" 
-            name="phone" 
-            value={formData.phone} 
+            name="customerPhone" 
+            value={formData.customerPhone} 
             onChange={handleChange} 
             readOnly={isReadOnly}
             required
@@ -72,8 +76,8 @@ const OrderForm = ({
         <label>Địa chỉ nhận hàng *</label>
         <input 
           type="text" 
-          name="delivery_location" 
-          value={formData.delivery_location} 
+          name="deliveryLocation" 
+          value={formData.deliveryLocation} 
           onChange={handleChange} 
           readOnly={isReadOnly}
           required
@@ -85,8 +89,8 @@ const OrderForm = ({
         <div className="form-group">
         <label>Phương thức thanh toán *</label>
         <select 
-          name="payment_method" 
-          value={formData.payment_method} 
+          name="paymentMethod" 
+          value={formData.paymentMethod} 
           onChange={handleChange}
           disabled={isReadOnly}
         >
@@ -97,10 +101,11 @@ const OrderForm = ({
         <div className="form-group">
           <label>Đơn vị vận chuyển</label>
           <select 
-            name="shipping_provider" 
-            value={formData.shipping_provider} 
-            onChange={handleChange}
+            name="shippingProvider" 
+            value={formData.shippingProvider} 
+            onChange={handleChangeShippingProvider}
             disabled={isReadOnly}
+            required
           >
             <option value="">-- Chọn đơn vị --</option>
             <option value="GHTK">Giao Hàng Tiết Kiệm (GHTK)</option>

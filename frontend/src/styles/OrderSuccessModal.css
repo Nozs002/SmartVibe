@@ -1,0 +1,346 @@
+/* --- Cấu trúc nền và Container của Modal --- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center; /* Căn giữa modal theo chiều dọc */
+  justify-content: center; /* Căn giữa modal theo chiều ngang */
+  padding: 20px;
+  background-color: rgba(
+    0,
+    0,
+    0,
+    0.6
+  ); /* Làm nền tối hơn một chút để nổi bật popup */
+  backdrop-filter: blur(3px);
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+  box-sizing: border-box;
+}
+
+.modal-container {
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.15),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  max-w: 550px;
+  width: 100%;
+
+  /* SỬA LỖI CỐT LÕI TẠI ĐÂY: */
+  max-height: 90vh; /* Không cho phép modal vượt quá 90% chiều cao màn hình */
+  display: flex;
+  flex-direction: column; /* Chia modal thành các khối dọc */
+
+  padding: 24px;
+  box-sizing: border-box;
+  position: relative;
+}
+
+/* --- Tạo vùng cuộn riêng biệt cho thân Modal nếu dữ liệu quá dài --- */
+.modal-body {
+  overflow-y: auto; /* Chỉ cho phép cuộn bên trong vùng chứa thông tin này */
+  flex: 1; /* Tự động co giãn chiếm phần không gian trống */
+  margin-top: 20px;
+  padding-right: 4px; /* Tránh thanh cuộn đè vào chữ */
+}
+
+/* --- Tùy chỉnh lại thanh cuộn bên trong cho đẹp, không bị lỗi layout hệ thống --- */
+.modal-body::-webkit-scrollbar {
+  width: 6px;
+}
+.modal-body::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 10px;
+}
+.modal-body::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+.modal-body::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* --- Header --- */
+.modal-header {
+  text-align: center;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 16px;
+  flex-shrink: 0; /* Không cho phép header bị bóp méo chiều cao */
+}
+
+.icon-success-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  background-color: #dcfce7;
+  color: #22c55e;
+  border-radius: 50%;
+  margin-bottom: 12px;
+}
+
+.icon-success {
+  width: 32px;
+  height: 32px;
+}
+
+.modal-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+
+.modal-subtitle {
+  font-size: 13px;
+  color: #64748b;
+  margin: 4px 0 0 0;
+}
+
+.order-badge {
+  display: inline-block;
+  background-color: #eff6ff;
+  color: #1d4ed8;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 4px 14px;
+  border-radius: 9999px;
+  margin-top: 10px;
+}
+
+/* --- Các ô thông tin (Giữ nguyên cấu trúc nhưng bọc padding an toàn) --- */
+.section-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #475569;
+  margin: 0 0 10px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.info-box {
+  background-color: #f8fafc;
+  border-radius: 12px;
+  padding: 14px;
+  border: 1px solid #f1f5f9;
+  box-sizing: border-box;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.info-row:last-child {
+  margin-bottom: 0;
+}
+
+.info-row.align-start {
+  align-items: flex-start;
+}
+
+.info-label {
+  color: #64748b;
+  font-weight: 500;
+}
+
+.info-value {
+  color: #1e293b;
+}
+
+.text-right {
+  text-align: right;
+}
+
+/* --- Grid chia 2 cột --- */
+.grid-twocol {
+  display: grid;
+  grid-template-cols: 1fr 1fr;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.box-half {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.box-title {
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.status-subtext {
+  font-size: 11px;
+  font-weight: 500;
+}
+
+/* --- Khối Hướng dẫn chuyển khoản ngân hàng --- */
+.bank-instruction-box {
+  background-color: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  padding: 14px;
+  border-radius: 12px;
+  margin-top: 12px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.bank-title {
+  font-weight: 700;
+  color: #166534;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.bank-desc {
+  color: #15803d;
+  font-size: 12px;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.bank-account-number {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 10px;
+  margin-top: 8px;
+  font-family: monospace;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: #334155;
+}
+
+.order-note-text {
+  font-size: 12px;
+  color: #94a3b8;
+  font-style: italic;
+  margin-top: 12px;
+}
+
+/* --- Footer cố định nằm dưới đáy Modal --- */
+.modal-footer {
+  margin-top: 20px;
+  padding-top: 14px;
+  border-top: 1px solid #f1f5f9;
+  display: flex;
+  gap: 12px;
+  flex-shrink: 0; /* Không cho phép footer bị biến dạng */
+}
+
+.btn-secondary {
+  flex: 1;
+  padding: 10px 16px;
+  background-color: #f1f5f9;
+  border: none;
+  border-radius: 10px;
+  color: #475569;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-secondary:hover {
+  background-color: #e2e8f0;
+}
+
+.btn-primary {
+  flex: 1;
+  padding: 10px 16px;
+  background-color: #2563eb;
+  border: none;
+  border-radius: 10px;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+  transition: background-color 0.2s;
+}
+
+.btn-primary:hover {
+  background-color: #1d4ed8;
+}
+
+/* --- Tiện ích hỗ trợ hệ thống --- */
+.flex-center {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.icon-small {
+  width: 16px;
+  height: 16px;
+  color: #64748b;
+}
+
+.icon-inline {
+  width: 14px;
+  height: 14px;
+}
+
+.font-highlight {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.font-mono {
+  font-family: monospace;
+  font-weight: 600;
+}
+
+.uppercase {
+  text-transform: uppercase;
+}
+.text-blue {
+  color: #2563eb;
+}
+.text-orange {
+  color: #ea580c;
+}
+.text-red {
+  color: #ef4444;
+}
+.text-muted {
+  color: #64748b;
+}
+.select-all {
+  user-select: all;
+}
+
+/* --- Hiệu ứng Animate mở mượt mà --- */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.2s ease-out forwards;
+}
+
+@media (max-width: 480px) {
+  .grid-twocol {
+    grid-template-cols: 1fr;
+  }
+}

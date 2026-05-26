@@ -42,8 +42,8 @@ public class Product {
 
     private String description;
 
-    @Column(name = "base_price", nullable = false)
-    private BigDecimal basePrice;
+    @Column(name = "price", nullable = false)
+    private BigDecimal price;
 
     @Column(name = "warranty_months", nullable = false)
     private int warrantyMonths;

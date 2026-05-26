@@ -54,8 +54,7 @@ public class CartService {
                     .name(product.getName()).categoryId(product.getCategoryId()).brandId(product.getBrandId())
                     .isSerialized(product.isSerialized()).description(product.getDescription())
                     .warrantyMonths(product.getWarrantyMonths()).specifications(product.getSpecifications())
-                    .thumbnail(product.getThumbnail()).status(product.getStatus()).basePrice(product.getBasePrice())
-                    .build();
+                    .thumbnail(product.getThumbnail()).status(product.getStatus()).price(product.getPrice()).build();
 
             // Tạo CartItemDTO
             return CartItemDTO.builder().id(cartItem.getId()).cartId(cartItem.getCartId()).productDTO(productDTO)
@@ -86,10 +85,22 @@ public class CartService {
         if (cartOpt.isEmpty()) {
             throw new AppException(ErrorCode.CART_NOT_FOUND);
         }
+        if (cartItemDTO.getQuantity() > cartItemDTO.getProductDTO().getStock()) {
+            throw new AppException(ErrorCode.PRODUCT_STOCK_NOT_ENOUGH);
+        }
         Cart cart = cartOpt.get();
         CartItem newCartItem = CartItem.builder().cartId(cart.getId()).productId(cartItemDTO.getProductDTO().getId())
                 .quantity(cartItemDTO.getQuantity()).build();
-        cartItemRepository.save(newCartItem);
+        // Check if the product is already in the cart
+        Optional<CartItem> existingCartItem = cartItemRepository.findByCartIdAndProductId(cart.getId(),
+                cartItemDTO.getProductDTO().getId());
+        if (existingCartItem.isPresent()) {
+            newCartItem = existingCartItem.get();
+            newCartItem.setQuantity(newCartItem.getQuantity() + 1);
+        }
+        newCartItem = cartItemRepository.save(newCartItem);
+        cartItemDTO.setId(newCartItem.getId());
+        cartItemDTO.setQuantity(newCartItem.getQuantity());
         return cartItemDTO;
     }
 }
