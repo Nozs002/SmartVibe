@@ -13,7 +13,7 @@
   background: #f9f9f9;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .checkout-summary-section {
@@ -92,4 +92,240 @@
   font-weight: bold;
   display: flex;
   justify-content: space-between;
+}
+
+/* STYLE CHO TRANG CHI TIẾT ĐƠN HÀNG */
+
+.order-detail-wrapper {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow:
+    0 4px 6px rgba(0, 0, 0, 0.05),
+    0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  font-family: inherit;
+  color: #333;
+}
+
+/* --- HEADER --- */
+.header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eaeaea;
+  padding-bottom: 16px;
+  margin-bottom: 24px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.header-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 0;
+}
+
+/* --- GRID THÔNG TIN --- */
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.info-box {
+  border: 1px solid #eaeaea;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.info-box p {
+  margin: 0 0 8px 0;
+  line-height: 1.5;
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 12px 0;
+  color: #111;
+}
+
+.staff-only-info {
+  background-color: #f3f4f6;
+  border-left: 4px solid #3b82f6;
+  border-radius: 4px;
+  padding: 12px;
+  margin-top: 16px;
+}
+
+.staff-title {
+  color: #2563eb;
+  font-weight: bold;
+  font-size: 14px;
+  margin-bottom: 4px !important;
+}
+
+/* --- BẢNG SẢN PHẨM --- */
+.products-section {
+  margin-bottom: 24px;
+}
+
+.order-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #eaeaea;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.order-table thead {
+  background-color: #f9fafb;
+}
+
+.order-table th,
+.order-table td {
+  padding: 12px;
+  border-bottom: 1px solid #eaeaea;
+  text-align: left;
+}
+
+.order-table tbody tr:hover {
+  background-color: #f9fafb;
+}
+
+.text-right {
+  text-align: right !important;
+}
+
+/* --- PHẦN TỔNG TIỀN (ĐÃ FIX LỀ) --- */
+.summary-section {
+  border-top: 1px solid #eaeaea;
+  padding-top: 24px;
+  padding-right: 24px; /* Cách lề phải */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end; /* Ép toàn bộ khối sát sang phải */
+}
+
+.summary-row {
+  margin: 0 0 8px 0;
+  font-size: 15px;
+}
+
+.discount-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-bottom: 8px;
+}
+
+.discount-text {
+  color: #16a34a; /* Màu xanh lá */
+  margin: 0;
+}
+
+.discount-note {
+  font-size: 12px;
+  color: #9ca3af;
+  font-style: italic;
+  margin-top: 4px;
+}
+
+.total-price {
+  font-size: 20px;
+  color: #dc2626; /* Màu đỏ */
+  margin: 12px 0 0 0;
+}
+
+/* --- NÚT CHỨC NĂNG --- */
+.action-buttons {
+  display: flex;
+  justify-content: flex-end; /* Đẩy sát lề phải cùng trục với tổng tiền */
+  gap: 12px;
+  margin-top: 32px;
+  padding-right: 24px;
+}
+
+/* --- BADGE TRẠNG THÁI --- */
+.status-badge-ui {
+  padding: 6px 14px;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 13px;
+  display: inline-block;
+}
+.status-badge-ui.pending {
+  background-color: #fef3c7;
+  color: #d97706;
+}
+.status-badge-ui.completed,
+.status-badge-ui.shipping,
+.status-badge-ui.delivered {
+  background-color: #d1fae5;
+  color: #059669;
+}
+.status-badge-ui.cancelled,
+.status-badge-ui.failed {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+/* --- NÚT BẤM (Nếu bạn chưa có sẵn) --- */
+.btn-ui {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: 0.2s;
+}
+.btn-ui-outline {
+  background: #fff;
+  border-color: #d1d5db;
+  color: #374151;
+}
+.btn-ui-outline:hover {
+  background: #f3f4f6;
+}
+.btn-ui-primary {
+  background: #2563eb;
+  color: #fff;
+}
+.btn-ui-primary:hover {
+  background: #1d4ed8;
+}
+.btn-ui-success {
+  background: #16a34a;
+  color: #fff;
+}
+.btn-ui-success:hover {
+  background: #15803d;
+}
+
+/* Nút hủy đơn mềm mại */
+.btn-ui-danger-soft {
+  background-color: #fee2e2;
+  color: #ef4444;
+  border: 1px solid transparent;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.btn-ui-danger-soft:hover {
+  background-color: #fca5a5;
+  color: #b91c1c;
+}
+.btn-ui-danger-soft.outline {
+  background-color: transparent;
+  border-color: #fca5a5;
+}
+.btn-ui-danger-soft.outline:hover {
+  background-color: #fee2e2;
 }

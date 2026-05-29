@@ -29,4 +29,18 @@ public class UserController {
         response.setResult(userService.getAllUsers());
         return response;
     }
+
+    @PreAuthorize("hasRole('SYSTEM_ADMIN')")
+    @PutMapping("/{id}")
+    public ApiResponse<UserResponse> updateUser(@PathVariable("id") Long id, @RequestBody UserResponse userResponse) {
+        ApiResponse<UserResponse> response = new ApiResponse<>();
+        response.setResult(userService.updateUser(id, userResponse));
+        return response;
+    }
+
+    @PreAuthorize("hasRole('SYSTEM_ADMIN')")
+    @DeleteMapping("/{id}")
+    public void deleteUser(@PathVariable("id") Long id) {
+        userService.deleteUser(id);
+    }
 }

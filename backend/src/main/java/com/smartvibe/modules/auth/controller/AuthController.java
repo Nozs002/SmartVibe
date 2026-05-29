@@ -3,7 +3,7 @@ package com.smartvibe.modules.auth.controller;
 import org.springframework.web.bind.annotation.*;
 import com.smartvibe.common.response.ApiResponse;
 import com.smartvibe.modules.auth.dto.UserLoginRequest;
-import com.smartvibe.modules.auth.dto.UserResponse;
+import com.smartvibe.modules.user.dto.response.UserResponse;
 import com.smartvibe.modules.auth.dto.UserRegisterRequest;
 
 import java.util.Optional;

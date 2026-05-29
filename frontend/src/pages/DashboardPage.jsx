@@ -144,7 +144,6 @@ const CustomerDashboard = ({customer, onNavigate, user}) => (
       <div className="stat-card">
         <div className="stat-info">
           <p>Điểm tích lũy</p>
-          {/* <h3>1,250 pt</h3> */}
           <span className="trend green">Thành viên {customer.type}</span>
           </div>
         <div className="stat-icon" style={{ background: '#fef3c7', color: '#f59e0b' }}><i className="fa-solid fa-star"></i></div>
@@ -387,7 +386,7 @@ const DashboardPage = () => {
 
   return (
     <div className="dashboard-container">
-      {/* <div style={{ marginBottom: '20px', display: 'flex', gap: '10px' }}>
+      <div style={{ marginBottom: '20px', display: 'flex', gap: '10px' }}>
         <span>Test UI: </span>
         <button onClick={() => setUserRole('admin')} className="btn-sm">View as Admin</button>
         <button onClick={() => setUserRole('warehouse')} className="btn-sm">View as Warehouse</button>
@@ -395,7 +394,7 @@ const DashboardPage = () => {
         <button onClick={() => setUserRole('manager')} className="btn-sm">View as Manager</button>
         <button onClick={() => setUserRole('tech')} className="btn-sm">View as Tech Staff</button>
         <button onClick={() => setUserRole('sales')} className="btn-sm">View as Sales</button>
-      </div> */}
+      </div>
 
       {/*hiển thị Dashboard*/}
       {renderDashboardByRole()}

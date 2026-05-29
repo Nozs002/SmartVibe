@@ -10,19 +10,7 @@ const CheckoutPage = () => {
   const navigate = useNavigate();
   
   // Lấy danh sách cartItems được truyền từ giỏ hàng sang
-  const [cartItems, setCartItems] = useState(location.state?.cartItems || [/*{
-      id: 38,
-      cartId: 1,
-      quantity: 1,
-      productDTO: {
-        id: 1,
-        name: "Laptop Dell XPS 15 (Bản Test)",
-        price: 35000000,
-        isSerialized: true,
-        sku: "SKU-1"
-      }
-    },
-    }*/]);
+  const [cartItems, setCartItems] = useState(location.state?.cartItems || []);
   const [shippingFee, setShippingFee] = useState(0);
 
   const customer = JSON.parse(localStorage.getItem('customer') || '{}');
@@ -97,6 +85,11 @@ const CheckoutPage = () => {
     navigate('/dashboard');
   };
 
+  const handleViewOrderHistory = () => {
+    setIsModalOpen(false);
+    navigate('/order-history');
+  }
+
   if (cartItems.length === 0) {
     return <div style={{textAlign: 'center', marginTop: '50px'}}>Giỏ hàng của bạn đang trống!</div>;
   }
@@ -153,6 +146,7 @@ const CheckoutPage = () => {
         isOpen={isModalOpen} 
         onClose={handleCloseModal} 
         orderData={successOrderData} 
+        onView = {handleViewOrderHistory}
       />
     </div>
   );

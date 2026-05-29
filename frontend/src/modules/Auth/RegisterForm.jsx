@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import thêm thư viện điều hướng
+import { useNavigate } from 'react-router-dom'; 
 import { register } from '../../services/auth.service';
 
 const RegisterForm = () => {
@@ -13,7 +13,7 @@ const RegisterForm = () => {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
-    const navigate = useNavigate(); // Cho phép chuyển trang mà không cần click vào link
+    const navigate = useNavigate(); 
 
     const handleRegister = async (e) => {
         e.preventDefault();

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import thêm thư viện điều hướng
+import { useNavigate } from 'react-router-dom'; 
 import { login } from '../../services/auth.service';
 import { Link } from 'react-router-dom'; // Dùng để chuyển trang mà không load lại web
 
@@ -10,7 +10,7 @@ const LoginForm = () => {
   const [loading, setLoading] = useState(false);
   
   
-  const navigate = useNavigate(); // Cho phép chuyển trang mà không cần click vào link
+  const navigate = useNavigate(); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,9 +19,9 @@ const LoginForm = () => {
 
     try {
       const data = await login(username, password);
-      if (data.accountStatus === 'inactive') {
+      if (data.user.accountStatus === 'inactive') {
         navigate('/account-status', { state: { type: 'inactive' } });
-      } else if (data.accountStatus === 'banned') {
+      } else if (data.user.accountStatus === 'banned') {
         navigate('/account-status', { state: { type: 'banned' } });
       } else {
         navigate('/dashboard'); // Chỉ vào dashboard nếu ACTIVE

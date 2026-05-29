@@ -10,7 +10,7 @@ import {
 } from 'react-icons/fa'; // Import các icon từ Font Awesome
 import '../../styles/OrderSuccessModal.css';
 
-const OrderSuccessModal = ({ isOpen, onClose, orderData }) => {
+const OrderSuccessModal = ({ isOpen, onClose, orderData, onView }) => {
   if (!isOpen || !orderData) return null;
 
   return (
@@ -108,7 +108,7 @@ const OrderSuccessModal = ({ isOpen, onClose, orderData }) => {
           <button onClick={onClose} className="btn-secondary">
             Đóng
           </button>
-          <button onClick={() => window.location.href = '/orders/history'} className="btn-primary">
+          <button onClick={onView} className="btn-primary">
             Lịch sử đơn hàng
           </button>
         </div>

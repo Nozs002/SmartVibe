@@ -40,11 +40,8 @@ const ProductCard = ({ product, role = 'customer', onViewDetail, onActionClick }
         const isOutOfStock = product.stock <= 0;
         return (
           <>
-            <button className="btn-action btn-outline" onClick={() => handleAction('add_to_cart')} disabled={isOutOfStock}>
-              Add to Cart
-            </button>
-            <button className="btn-action btn-dark" onClick={() => handleAction('buy_now')} disabled={isOutOfStock}>
-              Buy Now
+            <button className="btn-action btn-dark" onClick={() => handleAction('add_to_cart')} disabled={isOutOfStock}>
+              Thêm vào giỏ hàng
             </button>
           </>
         );

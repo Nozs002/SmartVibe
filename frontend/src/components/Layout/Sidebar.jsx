@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { 
   FaThLarge, FaShoppingCart, FaBoxOpen, 
-  FaUsers, FaChartBar, FaCog, FaUserShield, FaSignOutAlt, FaBars, FaHeadset, FaStore
+  FaUsers, FaChartBar, FaCog, FaUserShield, FaSignOutAlt, FaBars, FaHeadset, FaStore, FaClipboardList
 } from 'react-icons/fa';
 import '../../styles/Sidebar.css';
 
@@ -25,6 +25,7 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
         { path: '/contact', name: 'Liên hệ hỗ trợ', icon: <FaHeadset/>, allowedRoles: ['customer', 'guest'] },
         { path: '/branch', name: 'Quản lý chi nhánh', icon: <FaStore/>, allowedRoles: ['manager', 'sales staff', 'system admin'] },
         { path: '/staff', name: 'Quản lý nhân viên', icon: <FaUsers />, allowedRoles: ['manager', 'system admin'] },
+        {path: '/order-history', name: 'Lịch sử mua hàng', icon: <FaClipboardList />, allowedRoles:['system admin', 'customer']}
     ];
 
     const menuItems = allMenuItems.filter(item => item.allowedRoles.includes(currentRole));

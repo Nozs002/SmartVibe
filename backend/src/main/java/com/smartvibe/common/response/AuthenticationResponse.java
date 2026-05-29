@@ -3,7 +3,7 @@ package com.smartvibe.common.response;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import com.smartvibe.modules.customer.dto.CustomerDTO;
-import com.smartvibe.modules.auth.dto.UserResponse;
+import com.smartvibe.modules.user.dto.response.UserResponse;
 import com.smartvibe.modules.staff.dto.StaffDTO;
 
 @Data

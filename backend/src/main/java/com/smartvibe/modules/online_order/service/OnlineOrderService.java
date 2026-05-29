@@ -1,6 +1,8 @@
 package com.smartvibe.modules.online_order.service;
 
 import com.smartvibe.modules.online_order.dto.OnlineOrder;
+import com.smartvibe.modules.online_order.dto.OrderDetailDTO;
+import com.smartvibe.modules.online_order.dto.OrderResponse;
 import com.smartvibe.modules.cart.dto.CartItemDTO;
 import com.smartvibe.modules.online_order.repository.OrderRepository;
 import com.smartvibe.modules.cart.repository.CartItemRepository;
@@ -43,19 +45,17 @@ public class OnlineOrderService {
     private final OrderDetailRepository orderDetailRepository;
     private final CartItemRepository cartItemRepository;
     private final InventoryService inventoryService;
+    private final OrderDetailService orderDetailService;
 
     public boolean checkOrder(List<CartItemDTO> cartDTO, List<ProductInventory> productInventory) {
-        Map<Long, Long> productQuantityMap = productInventory.stream()
-                .collect(Collectors.toMap(ProductInventory::getProductId, ProductInventory::getQuantityAvailable));
+        Map<Long, Long> productQuantityMap = productInventory.stream().collect(
+                Collectors.toMap(ProductInventory::getProductId, ProductInventory::getQuantityAvailable, Long::sum));
         for (CartItemDTO item : cartDTO) {
             // kiểm tra số lượng sản phẩm có đủ không
             Long productId = item.getProductDTO().getId();
             Long availableQuantity = productQuantityMap.getOrDefault(productId, 0L);
 
             if (availableQuantity < item.getQuantity()) {
-                System.out.println("================================================");
-                System.out.println("Lỗi ở hàm checkorder sản phẩm " + item.getProductDTO().getName());
-                System.out.println("================================================");
                 throw new AppException(ErrorCode.PRODUCT_STOCK_NOT_ENOUGH);
             }
         }
@@ -71,9 +71,6 @@ public class OnlineOrderService {
         List<ProductInventory> productInventoryList;
 
         if (CollectionUtils.isEmpty(productIds)) {
-            System.out.println("================================================");
-            System.out.println("Lỗi ở hàm createOrder1");
-            System.out.println("================================================");
             throw new AppException(ErrorCode.CART_ITEMS_EMPTY);
         } else {
 
@@ -91,6 +88,10 @@ public class OnlineOrderService {
                 .shippingFee(onlineOrder.getShippingFee()).customerName(onlineOrder.getCustomerName()).branchId(1L)
                 .build();
         String shippingProvider = onlineOrder.getShippingProvider();
+
+        if (order.getShippingFee() == null) {
+            order.setShippingFee(BigDecimal.ZERO);
+        }
 
         switch (shippingProvider) {
         case "GHTK":
@@ -162,9 +163,6 @@ public class OnlineOrderService {
                         PageRequest.of(0, quantity));
 
                 if (availableItems.size() < quantity) {
-                    System.out.println("================================================");
-                    System.out.println("Lỗi ở không đủ serial sản phẩm ");
-                    System.out.println("================================================");
                     throw new AppException(ErrorCode.NOT_ENOUGH_SERIALS);
                 }
 
@@ -219,5 +217,26 @@ public class OnlineOrderService {
         if (!inventoriesToUpdate.isEmpty())
             inventoryRepository.saveAll(inventoriesToUpdate);
         cartItemRepository.deleteAllById(cartItemIdsToRemove);
+    }
+
+    public List<OrderResponse> getOrderList(Long id) {
+        List<Order> orders = orderRepository.findByCustomerId(id);
+        List<OrderResponse> orderResponses = new ArrayList<>();
+
+        for (Order order : orders) {
+            List<OrderDetailDTO> detailResponses = orderDetailService.getOrderDetailsByOrderId(order.getId());
+
+            OrderResponse response = OrderResponse.builder().id(order.getId()).type(order.getType())
+                    .createdAt(order.getCreatedAt()).note(order.getNote()).deliveryLocation(order.getDeliveryLocation())
+                    .phone(order.getPhone()).orderStatus(order.getOrderStatus())
+                    .deliveryStatus(order.getDeliveryStatus()).accountPayment(order.getAccountPayment())
+                    .paymentMethod(order.getPaymentMethod()).paymentStatus(order.getPaymentStatus())
+                    .discountPercent(order.getDiscountPercent()).shippingProvider(order.getShippingProvider())
+                    .trackingCode(order.getTrackingCode()).shippingFee(order.getShippingFee())
+                    .customerName(order.getCustomerName()).orderDetailDTO(detailResponses).build();
+
+            orderResponses.add(response);
+        }
+        return orderResponses;
     }
 }
