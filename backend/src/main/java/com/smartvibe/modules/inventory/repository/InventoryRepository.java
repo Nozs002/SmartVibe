@@ -5,6 +5,7 @@ import com.smartvibe.modules.inventory.dto.ProductInventory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import com.smartvibe.modules.inventory.dto.InventoryDTO;
 import java.util.Optional;
 
 import java.util.List;
@@ -23,4 +24,22 @@ public interface InventoryRepository extends JpaRepository<Inventory, Long> {
     List<Inventory> findByProductIdOrderByQuantityAvailableDesc(Long productId);
 
     Optional<Inventory> findByProductIdAndBranchId(Long productId, Long branchId);
+
+    @Query("SELECT new com.smartvibe.modules.inventory.dto.InventoryDTO(" +
+       "i.id, i.quantityAvailable, " +
+       "new com.smartvibe.modules.branch.dto.BranchDTO(b.id, b.name, b.address, b.phone, b.email, b.operatingStatus,b.type, b.numberOfStaff, b.capacity), " +
+       "new com.smartvibe.modules.product.dto.ProductDTO(p.id, p.sku, p.name, p.categoryId, p.brandId, p.isSerialized, p.description, p.price, p.warrantyMonths, p.specifications, p.thumbnail, p.status)) " +
+       "FROM Inventory i " +
+       "LEFT JOIN Branch b ON i.branchId = b.id " +
+       "JOIN Product p ON i.productId = p.id")
+    List<InventoryDTO> findAllInventoryDTOs();
+
+    @Query("SELECT new com.smartvibe.modules.inventory.dto.InventoryDTO(" +
+       "i.id, i.quantityAvailable, " +
+       "new com.smartvibe.modules.branch.dto.BranchDTO(b.id, b.name, b.address, b.phone, b.email, b.operatingStatus,b.type, b.numberOfStaff, b.capacity), " +
+       "new com.smartvibe.modules.product.dto.ProductDTO(p.id, p.sku, p.name, p.categoryId, p.brandId, p.isSerialized, p.description, p.price, p.warrantyMonths, p.specifications, p.thumbnail, p.status)) " +
+       "FROM Inventory i " +
+       "LEFT JOIN Branch b ON i.branchId = b.id " +
+       "JOIN Product p ON i.productId = p.id WHERE i.productId = :productId ")
+    List<InventoryDTO> getAvailableStockByProductId(@Param("productId") Long productId);
 }

@@ -40,7 +40,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             if (claims != null) {
                 try {
-                    // In ra để xem có chạy vào đây không
                     System.out.println("=== BẮT ĐẦU ĐỌC TOKEN ===");
 
                     String username = claims.getSubject();

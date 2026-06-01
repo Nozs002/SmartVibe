@@ -16,4 +16,6 @@ public interface OrderDetailRepository extends JpaRepository<OrderDetail, Long> 
            "FROM OrderDetail od JOIN Product p ON od.productId = p.id " +
            "WHERE od.orderId = :orderId GROUP BY od.productId, p.name")
     List<OrderDetailDTO> findByOrderIdAndGroupByProductId(@Param("orderId") Long orderId);
+
+    List<OrderDetail> findByOrderId(@Param("orderId") Long orderId);
 }

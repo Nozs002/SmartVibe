@@ -2,16 +2,20 @@ import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { 
   FaThLarge, FaShoppingCart, FaBoxOpen, 
-  FaUsers, FaChartBar, FaCog, FaUserShield, FaSignOutAlt, FaBars, FaHeadset, FaStore, FaClipboardList
+  FaUsers, FaChartBar, FaCog, FaUserShield, FaSignOutAlt, FaBars, FaHeadset, FaStore, FaClipboardList, FaExchangeAlt
 } from 'react-icons/fa';
 import '../../styles/Sidebar.css';
 
 const Sidebar = ({ isCollapsed, toggleSidebar }) => {
     const navigate = useNavigate();
     
-    const userData = localStorage.getItem('user');
-    const user = (userData && userData !== "undefined") ? JSON.parse(userData) : { role: 'system admin' };
-    const currentRole = user.role.toLowerCase();
+    let currentRole = 'customer';
+    const userData = JSON.parse(localStorage.getItem('user'));
+    if (userData.role === 'staff') {
+        currentRole = JSON.parse(localStorage.getItem('staff')).type;
+    } else if (userData.role === 'system admin') {
+        currentRole = 'system admin';
+    }
 
     const allMenuItems = [
         { path: '/dashboard', name: 'Trang chủ', icon: <FaThLarge />, allowedRoles: ['manager', 'system admin', 'customer', 'sales staff'] },
@@ -25,7 +29,10 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
         { path: '/contact', name: 'Liên hệ hỗ trợ', icon: <FaHeadset/>, allowedRoles: ['customer', 'guest'] },
         { path: '/branch', name: 'Quản lý chi nhánh', icon: <FaStore/>, allowedRoles: ['manager', 'sales staff', 'system admin'] },
         { path: '/staff', name: 'Quản lý nhân viên', icon: <FaUsers />, allowedRoles: ['manager', 'system admin'] },
-        {path: '/order-history', name: 'Lịch sử mua hàng', icon: <FaClipboardList />, allowedRoles:['system admin', 'customer']}
+        {path: '/order-history', name: 'Lịch sử mua hàng', icon: <FaClipboardList />, allowedRoles:['system admin', 'customer']},
+        { 
+        path: '/stock-transfer', name: 'Quản lý chuyển kho', icon: <FaExchangeAlt />, allowedRoles: ['manager', 'warehouse staff', 'system admin'] 
+    }
     ];
 
     const menuItems = allMenuItems.filter(item => item.allowedRoles.includes(currentRole));

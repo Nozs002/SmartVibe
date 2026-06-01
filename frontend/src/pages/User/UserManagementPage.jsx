@@ -203,7 +203,7 @@ const getStatusStyle = (status) => {
   let color = '#374151';
   let bgColor = '#e5e7eb';
   if (status === 'active') { bgColor = '#d1fae5'; color = '#059669'; }
-  if (status === 'inactive') { bgColor = '#fef3c7'; color = '#d97706'; } // Màu vàng cho chờ phê duyệt
+  if (status === 'inactive') { bgColor = '#fef3c7'; color = '#d97706'; }
   if (status === 'banned') { bgColor = '#fee2e2'; color = '#dc2626'; }
   return { backgroundColor: bgColor, color: color, padding: '4px 8px', borderRadius: '12px', fontSize: '12px', fontWeight: '600', display: 'inline-block' };
 };

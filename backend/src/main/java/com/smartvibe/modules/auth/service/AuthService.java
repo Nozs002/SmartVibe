@@ -63,9 +63,6 @@ public class AuthService {
             throw new AppException(ErrorCode.INVALID_LOGIN);
         }
 
-        // neu dung mat khau -> tao token xac dinh nguoi dung
-        String token = generateToken(user);
-
         UserResponse userResponse = UserResponse.builder().username(user.getUsername()).fullname(user.getFullname())
                 .role(user.getRole()).address(user.getAddress()).birthday(user.getBirthday()).email(user.getEmail())
                 .description(user.getDescription()).avtUrl(user.getAvtUrl()).personalImg(user.getPersonalImg())
@@ -90,6 +87,9 @@ public class AuthService {
                         .userId(customerOpt.get().getUserId()).build();
             }
         }
+
+        //tao token xac dinh nguoi dung
+        String token = generateToken(user, staff, customer);
 
         return AuthenticationResponse.builder().token(token).authenticated(true).user(userResponse).staff(staff)
                 .customer(customer).build();
@@ -122,9 +122,13 @@ public class AuthService {
     }
 
     // ham tao token
-    private String generateToken(User user) {
+    private String generateToken(User user, StaffDTO staff, CustomerDTO customer) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 
+        String role = user.getRole();
+        if(role.equals("staff")) {
+            role = staff.getType();
+        }
         // subject: Lưu user.getUsername()
         // issuer: Nguồn phát hành là smartvibe.com.
         // issueTime: Thời điểm tạo token.
@@ -132,7 +136,7 @@ public class AuthService {
         // scope: Lưu user.getRole().
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder().subject(user.getUsername()).issuer("smartvibe.com")
                 .issueTime(new Date()).expirationTime(new Date(Instant.now().plus(8, ChronoUnit.HOURS).toEpochMilli()))
-                .claim("userId", user.getId()).claim("email", user.getEmail()).claim("scope", user.getRole()).build();
+                .claim("userId", user.getId()).claim("email", user.getEmail()).claim("scope", role).build();
 
         Payload payload = new Payload(jwtClaimsSet.toJSONObject());
         JWSObject jwsObject = new JWSObject(header, payload);

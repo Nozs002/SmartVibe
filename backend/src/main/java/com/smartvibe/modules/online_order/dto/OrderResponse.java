@@ -36,4 +36,26 @@ public class OrderResponse {
     private String trackingCode;
     private BigDecimal shippingFee;
     private List<OrderDetailDTO> orderDetailDTO;
+
+    public OrderResponse(Long id, LocalDateTime createdAt, String type, String note, String deliveryLocation, String phone, String orderStatus, String deliveryStatus, String accountPayment, String paymentMethod, String paymentStatus, BigDecimal discountPercent,StaffDTO staff, CustomerDTO customer, BranchDTO branch, String customerName, String shippingProvider, String trackingCode, BigDecimal shippingFee) {
+        this.id = id;
+        this.createdAt = createdAt;
+        this.type = type;
+        this.note = note;
+        this.deliveryLocation = deliveryLocation;
+        this.phone = phone;
+        this.orderStatus = orderStatus;
+        this.deliveryStatus = deliveryStatus;
+        this.accountPayment = accountPayment;
+        this.paymentMethod = paymentMethod;
+        this.paymentStatus = paymentStatus;
+        this.discountPercent = discountPercent;
+        this.staff = staff;
+        this.customer = customer;
+        this.branch = branch;
+        this.customerName = customerName;
+        this.shippingProvider = shippingProvider;
+        this.trackingCode = trackingCode;
+        this.shippingFee = shippingFee;
+    }
 }

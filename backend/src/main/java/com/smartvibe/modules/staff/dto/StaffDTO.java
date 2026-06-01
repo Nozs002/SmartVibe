@@ -18,4 +18,10 @@ public class StaffDTO {
     private BigDecimal deduction;
     private Long userId;
     private Long branchId;
+
+    public StaffDTO(Long id, String type, String workStatus) {
+        this.id = id;
+        this.type = type;
+        this.workStatus = workStatus;
+    }
 }

@@ -62,7 +62,7 @@ const ProductCard = ({ product, role = 'customer', onViewDetail, onActionClick }
 
       <div className="product-info">
         {/* Tên sản phẩm - Click để xem chi tiết */}
-        <h3 className="product-title" onClick={() => onViewDetail && onViewDetail(product)}>
+        <h3 className="product-title" onClick={() => onViewDetail && onViewDetail(product.id)} style={{ cursor: 'pointer' }} title="Xem chi tiết">
           {product.name}
         </h3>
         

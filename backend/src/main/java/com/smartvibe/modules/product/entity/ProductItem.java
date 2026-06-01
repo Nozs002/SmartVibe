@@ -21,9 +21,9 @@ public class ProductItem {
     @Column(name = "status", columnDefinition = "ENUM('in stock', 'sold', 'defective')")
     private String status;
 
-    @JoinColumn(name = "product_id")
+    @Column(name = "product_id")
     private Long productId;
 
-    @JoinColumn(name = "branch_id")
+    @Column(name = "branch_id")
     private Long branchId;
 }

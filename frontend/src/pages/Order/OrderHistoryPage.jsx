@@ -11,7 +11,7 @@ import {
   FaPhoneAlt,
   FaMoneyBillWave
 } from 'react-icons/fa';
-import { getData } from '../../services/api'; 
+import { getData, putData } from '../../services/api'; 
 import '../../styles/OrderHistory.css'; 
 import { useNavigate } from 'react-router-dom';
 
@@ -22,7 +22,7 @@ const OrderHistoryPage = () => {
   const [activeTab, setActiveTab] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
 
-  // 1. Gọi API lấy danh sách đơn hàng
+  // lấy danh sách đơn hàng
   useEffect(() => {
     const customer = JSON.parse(localStorage.getItem('customer') || '{}');
     
@@ -42,7 +42,7 @@ const OrderHistoryPage = () => {
     fetchMyOrders();
   }, []);
 
-  // 2. Lọc đơn hàng theo Tab và Ô tìm kiếm
+  // Lọc đơn hàng theo Tab và Ô tìm kiếm
   useEffect(() => {
     let result = [...orders];
 
@@ -88,6 +88,25 @@ const OrderHistoryPage = () => {
     const totalProductPrice = order.orderDetailDTO?.reduce((sum, item) => sum + (item.price * item.quantity), 0) || 0;
     const discountAmount = (totalProductPrice * (order.discountPercent || 0)) / 100;
     return totalProductPrice + (order.shippingFee || 0) - discountAmount;
+  };
+
+  // hủy đơn
+  const handleCancelOrder = async (orderId) => {
+    const isConfirm = window.confirm(`Bạn có chắc chắn muốn hủy đơn hàng #${orderId} không?`);
+    if (!isConfirm) return;
+
+    try {
+      await putData(`/online_order/${order.id}/status?status=cancelled`,{});
+      
+      setOrders(prevOrders => prevOrders.map(order => 
+        order.id === orderId ? { ...order, orderStatus: 'cancelled' } : order
+      ));
+      
+    } catch (error) {
+      console.error("Lỗi khi hủy đơn:", error);
+      const errorMsg = error.response?.data?.message || 'Có lỗi xảy ra khi hủy đơn. Vui lòng thử lại!';
+      alert(errorMsg);
+    }
   };
 
   return (
@@ -211,7 +230,7 @@ const OrderHistoryPage = () => {
                         Chi tiết đơn
                       </button>
                       {order.orderStatus === 'pending' && (
-                        <button className="btn-ui btn-ui-danger" onClick={() => alert(`Yêu cầu hủy đơn hàng #${order.id}`)}>
+                        <button className="btn-ui btn-ui-danger" onClick={() => handleCancelOrder(order.id)}>
                           Hủy đơn
                         </button>
                       )}

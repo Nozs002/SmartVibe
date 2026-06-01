@@ -9,10 +9,8 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.*;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("api/online_order")
@@ -28,11 +26,47 @@ public class OnlineOrderController {
         return response;
     }
 
+    @PreAuthorize("hasRole('CUSTOMER')")
     @GetMapping("/customer")
     public ApiResponse<List<OrderResponse>> viewOrder(@RequestParam Long id){
         ApiResponse<List<OrderResponse>> response = new ApiResponse<>();
         List<OrderResponse> orderList = onlineOrderService.getOrderList(id);
         response.setResult(orderList);
+        return response;
+    }
+
+    @PreAuthorize("hasRole('SALES') or hasRole('MANAGER')")
+    @GetMapping("/branch")
+    public ApiResponse<List<OrderResponse>> viewOrdersByBranch(@RequestParam Long id){
+        ApiResponse<List<OrderResponse>> response = new ApiResponse<>();
+        List<OrderResponse> orderList = onlineOrderService.getOrdersByBranchId(id);
+        response.setResult(orderList);
+        return response;
+    }
+
+    @PreAuthorize("hasRole('SALES') or hasRole('MANAGER') or hasRole('CUSTOMER')")
+    @PutMapping("/{id}/status")
+    public ApiResponse<String> updateOrderStatus(
+            @PathVariable("id") Long id, 
+            @RequestParam("status") String newStatus) {
+        
+        ApiResponse<String> response = new ApiResponse<>();
+        onlineOrderService.updateOrderStatus(id, newStatus);
+        
+        response.setResult("Cập nhật trạng thái thành công!");
+        return response;
+    }
+
+    @PreAuthorize("hasRole('SALES') or hasRole('MANAGER')")
+    @PutMapping("/{id}/payment_status")
+    public ApiResponse<String> updatePaymentStatus(
+            @PathVariable("id") Long id, 
+            @RequestParam("status") String newPaymentStatus) {
+        
+        ApiResponse<String> response = new ApiResponse<>();
+        onlineOrderService.updatePaymentStatus(id, newPaymentStatus);
+        
+        response.setResult("Cập nhật trạng thái thanh toán thành công!");
         return response;
     }
 }

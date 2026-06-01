@@ -31,7 +31,10 @@ public enum ErrorCode {
     PRODUCT_STOCK_NOT_ENOUGH(1021, "Số lượng sản phẩm không đủ!", HttpStatus.BAD_REQUEST),
     CART_ITEMS_EMPTY(1022, "Giỏ hàng trống!", HttpStatus.BAD_REQUEST),
     NOT_ENOUGH_SERIALS(1023, "Không đủ sản phẩm serial!", HttpStatus.NOT_FOUND),
-    INVENTORY_NOT_FOUND(1024, "Inventory không tồn tại!", HttpStatus.NOT_FOUND);
+    INVENTORY_NOT_FOUND(1024, "Inventory không tồn tại!", HttpStatus.NOT_FOUND),
+    PRODUCT_NOT_FOUND(1025, "Sản phẩm không tồn tại!", HttpStatus.NOT_FOUND),
+    STAFF_NOT_FOUND_BY_USER_ID(1026, "Không tìm thấy nhân viên theo userId!", HttpStatus.NOT_FOUND),
+    ORDER_NOT_FOUND(1027, "Đơn hàng không tồn tại!", HttpStatus.NOT_FOUND);
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;

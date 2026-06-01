@@ -164,13 +164,18 @@ tr:hover td {
   background: #e4f8dd;
   color: #118d57;
 }
-.badge-processing {
+.badge-pending {
   background: #fff5cc;
   color: #b78103;
 }
-.badge-pending {
+.badge-cancelled {
   background: #ffe4de;
   color: #b71d18;
+}
+
+.badge-confirmed {
+  background: #e4f8dd;
+  color: #3b82f6;
 }
 
 /* Action Buttons */
@@ -196,7 +201,9 @@ tr:hover td {
   font-weight: 600;
 }
 
-/* Modal */
+/* =========================================
+   GIAO DIỆN MODAL TRÊN TRÌNH DUYỆT (WEB)
+========================================= */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -209,16 +216,19 @@ tr:hover td {
   align-items: center;
   z-index: 1000;
   backdrop-filter: blur(2px);
+  padding: 24px; /* Tránh modal chạm mép màn hình */
 }
 
 .modal-content {
-  background: white;
-  width: 100%;
-  max-width: 600px;
+  background-color: #ffffff;
   border-radius: 16px;
-  padding: 24px;
+  padding: 32px;
+  width: 100%;
+  max-width: 850px; /* Bề ngang rộng rãi */
+  max-height: 90vh; /* Không bao giờ cao hơn màn hình */
+  overflow-y: auto; /* Tự xuất hiện thanh cuộn nếu quá dài */
   position: relative;
-  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
 .modal-close {
@@ -256,4 +266,167 @@ tr:hover td {
   justify-content: space-between;
   margin-bottom: 8px;
   font-size: 14px;
+}
+
+.modal-title {
+  margin-top: 0;
+}
+
+.info-row-status {
+  display: flex;
+  align-items: center;
+}
+
+.status-select {
+  margin-left: 8px;
+  padding: 6px 8px;
+  font-weight: bold;
+  border: 1px solid #e0e5f2;
+  border-radius: 6px;
+  outline: none;
+  cursor: pointer;
+}
+
+.updating-text {
+  font-size: 12px;
+  color: #a3aed1;
+  margin-left: 8px;
+}
+
+.text-danger { color: #dc2626; }
+.text-uppercase { text-transform: uppercase; }
+.text-right { text-align: right; }
+.fw-bold { font-weight: bold; }
+
+.staff-block {
+  margin-top: 24px;
+  background-color: #f4f7fe;
+  padding: 16px;
+  border-radius: 8px;
+}
+
+.staff-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.empty-text {
+  color: #a3aed1;
+  font-size: 14px;
+}
+
+.product-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+}
+
+.product-table thead tr {
+  border-bottom: 1px solid #eee;
+  text-align: left;
+}
+
+.product-table th {
+  padding: 8px 0;
+}
+
+.product-table tbody tr {
+  border-bottom: 1px solid #f9f9f9;
+}
+
+.product-table td {
+  padding: 12px 0;
+  font-size: 14px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16px;
+  font-size: 14px;
+}
+
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  font-size: 18px;
+  border-top: 1px solid #eee;
+  padding-top: 8px;
+}
+
+.total-value {
+  color: #4318FF;
+}
+
+.modal-footer-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 24px;
+  padding-bottom: 8px;
+}
+
+/* =========================================
+   CSS CHUYÊN DỤNG CHO BẢN IN GIẤY
+========================================= */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  .modal-content, 
+  .modal-content * {
+    visibility: visible;
+  }
+
+  .modal-content {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0; 
+    box-shadow: none !important;
+    border: none !important;
+    overflow: visible;
+  }
+
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    height: auto !important; 
+    overflow: visible !important;
+    background-color: white !important;
+  }
+
+  .modal-overlay {
+    position: static !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: transparent !important;
+    padding: 0 !important;
+  }
+
+  @page {
+    size: auto;
+    margin: 15mm; 
+  }
+
+  .modal-close,
+  .modal-footer-actions {
+    display: none !important;
+  }
+
+  .status-select {
+    border: none;
+    background: transparent;
+    appearance: none; 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding: 0;
+    color: black;
+  }
 }

@@ -66,7 +66,6 @@ const OnlineOrderPage = () => {
   }, []);
   
     // Lọc (Filter) và Sắp xếp (Sort) dữ liệu dựa trên State
-    // useMemo sẽ chạy lại khi một trong các dependencies(products, searchTerm, selectedCategory, sortBy) thay đổi
     const filteredAndSortedProducts = useMemo(() => {
         // copy mảng products để tránh thay đổi mảng gốc
         let result = [...products];
@@ -122,7 +121,7 @@ const OnlineOrderPage = () => {
       return result;
     }, [products, searchTerm, selectedCategory, sortBy]);
 
-    // giỏ hàng
+    // Thêm sản phẩm vào giỏ hàng
     const handleAddToCart = async (product) => {
       try{
         const currentItem = cartItems.find(item => item.productDTO.id === product.id);
@@ -135,8 +134,8 @@ const OnlineOrderPage = () => {
             await handleUpdateQuantity(currentItem.id, 1);
         } else {
             const newCartItemPayload = {
-                cartId: Number(customer.id), // Ép kiểu sang số (Long trong Java)
-                quantity: 1,                 // Mặc định thêm mới là 1
+                cartId: Number(customer.id),
+                quantity: 1,                
                 productDTO: {
                     id: product.id,
                     sku: product.sku,
@@ -153,7 +152,7 @@ const OnlineOrderPage = () => {
                 }
             };
             const response = await postData('/cart/addCartItem', newCartItemPayload);
-            const newCartItem = response.result;
+            const newCartItem = response;
             const exists = cartItems.some(
                 item => item.productDTO.id === newCartItem.productDTO.id
             );
@@ -175,6 +174,7 @@ const OnlineOrderPage = () => {
       }
     };
 
+    // Câp nhật số lượng sản phẩm trong giỏ hàng
     const handleUpdateQuantity = async (id, delta) => {
       try {
             const currentItem = cartItems.find(item => item.id === id);
@@ -183,10 +183,8 @@ const OnlineOrderPage = () => {
             if (newQuantity < 1) return;
             currentItem.quantity = newQuantity;
       
-            // CALL BACKEND
             await putData('/cart/updateQuantity', currentItem);
       
-            // UPDATE FRONTEND
             setCartItems(prev =>
               prev.map(item =>
                 item.id === id
@@ -200,6 +198,7 @@ const OnlineOrderPage = () => {
           }
     };
 
+    // Xóa sản phẩm khỏi giỏ hàng
     const handleRemoveItem = async (id) => {
       try {
         const currentItem = cartItems.find(item => item.id === id);
@@ -211,22 +210,26 @@ const OnlineOrderPage = () => {
       }
     };
 
+  // Xử lý các hành động của khách hàng trên thẻ sản phẩm (chỉ có "Thêm vào giỏ hàng" đối với khách hàng)
   const handleCustomerActions = (actionType, product) => {
     if (actionType === 'add_to_cart') {
       handleAddToCart(product); 
-    } else if (actionType === 'buy_now') {
-      // Xử lý mua ngay
     }
   };
 
+  // Đi tới trang thanh toán
   const handleGoToCheckout = () => {
     if (cartItems.length === 0) return;
 
-    // Chuyển hướng sang trang thanh toán kèm theo dữ liệu thông qua state
     navigate('/checkout', { 
       state: { cartItems: cartItems} 
     });
   };
+
+  // Đi tới trang chi tiết sản phẩm
+  const handleViewProductDetail = (productId) => {
+    navigate(`/product-detail/${productId}`);
+  }
 
   return (
     <div className="online-order-page">
@@ -249,6 +252,7 @@ const OnlineOrderPage = () => {
         products={filteredAndSortedProducts} 
         role="customer" 
         onProductAction={handleCustomerActions}
+        onProductViewDetail={(productId) => handleViewProductDetail(productId)}
       />
 
       <CartSidebar 

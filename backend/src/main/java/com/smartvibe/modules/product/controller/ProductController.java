@@ -7,8 +7,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PathVariable;
 import lombok.RequiredArgsConstructor;
 import com.smartvibe.modules.product.dto.ProductDTO;
+import com.smartvibe.modules.inventory.dto.InventoryDTO;
 import com.smartvibe.common.response.ApiResponse;
 
 import java.util.List;
@@ -23,6 +25,13 @@ public class ProductController {
     public ApiResponse<List<ProductDTO>> getAllProducts() {
         ApiResponse<List<ProductDTO>> response = new ApiResponse<>();
         response.setResult(productService.getAllProducts());
+        return response;
+    }
+
+    @GetMapping("/{id}")
+    public ApiResponse<List<InventoryDTO>> getProductById(@PathVariable Long id) {
+        ApiResponse<List<InventoryDTO>> response = new ApiResponse<>();
+        response.setResult(productService.getProductById(id));
         return response;
     }
 }

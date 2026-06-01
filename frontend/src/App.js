@@ -18,6 +18,8 @@ import CartPage from './pages/Order/CartPage';
 import CheckoutPage from './pages/Order/CheckoutPage';
 import OrderHistoryPage from './pages/Order/OrderHistoryPage';
 import OrderDetailPage from './pages/Order/OrderDetailPage';
+import StaffStockTransfers from './pages/StockTransfer/StockTransferPage';
+import ProductDetailPage from './pages/Product/ProductDetailPage';
 
 function App() {
   return (
@@ -73,6 +75,12 @@ function App() {
 
           {/* Đường dẫn cho trang chi tiết đơn hàng */}
           <Route path="/order-detail" element={<OrderDetailPage />} />
+
+          {/* Đường dẫn cho trang Quản lý chuyển kho */}
+          <Route path="/stock-transfer" element={<StaffStockTransfers />} />
+
+          {/* Đường dẫn cho trang Quản lý chuyển kho */}
+          <Route path="/product-detail/:id" element={<ProductDetailPage />} />
 
         </Route>
 

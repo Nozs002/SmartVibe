@@ -1,0 +1,163 @@
+.pd-wrapper {
+  padding: 24px 32px;
+  background-color: #f4f7fe;
+  min-height: 100vh;
+  font-family: 'Inter', system-ui, sans-serif;
+  color: #2b3674;
+}
+
+.pd-breadcrumb {
+  font-size: 13px;
+  color: #a3aed1;
+  margin-bottom: 12px;
+}
+.pd-breadcrumb span {
+  color: #2b3674;
+  font-weight: 500;
+}
+
+.pd-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.pd-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1b2559;
+  margin: 0;
+}
+
+.pd-btn-edit {
+  background-color: #4318FF;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: opacity 0.2s;
+}
+.pd-btn-edit:hover { opacity: 0.9; }
+
+/* Grid Layout */
+.pd-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+@media (min-width: 1024px) {
+  .pd-grid { grid-template-columns: 2fr 1fr; }
+}
+
+/* Cards */
+.pd-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+}
+
+.pd-card-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1b2559;
+  margin-top: 0;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #e0e5f2;
+  padding-bottom: 12px;
+}
+
+/* Product Info Section */
+.pd-info-container {
+  display: flex;
+  flex-direction: row;
+  gap: 32px;
+}
+
+.pd-image {
+  width: 100%;
+  max-width: 280px;
+  height: 280px;
+  object-fit: contain;
+  border-radius: 12px;
+  border: 1px solid #e0e5f2;
+  background-color: #f9fafb;
+}
+
+.pd-details { flex: 1; display: flex; flex-direction: column; }
+.pd-name { font-size: 22px; font-weight: 700; color: #1b2559; margin: 0 0 8px 0; }
+.pd-sku { font-size: 14px; color: #a3aed1; margin-bottom: 16px; }
+.pd-price { font-size: 28px; font-weight: 700; color: #4318FF; margin-bottom: 24px; }
+
+/* Thuộc tính dạng lưới */
+.pd-attr-grid {
+  display: grid;
+  grid-template-columns: minmax(200px, max-content) 1fr;
+  gap: 24px;
+  margin-bottom: 24px;
+  align-items: start;
+}
+.pd-attr-item { display: flex; flex-direction: column; gap: 8px; }
+.pd-attr-label { font-size: 13px; color: #a3aed1; font-weight: 500; }
+.pd-attr-value { font-size: 15px; font-weight: 600; color: #2b3674; margin-top: 6px;}
+
+/* Status Select cho Manager */
+.pd-status-select {
+  padding: 6px 12px;
+  border: 1px solid #e0e5f2;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #2b3674;
+  outline: none;
+  cursor: pointer;
+  background-color: #f4f7fe;
+}
+
+.pd-status-select:hover,
+.pd-status-select:focus {
+  border-color: #4318FF; /* Đổi màu viền khi click vào */
+}
+
+.pd-status-badge {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  display: inline-block;
+  background-color: #e6fffa;
+  color: #05cd99;
+}
+
+/* Bảng Tồn Kho */
+.pd-table-wrapper { overflow-x: auto; }
+.pd-table { width: 100%; border-collapse: collapse; text-align: left; }
+.pd-table th {
+  padding: 12px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #a3aed1;
+  border-bottom: 1px solid #e0e5f2;
+}
+.pd-table td {
+  padding: 16px;
+  font-size: 14px;
+  color: #2b3674;
+  font-weight: 500;
+  border-bottom: 1px solid #f4f7fe;
+}
+.pd-table tr:last-child td { border-bottom: none; }
+
+.pd-desc-text {
+  font-size: 15px;
+  color: #4b5563;
+  line-height: 1.6;
+  font-weight: 400;
+}
