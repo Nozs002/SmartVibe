@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { 
   FaThLarge, FaShoppingCart, FaBoxOpen, 
-  FaUsers, FaChartBar, FaCog, FaUserShield, FaSignOutAlt, FaBars, FaHeadset, FaStore, FaClipboardList, FaExchangeAlt
+  FaUsers, FaChartBar, FaCog, FaUserShield, FaSignOutAlt, FaBars, FaHeadset, FaStore, FaClipboardList, FaExchangeAlt, FaWarehouse
 } from 'react-icons/fa';
 import '../../styles/Sidebar.css';
 
@@ -30,9 +30,8 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
         { path: '/branch', name: 'Quản lý chi nhánh', icon: <FaStore/>, allowedRoles: ['manager', 'sales staff', 'system admin'] },
         { path: '/staff', name: 'Quản lý nhân viên', icon: <FaUsers />, allowedRoles: ['manager', 'system admin'] },
         {path: '/order-history', name: 'Lịch sử mua hàng', icon: <FaClipboardList />, allowedRoles:['system admin', 'customer']},
-        { 
-        path: '/stock-transfer', name: 'Quản lý chuyển kho', icon: <FaExchangeAlt />, allowedRoles: ['manager', 'warehouse staff', 'system admin'] 
-    }
+        { path: '/stock-transfer', name: 'Quản lý chuyển kho', icon: <FaExchangeAlt />, allowedRoles: ['manager', 'warehouse staff', 'system admin'] },
+        { path: '/warehouse', name: 'Quản lý kho', icon: <FaWarehouse />, allowedRoles: ['manager', 'warehouse staff', 'system admin'] }
     ];
 
     const menuItems = allMenuItems.filter(item => item.allowedRoles.includes(currentRole));

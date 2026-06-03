@@ -24,8 +24,6 @@ public class InventoryTransaction {
     @Column(name = "transaction_type", columnDefinition = "ENUM('import', 'export', 'transfer in', 'transfer out', 'sale', 'adjustment', 'return')")
     private String transactionType;
 
-    private String note;
-
     @Column(name = "quantity_changed", nullable = false)
     private Long quantityChanged;
 

@@ -96,7 +96,7 @@ const OrderHistoryPage = () => {
     if (!isConfirm) return;
 
     try {
-      await putData(`/online_order/${order.id}/status?status=cancelled`,{});
+      await putData(`/online_order/${orderId}/status?status=cancelled`,{});
       
       setOrders(prevOrders => prevOrders.map(order => 
         order.id === orderId ? { ...order, orderStatus: 'cancelled' } : order

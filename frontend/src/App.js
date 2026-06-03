@@ -20,6 +20,7 @@ import OrderHistoryPage from './pages/Order/OrderHistoryPage';
 import OrderDetailPage from './pages/Order/OrderDetailPage';
 import StaffStockTransfers from './pages/StockTransfer/StockTransferPage';
 import ProductDetailPage from './pages/Product/ProductDetailPage';
+import InventoryManagementPage from './pages/Inventory/InventoryManagementPage';
 
 function App() {
   return (
@@ -81,6 +82,8 @@ function App() {
 
           {/* Đường dẫn cho trang Quản lý chuyển kho */}
           <Route path="/product-detail/:id" element={<ProductDetailPage />} />
+
+          <Route path="/warehouse" element={<InventoryManagementPage />} />
 
         </Route>
 

@@ -11,9 +11,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ProductItemRepository extends JpaRepository<ProductItem, Long> {
+public interface ProductItemRepository extends JpaRepository<ProductItem, String> {
     // Pageable để tự động limit số lượng cần tìm
     List<ProductItem> findByProductIdAndStatus(Long productId, String status, Pageable pageable);
 
     Optional<ProductItem> findBySerial(String serial);
+
+    boolean existsBySerial(String serial);
 }
