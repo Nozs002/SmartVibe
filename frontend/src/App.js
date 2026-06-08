@@ -21,6 +21,8 @@ import OrderDetailPage from './pages/Order/OrderDetailPage';
 import StaffStockTransfers from './pages/StockTransfer/StockTransferPage';
 import ProductDetailPage from './pages/Product/ProductDetailPage';
 import InventoryManagementPage from './pages/Inventory/InventoryManagementPage';
+import CustomerManagementPage from './pages/Customer/CustomerManagementPage';
+import StaffManagementPage from './pages/Staff/StaffManagementPage';
 
 function App() {
   return (
@@ -83,8 +85,14 @@ function App() {
           {/* Đường dẫn cho trang Quản lý chuyển kho */}
           <Route path="/product-detail/:id" element={<ProductDetailPage />} />
 
+          {/* Đường dẫn cho trang Quản lý kho */}
           <Route path="/warehouse" element={<InventoryManagementPage />} />
 
+          {/* Đường dẫn cho trang quản lý khách hàng */}
+          <Route path="/customers" element={<CustomerManagementPage />} />
+
+          {/* Đường dẫn cho trang quản lý nhân viên */}
+          <Route path="/staff" element={<StaffManagementPage />} />
         </Route>
 
         {/* Nếu người dùng vào trang khác, quay về Login */}

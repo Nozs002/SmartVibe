@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import AccountForm from '../../modules/User/AccountForm';
-import { getData, postData, putData, deleteData } from '../../services/api';
+import { getData, postData, putData, deleteData, patchData } from '../../services/api';
 import '../../styles/UserManagement.css';
 import { register } from '../../services/auth.service';
 
 const UserManagementPage = () => {
+
   const [accounts, setAccounts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -35,16 +36,32 @@ const UserManagementPage = () => {
       if (editingAccount) {
         const updatedAccount = await putData(`/users/${editingAccount.id}`, accountData);
         setAccounts(accounts.map((acc) => (acc.id === editingAccount.id ? updatedAccount : acc)));
-        console.log(accountData);
       } else {
-        const response = await register(accountData);
-        const newAccount = response.result;
-        setAccounts([newAccount, ...accounts]);
+        if (accountData.role === 'staff') {
+          const newStaff = await postData('/users/staff', accountData);
+          setAccounts([newStaff, ...accounts]);
+        } else {
+          const response = await register(accountData);
+          const newAccount = response.result;
+          setAccounts([newAccount, ...accounts]);
+          alert("Tạo khách hàng thành công!");
+        }
       }
       closeModal();
     } catch (err) {
       alert(err.message || "Lỗi khi lưu tài khoản!");
       console.error(err);
+    }
+  };
+
+  const handleApprove = async (id) => {
+    if (window.confirm("Xác nhận duyệt tài khoản này?")) {
+      try {
+        const updatedAccount = await patchData(`/users/${id}/status`, null, { status: 'active' });
+        setAccounts(accounts.map((acc) => (acc.id === id ? updatedAccount : acc)));
+      } catch (err) {
+        alert(err.message || "Lỗi khi duyệt tài khoản!");
+      }
     }
   };
 
@@ -166,8 +183,20 @@ const UserManagementPage = () => {
                       </span>
                     </td>
                     <td className="td action-group">
-                      <button onClick={() => handleEditClick(account)} className="btn-edit">Sửa</button>
-                      <button onClick={() => handleDeleteAccount(account.id)} className="btn-delete">Xóa</button>
+                      {/* Thêm nút Duyệt nếu trạng thái là inactive */}
+                      {account.accountStatus === 'inactive' && (
+                        <button 
+                          onClick={() => handleApprove(account.id)} 
+                          className="btn-approve" 
+                          style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', marginRight: '5px' }}
+                        >
+                          Duyệt
+                        </button>
+                      )}
+                      <button onClick={() => handleEditClick(account)} className="btn-edit" style={{ marginRight: '5px' }}>Sửa</button>
+                      {(account.id !== 1 && account.role !== 'system admin') && ( 
+                        <button onClick={() => handleDeleteAccount(account.id)} className="btn-delete">Xóa</button>
+                      )}
                     </td>
                   </tr>
                 ))

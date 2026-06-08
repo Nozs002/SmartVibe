@@ -16,6 +16,7 @@ public enum ErrorCode {
     UNAUTHENTICATED(1006, "Bạn chưa đăng nhập!", HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(1007, "Bạn không có quyền truy cập!", HttpStatus.FORBIDDEN),
     EMAIL_EXISTED(1008, "Email đã tồn tại trong hệ thống!", HttpStatus.BAD_REQUEST),
+    PHONE_EXISTED_CUSTOMER_ROLE(1008, "Phone đã tồn tại trong hệ thống với vai trò khách hàng!", HttpStatus.BAD_REQUEST),
     PHONE_EXISTED(1009, "Số điện thoại đã tồn tại trong hệ thống!", HttpStatus.BAD_REQUEST),
     USERNAME_BLANK(1010, "Tên đăng nhập không thể để trống!", HttpStatus.BAD_REQUEST),
     PASSWORD_BLANK(1011, "Password không thể để trống!", HttpStatus.BAD_REQUEST),
@@ -39,7 +40,9 @@ public enum ErrorCode {
     SERIAL_ALREADY_EXISTS(1029, "Serial đã tồn tại trong hệ thống!", HttpStatus.BAD_REQUEST),
     INVALID_PRODUCT_ITEM_STATUS(1030, "Sản phẩm serial không hợp lệ!", HttpStatus.BAD_REQUEST),
     DOCUMENT_NOT_FOUND(1031, "Chứng từ không tồn tại!", HttpStatus.NOT_FOUND),
-    INVALID_DOCUMENT_STATUS(1032, "Trạng thái chứng từ không hợp lệ!", HttpStatus.BAD_REQUEST);
+    INVALID_DOCUMENT_STATUS(1032, "Trạng thái chứng từ không hợp lệ!", HttpStatus.BAD_REQUEST),
+    UNAUTHORIZED_BRANCH_TRANSFER(1033, "Bạn không có quyền thao tác với chi nhánh này!", HttpStatus.FORBIDDEN), 
+    USER_IN_USE(1034, "Tài khoản đã phát sinh dữ liệu nghiệp vụ, không thể xóa bỏ hoàn toàn. Vui lòng chuyển trạng thái sang 'Bị khóa'!", HttpStatus.BAD_REQUEST);
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;

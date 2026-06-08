@@ -6,6 +6,8 @@ import com.smartvibe.modules.document.dto.PendingApprovalResponse;
 import com.smartvibe.modules.document.service.StockDocumentService;
 import com.smartvibe.modules.document.repository.StockDocumentRepository;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +21,7 @@ public class StockDocumentController {
     private final StockDocumentRepository stockDocumentRepository;
 
     // Tạo chứng từ nhập kho mới
+    @PreAuthorize("hasRole('MANAGER') or hasRole('SALES') or hasRole('WAREHOUSE')")
     @PostMapping("/import")
     public ApiResponse<String> importStock(@RequestBody ImportRequestDTO request) {
         stockDocumentService.importStock(request);
@@ -28,6 +31,7 @@ public class StockDocumentController {
     }
 
     // Tạo yêu cầu xuất kho
+    @PreAuthorize("hasRole('MANAGER') or hasRole('SALES') or hasRole('WAREHOUSE')")
     @PostMapping("/export")
     public ApiResponse<String> createExport(@RequestBody ImportRequestDTO request) {
         stockDocumentService.createExportRequest(request);
@@ -37,6 +41,7 @@ public class StockDocumentController {
     }
 
     // danh sách phiếu xuất chờ duyệt
+    @PreAuthorize("hasRole('MANAGER')")
     @GetMapping("/pending-exports/{branchId}")
     public ApiResponse<List<PendingApprovalResponse>> getPendingExports(@PathVariable Long branchId) {
         ApiResponse<List<PendingApprovalResponse>> response = new ApiResponse<>();
@@ -45,6 +50,7 @@ public class StockDocumentController {
     }
 
     // Phê duyệt phiếu xuất
+    @PreAuthorize("hasRole('MANAGER')")
     @PutMapping("/approve/{documentId}")
     public ApiResponse<String> approveExport(@PathVariable Long documentId) {
         stockDocumentService.approveExportDocument(documentId);

@@ -2,18 +2,23 @@ package com.smartvibe.modules.user.service;
 
 import com.smartvibe.modules.user.entity.User;
 import com.smartvibe.modules.user.repository.UserRepository;
-
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
-
+import org.springframework.security.crypto.password.PasswordEncoder;
 import lombok.RequiredArgsConstructor;
 
 import com.smartvibe.common.exception.AppException;
 import com.smartvibe.common.exception.ErrorCode;
 import com.smartvibe.modules.customer.service.CustomerService;
+import com.smartvibe.modules.staff.dto.StaffCreateRequest;
+import com.smartvibe.modules.staff.entity.Staff;
 import com.smartvibe.modules.staff.service.StaffService;
+import com.smartvibe.modules.staff.repository.StaffRepository;
+import com.smartvibe.modules.customer.repository.CustomerRepository;
 
 import com.smartvibe.modules.user.dto.response.UserResponse;
 
@@ -23,9 +28,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final CustomerService customerService;
-    private final StaffService staffService;
+    private final PasswordEncoder passwordEncoder;
+    private final StaffRepository staffRepository;
+    private final CustomerRepository customerRepository;
 
+    // Lấy danh sách tất cả user
     public List<UserResponse> getAllUsers() {
         return userRepository.findAll().stream()
                 .map(user -> UserResponse.builder().id(user.getId()).username(user.getUsername()).role(user.getRole())
@@ -37,6 +44,8 @@ public class UserService {
                 .toList();
     }
 
+    // Cập nhật thông tin user
+    @Transactional(rollbackFor = Exception.class)
     public UserResponse updateUser(Long id, UserResponse userResponse) {
         Optional<User> userOpt = userRepository.findById(id);
         if (userOpt.isEmpty()) {
@@ -58,11 +67,7 @@ public class UserService {
 
         if (userResponse.getFullname() != null)
             user.setFullname(userResponse.getFullname());
-        if (userResponse.getRole() != null)
-            user.setRole(userResponse.getRole());
         if (userResponse.getAccountStatus() != null) {
-            if (userResponse.getAccountStatus().equals("active") && user.getAccountStatus().equals("inactive"))
-                createObj(user);
             user.setAccountStatus(userResponse.getAccountStatus());
         }
         if (userResponse.getPhone() != null)
@@ -89,19 +94,74 @@ public class UserService {
                 .createdAt(updatedUser.getCreatedAt()).build();
     }
 
-    public void createObj(User user) {
-        if (user.getRole().equals("customer")) {
-            customerService.createCustomer(user.getId());
-        } else if (user.getRole().equals("staff")) {
-            staffService.createStaffDefautl(user.getId());
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteUser(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        try {
+            if ("staff".equals(user.getRole()) || "system admin".equals(user.getRole())) {
+                staffRepository.findByUserId(id).ifPresent(staffRepository::delete);
+            } else if ("customer".equals(user.getRole())) {
+                customerRepository.findByUserId(id).ifPresent(customerRepository::delete);
+            }
+            userRepository.deleteById(id);
+
+        } catch (DataIntegrityViolationException e) {
+            throw new AppException(ErrorCode.USER_IN_USE);
         }
     }
 
-    public void deleteUser(Long id) {
-        Optional<User> userOpt = userRepository.findById(id);
-        if (userOpt.isEmpty()) {
-            throw new AppException(ErrorCode.USER_NOT_EXISTED);
-        }
-        userRepository.deleteById(id);
+    @Transactional(rollbackFor = Exception.class)
+    public UserResponse createStaff(StaffCreateRequest request) {
+        String role = "staff";
+
+        if (userRepository.existsByUsername(request.getUsername())) throw new AppException(ErrorCode.USER_EXISTED);
+        if (userRepository.existsByEmail(request.getEmail())) throw new AppException(ErrorCode.EMAIL_EXISTED);
+        
+        User user = User.builder()
+                .username(request.getUsername())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .email(request.getEmail())
+                .phone(request.getPhone())
+                .role(role)
+                .accountStatus("inactive")
+                .build();
+        user = userRepository.save(user);
+
+        Staff staff = Staff.builder()
+                .userId(user.getId())
+                .branchId(request.getBranchId())
+                .type(request.getStaffType())
+                .workStatus("working")
+                .build();
+        staffRepository.save(staff);
+
+        return UserResponse.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .phone(user.getPhone())
+                .role(user.getRole())
+                .accountStatus(user.getAccountStatus())
+                .build();
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public UserResponse approveAccount(Long userId, String status) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+                
+        user.setAccountStatus(status);
+        user = userRepository.save(user);
+        
+        return UserResponse.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .phone(user.getPhone())
+                .role(user.getRole())
+                .accountStatus(user.getAccountStatus())
+                .build();
     }
 }

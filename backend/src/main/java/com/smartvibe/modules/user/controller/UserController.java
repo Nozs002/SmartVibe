@@ -11,12 +11,11 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import com.smartvibe.common.response.ApiResponse;
+import com.smartvibe.modules.staff.dto.StaffCreateRequest;
 import com.smartvibe.modules.user.dto.response.UserResponse;
 
 @RestController
 @RequestMapping("/api/users")
-// tự động sinh ra constructor cho tất cả các biến được khai báo với từ khóa
-// final
 @CrossOrigin("*")
 @RequiredArgsConstructor
 public class UserController {
@@ -42,5 +41,23 @@ public class UserController {
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable("id") Long id) {
         userService.deleteUser(id);
+    }
+
+    @PreAuthorize("hasAnyRole('SYSTEM_ADMIN', 'MANAGER')")
+    @PostMapping("/staff")
+    public ApiResponse<UserResponse> createStaff(@RequestBody @Valid StaffCreateRequest request) {
+        return ApiResponse.<UserResponse>builder()
+                .result(userService.createStaff(request))
+                .build();
+    }
+
+    @PreAuthorize("hasAnyRole('SYSTEM_ADMIN', 'MANAGER')")
+    @PatchMapping("/{id}/status")
+    public ApiResponse<UserResponse> updateAccountStatus(
+            @PathVariable("id") Long id, 
+            @RequestParam String status) {
+        return ApiResponse.<UserResponse>builder()
+                .result(userService.approveAccount(id, status))
+                .build();
     }
 }

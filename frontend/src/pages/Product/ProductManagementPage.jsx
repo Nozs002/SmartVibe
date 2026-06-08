@@ -151,6 +151,7 @@ const ProductManagementPage = () => {
           <table className="custom-table">
             <thead>
               <tr>
+                <th>id</th>
                 <th>Sản phẩm</th>
                 <th>Thể loại</th>
                 <th>Trạng thái</th>
@@ -163,7 +164,7 @@ const ProductManagementPage = () => {
             <tbody>
               {filteredInventories.map((inventory) => (
                 <tr key={inventory.id}>
-                  
+                  <td>{inventory.product.id}</td>
                   <td>
                     <div className="product-cell">
                       <img src={inventory.product.thumbnail} alt={inventory.product.name} className="product-img" />

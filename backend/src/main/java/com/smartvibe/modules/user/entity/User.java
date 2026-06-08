@@ -37,7 +37,6 @@ public class User {
     @Column(name = "personal_img")
     private String personalImg;
 
-    @Column(unique = true)
     private String phone;
 
     @Column(columnDefinition = "ENUM('male', 'female', 'other')")

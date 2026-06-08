@@ -1,0 +1,241 @@
+/* --- Khung Container chung --- */
+.management-container {
+  padding: 24px;
+  background-color: #f4f6f9;
+  min-height: calc(100vh - 60px);
+  font-family: "Segoe UI", Roboto, sans-serif;
+}
+
+.page-title {
+  font-size: 22px;
+  color: #111827;
+  margin-bottom: 20px;
+  font-weight: 700;
+}
+
+/* --- Thanh công cụ lọc dữ liệu --- */
+.filter-toolbar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.search-box {
+  flex: 1;
+  min-width: 200px;
+  height: 38px;
+  padding: 0 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+}
+
+.search-box.long-search {
+  flex: 2;
+}
+
+.search-box:focus, .select-box:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.select-box {
+  height: 38px;
+  padding: 0 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  background-color: #fff;
+  cursor: pointer;
+  outline: none;
+}
+
+/* --- Bảng dữ liệu chuẩn hóa --- */
+.table-container {
+  background-color: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  overflow-x: auto;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+}
+
+.pure-management-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.pure-management-table th {
+  background-color: #f9fafb;
+  padding: 14px 16px;
+  color: #111827;
+  font-weight: 600;
+  font-size: 14px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.pure-management-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 14px;
+  color: #374151;
+  vertical-align: middle;
+}
+
+.empty-cell {
+  text-align: center;
+  color: #9ca3af;
+  padding: 30px !important;
+}
+
+/* --- Cell hiển thị kép thông tin user --- */
+.user-info-cell {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-fullname {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.user-username {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* --- Nút hành động --- */
+.action-btn-edit {
+  padding: 6px 12px;
+  background-color: #f59e0b;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.action-btn-edit:hover {
+  background-color: #d97706;
+}
+
+/* --- Hệ thống Badge Trạng thái & Phân quyền --- */
+.role-badge, .status-badge, .rank-badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-block;
+}
+
+/* Chức vụ nhân viên */
+.type-manager { background-color: #fee2e2; color: #991b1b; }
+.type-sales { background-color: #e0e7ff; color: #3730a3; }
+.type-warehouse { background-color: #ffedd5; color: #9a3412; }
+.type-technical { background-color: #e2e8f0; color: #334155; }
+
+/* Trạng thái làm việc */
+.ws-working { background-color: #d1fae5; color: #065f46; }
+.ws-on_leave { background-color: #fef3c7; color: #92400e; }
+.ws-resigned { background-color: #f3f4f6; color: #4b5563; }
+
+/* Hạng khách hàng */
+.rank-normal { background-color: #f3f4f6; color: #374151; }
+.rank-vip { background-color: #e0f2fe; color: #0369a1; }
+.rank-gold { background-color: #fef3c7; color: #b45309; }
+.rank-diamond { background-color: #fae8ff; color: #86198f; }
+
+/* --- Cấu trúc Layout Modal Pop-up 2 cột cân đối --- */
+.modal-mask {
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex; justify-content: center; align-items: center;
+  z-index: 2000;
+}
+
+.modal-box {
+  background-color: #ffffff;
+  width: 100%;
+  max-width: 650px;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  display: flex; flex-direction: column;
+}
+
+.modal-box.small-modal {
+  max-width: 400px;
+}
+
+.modal-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.modal-header h3 {
+  margin: 0; font-size: 16px; color: #111827;
+}
+
+.close-mask-btn {
+  background: none; border: none; font-size: 22px; color: #9ca3af; cursor: pointer;
+}
+
+.modal-form {
+  padding: 20px;
+  display: flex; flex-direction: column;
+  gap: 14px;
+}
+
+.grid-row {
+  display: flex;
+  gap: 16px;
+}
+
+.input-group {
+  flex: 1;
+  display: flex; flex-direction: column;
+  gap: 6px;
+}
+
+.input-group label {
+  font-size: 13px; font-weight: 600; color: #4b5563;
+}
+
+.input-group input, .input-group select, .input-group textarea {
+  padding: 9px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+}
+
+.disabled-input {
+  background-color: #f3f4f6;
+  color: #6b7280;
+  cursor: not-allowed;
+}
+
+.modal-footer-btns {
+  display: flex; justify-content: flex-end;
+  gap: 12px; margin-top: 10px; padding-top: 14px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.btn-form-submit {
+  padding: 9px 18px; background-color: #10b981; color: white;
+  border: none; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 14px;
+}
+
+.btn-form-cancel {
+  padding: 9px 18px; background-color: #fff; color: #374151;
+  border: 1px solid #d1d5db; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 14px;
+}
+
+.btn-form-submit:hover { background-color: #059669; }
+.btn-form-cancel:hover { background-color: #f9fafb; }

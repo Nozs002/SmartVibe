@@ -34,6 +34,7 @@ import com.smartvibe.modules.customer.repository.CustomerRepository;
 import com.smartvibe.modules.staff.repository.StaffRepository;
 import com.smartvibe.modules.customer.entity.Customer;
 import com.smartvibe.modules.staff.entity.Staff;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -96,13 +97,18 @@ public class AuthService {
     }
 
     // Đăng ký
+    @Transactional(rollbackFor = Exception.class)
     public UserResponse register(UserRegisterRequest request) {
+        String role = "customer";
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new AppException(ErrorCode.USER_EXISTED);
         }
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new AppException(ErrorCode.EMAIL_EXISTED);
         }
+        if (userRepository.existsByPhoneAndRole(request.getPhone(), role)) {
+            throw new AppException(ErrorCode.PHONE_EXISTED_CUSTOMER_ROLE);
+        } 
         if (!request.getPassword().equals(request.getConfirmPassword())) {
             throw new AppException(ErrorCode.PASSWORD_NOT_MATCH);
         }
@@ -111,9 +117,16 @@ public class AuthService {
         String encodedPassword = passwordEncoder.encode(request.getPassword());
 
         User user = User.builder().username(request.getUsername()).password(encodedPassword).email(request.getEmail())
-                .role(request.getRole() != null ? request.getRole() : "customer").phone(request.getPhone())
-                .accountStatus("inactive").sex(request.getSex() != null ? request.getSex() : "other").build();
+                .role(role).phone(request.getPhone())
+                .accountStatus("active").sex(request.getSex() != null ? request.getSex() : "other").build();
         userRepository.save(user);
+
+        Customer customer = Customer.builder()
+            .userId(user.getId())
+            .type("normal")
+            .build();
+        customerRepository.save(customer);
+
         return UserResponse.builder().username(user.getUsername()).role(user.getRole()).address(user.getAddress())
                 .birthday(user.getBirthday()).email(user.getEmail()).description(user.getDescription())
                 .avtUrl(user.getAvtUrl()).personalImg(user.getPersonalImg()).phone(user.getPhone()).sex(user.getSex())

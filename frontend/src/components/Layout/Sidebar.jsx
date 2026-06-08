@@ -10,28 +10,31 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
     const navigate = useNavigate();
     
     let currentRole = 'customer';
-    const userData = JSON.parse(localStorage.getItem('user'));
-    if (userData.role === 'staff') {
-        currentRole = JSON.parse(localStorage.getItem('staff')).type;
-    } else if (userData.role === 'system admin') {
-        currentRole = 'system admin';
+    const userString = localStorage.getItem('user');
+    const userData = userString ? JSON.parse(userString) : null;
+    if (userData?.role === 'staff') {
+        const staffString = localStorage.getItem('staff');
+        const staffData = staffString ? JSON.parse(staffString) : null;
+        currentRole = staffData?.type || 'staff'; // Fallback về 'staff' nếu không lấy được type
+    } else if (userData?.role) {
+        currentRole = userData.role; // Lấy 'customer' hoặc 'system admin'
     }
 
     const allMenuItems = [
-        { path: '/dashboard', name: 'Trang chủ', icon: <FaThLarge />, allowedRoles: ['manager', 'system admin', 'customer', 'sales staff'] },
-        { path: '/order-management', name: 'Quản lý đơn hàng', icon: <FaShoppingCart />, allowedRoles: ['manager', 'sales staff', 'system admin'] },
-        { path: '/products', name: 'Quản lý sản phẩm', icon: <FaBoxOpen />, allowedRoles: ['manager', 'warehouse staff', 'system admin'] },
-        { path: '/customers', name: 'Quản lý khách hàng', icon: <FaUsers />, allowedRoles: ['manager', 'sales staff', 'system admin'] },
+        { path: '/dashboard', name: 'Trang chủ', icon: <FaThLarge />, allowedRoles: ['manager', 'system admin', 'customer', 'sales', 'warehouse', 'technical'] },
+        { path: '/order-management', name: 'Quản lý đơn hàng', icon: <FaShoppingCart />, allowedRoles: ['manager', 'sales', 'system admin'] },
+        { path: '/products', name: 'Quản lý sản phẩm', icon: <FaBoxOpen />, allowedRoles: ['manager', 'warehouse', 'system admin', 'sales'] },
+        { path: '/customers', name: 'Quản lý khách hàng', icon: <FaUsers />, allowedRoles: ['manager', 'sales', 'system admin'] },
         { path: '/reports', name: 'Báo cáo doanh thu', icon: <FaChartBar />, allowedRoles: ['manager', 'system admin'] },
         { path: '/user-management', name: 'Quản lý tài khoản', icon: <FaUserShield />, allowedRoles: ['system admin'] },
         { path: '/settings', name: 'Cài đặt hệ thống', icon: <FaCog />, allowedRoles: ['system admin'] },
-        { path: '/online-order', name: 'Mua hàng', icon: <FaShoppingCart />, allowedRoles: ['manager', 'sales staff', 'warehouse staff', 'system admin', 'customer', 'guest'] },
+        { path: '/online-order', name: 'Mua hàng', icon: <FaShoppingCart />, allowedRoles: ['manager', 'sales', 'warehouse', 'system admin', 'customer', 'guest'] },
         { path: '/contact', name: 'Liên hệ hỗ trợ', icon: <FaHeadset/>, allowedRoles: ['customer', 'guest'] },
-        { path: '/branch', name: 'Quản lý chi nhánh', icon: <FaStore/>, allowedRoles: ['manager', 'sales staff', 'system admin'] },
+        { path: '/branch', name: 'Quản lý chi nhánh', icon: <FaStore/>, allowedRoles: ['manager', 'sales', 'system admin'] },
         { path: '/staff', name: 'Quản lý nhân viên', icon: <FaUsers />, allowedRoles: ['manager', 'system admin'] },
         {path: '/order-history', name: 'Lịch sử mua hàng', icon: <FaClipboardList />, allowedRoles:['system admin', 'customer']},
-        { path: '/stock-transfer', name: 'Quản lý chuyển kho', icon: <FaExchangeAlt />, allowedRoles: ['manager', 'warehouse staff', 'system admin'] },
-        { path: '/warehouse', name: 'Quản lý kho', icon: <FaWarehouse />, allowedRoles: ['manager', 'warehouse staff', 'system admin'] }
+        { path: '/stock-transfer', name: 'Quản lý chuyển kho', icon: <FaExchangeAlt />, allowedRoles: ['manager', 'warehouse', 'system admin'] },
+        { path: '/warehouse', name: 'Quản lý kho', icon: <FaWarehouse />, allowedRoles: ['manager', 'warehouse', 'system admin'] }
     ];
 
     const menuItems = allMenuItems.filter(item => item.allowedRoles.includes(currentRole));

@@ -9,6 +9,18 @@ const api = axios.create({
   } 
 });
 
+export const getErrorMessage = (error) => {
+  if (error.response && error.response.data) {
+    return error.response.data.message || "Lỗi xử lý từ máy chủ!";
+  }
+  
+  if (error.message && error.message !== 'Network Error') {
+    return error.message;
+  }
+
+  return "Không thể kết nối đến máy chủ. Vui lòng kiểm tra lại mạng hoặc hệ thống!";
+};
+
 // Tự động đính kèm Token
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
@@ -52,6 +64,15 @@ export const getDataWithCondition = async (url, params = {}) => {
     return response.data.result; 
   } catch (error) {
     throw new Error(error.response?.data?.message || 'Lấy dữ liệu thất bại!');
+  }
+};
+
+export const patchData = async (url, data = null, params = {}) => {
+  try {
+    const response = await api.patch(url, data, { params });
+    return response.data.result || response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Thao tác thất bại!');
   }
 };
 
