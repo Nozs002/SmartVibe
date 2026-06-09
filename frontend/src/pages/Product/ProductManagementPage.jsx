@@ -14,8 +14,12 @@ const ProductManagementPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const staff = JSON.parse(localStorage.getItem('staff')) || {};
+  const user = JSON.parse(localStorage.getItem('user'))
 
-  const role = staff.type;
+  let role = user.role;
+  if(user.role === 'staff'){
+    role = staff.type;
+  }
 
   // Fetch Data
   useEffect(() => {
@@ -28,7 +32,7 @@ const ProductManagementPage = () => {
         ]);
         setCategories(categoriesRes || []);
         let inventoriesData =[];
-        if (staff.branch === 1){
+        if (staff.branchId === 1){
           inventoriesData = inventoriesRes || [];
         } else {
           inventoriesData = (inventoriesRes || []).filter(i => i.branch.id === staff.branchId);
@@ -47,14 +51,32 @@ const ProductManagementPage = () => {
   // Lọc dữ liệu
   const filteredInventories = useMemo(() => {
     let result = [...inventories];
+    
+    // Lọc theo từ khóa (Tìm kiếm)
     if (searchTerm) {
-      result = result.filter(i => i.product.name.toLowerCase().includes(searchTerm.toLowerCase()) || i.product.sku?.toLowerCase().includes(searchTerm.toLowerCase()));
+      result = result.filter(i => 
+        i.product.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+        i.product.sku?.toLowerCase().includes(searchTerm.toLowerCase())
+      );
     }
+    
+    // Lọc theo Thể loại
     if (selectedCategory !== 'all') {
-      result = result.filter(i => String(i.product.categoryId) === String(selectedCategory));
+    
+      const getSubCategoryIds = (parentId, allCategories) => {
+        let ids = [String(parentId)];
+        const children = allCategories.filter(cat => String(cat.parentId) === String(parentId));
+        children.forEach(child => {
+          ids = [...ids, ...getSubCategoryIds(child.id, allCategories)]; 
+        });
+        return ids;
+      };
+      const targetCategoryIds = getSubCategoryIds(selectedCategory, categories);
+      result = result.filter(i => targetCategoryIds.includes(String(i.product.categoryId)));
     }
+    
     return result;
-  }, [inventories, searchTerm, selectedCategory]);
+  }, [inventories, searchTerm, selectedCategory, categories]);
 
   // Bảng thống kê
   const stats = useMemo(() => {
@@ -76,7 +98,7 @@ const ProductManagementPage = () => {
           <h1 className="page-title">Manage Products</h1>
           <p className="page-subtitle">Theo dõi, quản lý sản phẩm và tồn kho</p>
         </div>
-        {(role === 'manager' || role === 'warehouse' || role === 'sales') && (
+        {((role === 'manager' && staff.branchId === 1) || role === 'warehouse') && (
           <button className="btn-primary">
             <FaPlus /> Thêm sản phẩm
           </button>

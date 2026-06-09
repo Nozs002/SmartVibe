@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { getData, putData } from '../../services/api';
+import { getData, putData, getErrorMessage } from '../../services/api';
 import '../../styles/StaffCustomerManagement.css';
+import { useToast } from '../../components/ToastContext';
 
 const StaffManagementPage = () => {
   const [staffs, setStaffs] = useState([]);
@@ -15,18 +16,20 @@ const StaffManagementPage = () => {
   const [filterType, setFilterType] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
 
+  const { showToast } = useToast();
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         setIsLoading(true);
         const [staffData, branchData] = await Promise.all([
-          getData('/staffs'), // Giả định API lấy danh sách nhân viên kèm thông tin user
-          getData('/branches/active')
+          getData('/staff'),
+          getData('/branches')  
         ]);
         setStaffs(staffData);
         setBranches(branchData);
       } catch (err) {
-        console.error('Lỗi tải dữ liệu nhân viên:', err);
+        showToast("Lỗi khi tải dữ liệu nhân viên!", 'error');
       } finally {
         setIsLoading(false);
       }
@@ -47,12 +50,13 @@ const StaffManagementPage = () => {
   const handleSaveStaff = async (e) => {
     e.preventDefault();
     try {
-      const updated = await putData(`/staffs/${editingStaff.id}`, editingStaff);
+      const updated = await putData(`/staff/${editingStaff.id}`, editingStaff);
       setStaffs(staffs.map(s => s.id === editingStaff.id ? updated : s));
       setIsModalOpen(false);
-      alert('Cập nhật thông tin nhân viên thành công!');
+      showToast("Cập nhật nhân viên thành công!", 'success');
     } catch (err) {
-      alert(err.message || 'Lỗi khi cập nhật nhân viên!');
+      const errorMessage = getErrorMessage(err);
+      showToast(errorMessage, 'error');
     }
   };
 
@@ -134,7 +138,18 @@ const StaffManagementPage = () => {
                       </div>
                     </td>
                     <td><span className={`role-badge type-${staff.type}`}>{staff.type}</span></td>
-                    <td>{branches.find(b => b.id === staff.branchId)?.name || `Chi nhánh #${staff.branchId}`}</td>
+                    <td>
+                      {branches.find(b => b.id === staff.branchId)
+                        ? (
+                            <span>
+                              {branches.find(b => b.id === staff.branchId).name} 
+                              {branches.find(b => b.id === staff.branchId).operatingStatus !== 'open' && 
+                                <span style={{ color: 'red', fontSize: '12px', marginLeft: '4px' }}>(Đóng cửa)</span>
+                              }
+                            </span>
+                          )
+                        : `Chi nhánh #${staff.branchId}`}
+                    </td>
                     <td>{staff.phone || '-'}</td>
                     <td>{staff.basicSalary ? `${Number(staff.basicSalary).toLocaleString()}đ` : '0đ'}</td>
                     <td><span className={`status-badge ws-${staff.workStatus}`}>{staff.workStatus}</span></td>
@@ -173,7 +188,15 @@ const StaffManagementPage = () => {
                 <div className="input-group">
                   <label>Chi nhánh công tác (*)</label>
                   <select name="branchId" value={editingStaff.branchId || ''} onChange={handleInputChange} required>
-                    {branches.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
+                    <option value="">-- Chọn chi nhánh --</option>
+                    {branches
+                      .filter(b => b.operatingStatus === 'open' || b.id === editingStaff.branchId)
+                      .map(b => (
+                        <option key={b.id} value={b.id}>
+                          {b.name} {b.operatingStatus !== 'open' ? ' (Đang tạm đóng)' : ''}
+                        </option>
+                      ))
+                    }
                   </select>
                 </div>
                 <div className="input-group">

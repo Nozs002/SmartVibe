@@ -27,7 +27,7 @@ public class Branch {
     @Column(nullable = false)
     private String email;
 
-    @Column(name = "operating_status", columnDefinition = "ENUM('open', 'closed', 'maintenance')")
+    @Column(name = "operating_status", columnDefinition = "ENUM('open', 'close', 'maintenance')")
     private String operatingStatus;
 
     @Column(name = "number_of_staff", nullable = false)
@@ -35,7 +35,7 @@ public class Branch {
 
     @Column(nullable = false)
     private Long capacity;
-
+ 
     @Column(columnDefinition = "ENUM('retail_branch', 'head_warehouse')")
     private String type;
 }

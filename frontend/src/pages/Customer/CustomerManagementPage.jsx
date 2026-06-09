@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { getData, putData } from '../../services/api';
+import { getData, putData, getErrorMessage } from '../../services/api';
 import '../../styles/StaffCustomerManagement.css';
+import { useToast } from '../../components/ToastContext';
 
 const CustomerManagementPage = () => {
   const [customers, setCustomers] = useState([]);
@@ -12,14 +13,17 @@ const CustomerManagementPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterRank, setFilterRank] = useState('');
 
+  const { showToast } = useToast();
+
   useEffect(() => {
     const fetchCustomers = async () => {
       try {
         setIsLoading(true);
-        const data = await getData('/customers'); // API lấy dữ liệu khách hàng kèm user profile
+        const data = await getData('/customers'); 
         setCustomers(data);
       } catch (err) {
-        console.error('Lỗi tải dữ liệu khách hàng:', err);
+        const errorMsg = getErrorMessage(err);
+        showToast(errorMsg, 'error'); 
       } finally {
         setIsLoading(false);
       }
@@ -43,9 +47,10 @@ const CustomerManagementPage = () => {
       const updated = await putData(`/customers/${editingCustomer.id}`, editingCustomer);
       setCustomers(customers.map(c => c.id === editingCustomer.id ? updated : c));
       setIsModalOpen(false);
-      alert('Cập nhật phân hạng khách hàng thành công!');
+      showToast('Cập nhật hạng khách hàng thành công!', 'success');
     } catch (err) {
-      alert(err.message || 'Lỗi khi cập nhật hạng khách hàng!');
+      const errorMsg = getErrorMessage(err);
+      showToast(errorMsg, 'error');
     }
   };
 

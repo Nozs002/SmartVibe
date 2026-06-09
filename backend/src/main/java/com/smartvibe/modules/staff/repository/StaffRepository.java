@@ -21,4 +21,6 @@ public interface StaffRepository extends JpaRepository<Staff, Long> {
            "LEFT JOIN User u ON s.userId = u.id " +
            "WHERE s.id = :id")
     Optional<StaffInfo> findStaffInfoById(@Param("id") Long id);
+
+    List<Staff> findByBranchId(Long branchId);
 }

@@ -10,14 +10,21 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
     const navigate = useNavigate();
     
     let currentRole = 'customer';
+    let currentBranchId = null; 
+
     const userString = localStorage.getItem('user');
     const userData = userString ? JSON.parse(userString) : null;
+    
     if (userData?.role === 'staff') {
         const staffString = localStorage.getItem('staff');
         const staffData = staffString ? JSON.parse(staffString) : null;
-        currentRole = staffData?.type || 'staff'; // Fallback về 'staff' nếu không lấy được type
+        
+        currentRole = staffData?.type || 'staff';
+        currentBranchId = staffData?.branchId;
+        
     } else if (userData?.role) {
-        currentRole = userData.role; // Lấy 'customer' hoặc 'system admin'
+        currentRole = userData.role; 
+        currentBranchId = userData?.branchId;
     }
 
     const allMenuItems = [
@@ -28,20 +35,35 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
         { path: '/reports', name: 'Báo cáo doanh thu', icon: <FaChartBar />, allowedRoles: ['manager', 'system admin'] },
         { path: '/user-management', name: 'Quản lý tài khoản', icon: <FaUserShield />, allowedRoles: ['system admin'] },
         { path: '/settings', name: 'Cài đặt hệ thống', icon: <FaCog />, allowedRoles: ['system admin'] },
-        { path: '/online-order', name: 'Mua hàng', icon: <FaShoppingCart />, allowedRoles: ['manager', 'sales', 'warehouse', 'system admin', 'customer', 'guest'] },
-        { path: '/contact', name: 'Liên hệ hỗ trợ', icon: <FaHeadset/>, allowedRoles: ['customer', 'guest'] },
-        { path: '/branch', name: 'Quản lý chi nhánh', icon: <FaStore/>, allowedRoles: ['manager', 'sales', 'system admin'] },
+        { path: '/online-order', name: 'Mua hàng', icon: <FaShoppingCart />, allowedRoles: ['customer'] },
+        { path: '/contact', name: 'Liên hệ hỗ trợ', icon: <FaHeadset/>, allowedRoles: ['customer'] },
         { path: '/staff', name: 'Quản lý nhân viên', icon: <FaUsers />, allowedRoles: ['manager', 'system admin'] },
-        {path: '/order-history', name: 'Lịch sử mua hàng', icon: <FaClipboardList />, allowedRoles:['system admin', 'customer']},
+        { path: '/order-history', name: 'Lịch sử mua hàng', icon: <FaClipboardList />, allowedRoles:['customer']},
         { path: '/stock-transfer', name: 'Quản lý chuyển kho', icon: <FaExchangeAlt />, allowedRoles: ['manager', 'warehouse', 'system admin'] },
-        { path: '/warehouse', name: 'Quản lý kho', icon: <FaWarehouse />, allowedRoles: ['manager', 'warehouse', 'system admin'] }
+        { path: '/warehouse', name: 'Quản lý kho', icon: <FaWarehouse />, allowedRoles: ['manager', 'warehouse', 'system admin'] },
+        { 
+            path: '/branch', 
+            name: 'Quản lý chi nhánh', 
+            icon: <FaStore/>, 
+            allowedRoles: ['manager', 'system admin'],
+            requireHeadManager: true
+        }
     ];
 
-    const menuItems = allMenuItems.filter(item => item.allowedRoles.includes(currentRole));
+    const filteredMenuItems = allMenuItems.filter(item => {
+        if (item.requireHeadManager) {
+            if (currentRole === 'system admin') return true;
+            if (currentRole === 'manager' && currentBranchId === 1) return true;
+            return false;
+        }
+        return item.allowedRoles.includes(currentRole);
+    });
 
     const handleLogout = () => { 
         localStorage.removeItem('token');
         localStorage.removeItem('user');
+        localStorage.removeItem('staff'); 
+        localStorage.removeItem('customer');
         navigate('/login', { replace: true }); 
     };
 
@@ -59,12 +81,12 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
             </div>
 
             <div className="sidebar-menu">
-                {menuItems.map((item, index) => (
+                {filteredMenuItems.map((item, index) => (
                     <NavLink 
                         key={index} 
                         to={item.path} 
                         className={({ isActive }) => isActive ? "menu-item active" : "menu-item"}
-                        title={isCollapsed ? item.name : ""} /* Hiện tooltip khi thu nhỏ */
+                        title={isCollapsed ? item.name : ""} 
                     >
                         <span className="menu-icon">{item.icon}</span>
                         {!isCollapsed && <span className="menu-text">{item.name}</span>}

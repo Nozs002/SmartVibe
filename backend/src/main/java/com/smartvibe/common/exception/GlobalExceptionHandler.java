@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = Exception.class) // bắt tất cả các lỗi exception
-    ResponseEntity<ApiResponse> handlingRuntimeException(RuntimeException exception) {
+    ResponseEntity<ApiResponse> handlingRuntimeException(Exception exception) {
         log.error("Exception: ", exception); // in log ra console khi lỗi xảy ra
         ApiResponse apiResponse = new ApiResponse();
 

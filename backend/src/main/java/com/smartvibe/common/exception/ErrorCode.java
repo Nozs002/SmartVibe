@@ -42,7 +42,10 @@ public enum ErrorCode {
     DOCUMENT_NOT_FOUND(1031, "Chứng từ không tồn tại!", HttpStatus.NOT_FOUND),
     INVALID_DOCUMENT_STATUS(1032, "Trạng thái chứng từ không hợp lệ!", HttpStatus.BAD_REQUEST),
     UNAUTHORIZED_BRANCH_TRANSFER(1033, "Bạn không có quyền thao tác với chi nhánh này!", HttpStatus.FORBIDDEN), 
-    USER_IN_USE(1034, "Tài khoản đã phát sinh dữ liệu nghiệp vụ, không thể xóa bỏ hoàn toàn. Vui lòng chuyển trạng thái sang 'Bị khóa'!", HttpStatus.BAD_REQUEST);
+    USER_IN_USE(1034, "Tài khoản đã phát sinh dữ liệu nghiệp vụ, không thể xóa bỏ hoàn toàn. Vui lòng chuyển trạng thái sang 'Bị khóa'!", HttpStatus.BAD_REQUEST),
+    FORBIDDEN(1035, "Bạn không có quyền thực hiện thao tác này!", HttpStatus.FORBIDDEN),
+    FORBIDDEN_TO_EDIT_SYSTEM_ADMIN(1036, "Bạn không có quyền điều chuyển nhân sự của hệ thống!", HttpStatus.FORBIDDEN),
+    BRANCHE_NOT_FOUND(1037, "Không tìm thấy chi nhánh!", HttpStatus.BAD_REQUEST);
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;

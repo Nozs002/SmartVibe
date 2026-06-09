@@ -162,4 +162,25 @@ public class AuthService {
             throw new RuntimeException(e);
         }
     }
+
+    // Hàm kiểm tra quyền chỉ admin hoặc manager tổng
+    public void verifyHeadManagerOrAdmin(String username) {
+        User loggedInUser = userRepository.findByUsername(username)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        if ("system admin".equals(loggedInUser.getRole())) {
+            return;
+        }
+
+        if ("staff".equals(loggedInUser.getRole())) {
+            Staff currentStaff = staffRepository.findByUserId(loggedInUser.getId())
+                    .orElseThrow(() -> new AppException(ErrorCode.STAFF_NOT_FOUND_BY_USER_ID));
+            
+            if ("manager".equals(currentStaff.getType()) && Objects.equals(currentStaff.getBranchId(), 1L)) {
+                return;
+            }
+        }
+        
+        throw new AppException(ErrorCode.FORBIDDEN);
+    }
 }

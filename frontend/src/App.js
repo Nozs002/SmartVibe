@@ -23,9 +23,12 @@ import ProductDetailPage from './pages/Product/ProductDetailPage';
 import InventoryManagementPage from './pages/Inventory/InventoryManagementPage';
 import CustomerManagementPage from './pages/Customer/CustomerManagementPage';
 import StaffManagementPage from './pages/Staff/StaffManagementPage';
+import { ToastProvider } from './components/ToastContext';
+import BranchManagementPage from './pages/Branch/BranchManagementPage';
 
 function App() {
   return (
+    <ToastProvider>
     <Router>
       <ScrollToTop />
       <Routes>
@@ -93,12 +96,16 @@ function App() {
 
           {/* Đường dẫn cho trang quản lý nhân viên */}
           <Route path="/staff" element={<StaffManagementPage />} />
+
+          {/* Đường dẫn cho trang quản lý chi nhánh */}
+          <Route path="/branch" element={<BranchManagementPage />} />
         </Route>
 
         {/* Nếu người dùng vào trang khác, quay về Login */}
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </Router>
+    </ToastProvider>
   );
 }
 
