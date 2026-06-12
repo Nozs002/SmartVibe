@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { 
   FaThLarge, FaShoppingCart, FaBoxOpen, 
-  FaUsers, FaChartBar, FaCog, FaUserShield, FaSignOutAlt, FaBars, FaHeadset, FaStore, FaClipboardList, FaExchangeAlt, FaWarehouse
+  FaUsers, FaChartBar, FaCog, FaUserShield, FaSignOutAlt, FaBars, FaHeadset, FaStore, FaClipboardList, FaExchangeAlt, FaWarehouse, FaUserTie
 } from 'react-icons/fa';
 import '../../styles/Sidebar.css';
 
@@ -21,6 +21,9 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
         
         currentRole = staffData?.type || 'staff';
         currentBranchId = staffData?.branchId;
+        if(staffData?.workStatus != 'working'){
+            currentRole = 'guest';
+        }
         
     } else if (userData?.role) {
         currentRole = userData.role; 
@@ -28,19 +31,20 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
     }
 
     const allMenuItems = [
+        { path: '/guest', name: 'Trang chủ', icon: <FaThLarge />, allowedRoles: ['guest'] },
         { path: '/dashboard', name: 'Trang chủ', icon: <FaThLarge />, allowedRoles: ['manager', 'system admin', 'customer', 'sales', 'warehouse', 'technical'] },
-        { path: '/order-management', name: 'Quản lý đơn hàng', icon: <FaShoppingCart />, allowedRoles: ['manager', 'sales', 'system admin'] },
-        { path: '/products', name: 'Quản lý sản phẩm', icon: <FaBoxOpen />, allowedRoles: ['manager', 'warehouse', 'system admin', 'sales'] },
+        { path: '/order-management', name: 'Quản lý đơn hàng', icon: <FaShoppingCart />, allowedRoles: ['manager', 'sales'] },
+        { path: '/products', name: 'Quản lý sản phẩm', icon: <FaBoxOpen />, allowedRoles: ['manager', 'warehouse', 'sales'] },
         { path: '/customers', name: 'Quản lý khách hàng', icon: <FaUsers />, allowedRoles: ['manager', 'sales', 'system admin'] },
-        { path: '/reports', name: 'Báo cáo doanh thu', icon: <FaChartBar />, allowedRoles: ['manager', 'system admin'] },
+        // { path: '/reports', name: 'Báo cáo doanh thu', icon: <FaChartBar />, allowedRoles: ['manager'] },
         { path: '/user-management', name: 'Quản lý tài khoản', icon: <FaUserShield />, allowedRoles: ['system admin'] },
-        { path: '/settings', name: 'Cài đặt hệ thống', icon: <FaCog />, allowedRoles: ['system admin'] },
+        // { path: '/settings', name: 'Cài đặt hệ thống', icon: <FaCog />, allowedRoles: ['system admin'] },
         { path: '/online-order', name: 'Mua hàng', icon: <FaShoppingCart />, allowedRoles: ['customer'] },
         { path: '/contact', name: 'Liên hệ hỗ trợ', icon: <FaHeadset/>, allowedRoles: ['customer'] },
-        { path: '/staff', name: 'Quản lý nhân viên', icon: <FaUsers />, allowedRoles: ['manager', 'system admin'] },
+        { path: '/staff', name: 'Quản lý nhân viên', icon: <FaUserTie />, allowedRoles: ['manager', 'system admin'] },
         { path: '/order-history', name: 'Lịch sử mua hàng', icon: <FaClipboardList />, allowedRoles:['customer']},
-        { path: '/stock-transfer', name: 'Quản lý chuyển kho', icon: <FaExchangeAlt />, allowedRoles: ['manager', 'warehouse', 'system admin'] },
-        { path: '/warehouse', name: 'Quản lý kho', icon: <FaWarehouse />, allowedRoles: ['manager', 'warehouse', 'system admin'] },
+        { path: '/stock-transfer', name: 'Quản lý chuyển kho', icon: <FaExchangeAlt />, allowedRoles: ['manager', 'warehouse'] },
+        { path: '/warehouse', name: 'Quản lý kho', icon: <FaWarehouse />, allowedRoles: ['manager', 'warehouse'] },
         { 
             path: '/branch', 
             name: 'Quản lý chi nhánh', 

@@ -18,7 +18,7 @@ public class ProductItem {
     @Column(name = "serial", unique = true, nullable = false)
     private String serial;
 
-    @Column(name = "status", columnDefinition = "ENUM('in stock', 'sold', 'defective')")
+    @Column(name = "status", columnDefinition = "ENUM('in stock', 'sold', 'defective', 'transit')")
     private String status;
 
     @Column(name = "product_id")

@@ -39,7 +39,7 @@ public class User {
 
     private String phone;
 
-    @Column(columnDefinition = "ENUM('male', 'female', 'other')")
+    @Column(name = "sex", columnDefinition = "ENUM('male', 'female', 'other') DEFAULT 'other'")
     private String sex;
 
     @Column(name = "identify_code")

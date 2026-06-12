@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; 
 import { login } from '../../services/auth.service';
-import { Link } from 'react-router-dom'; // Dùng để chuyển trang mà không load lại web
+import { Link } from 'react-router-dom';
 
 const LoginForm = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  
   
   const navigate = useNavigate(); 
 
@@ -19,13 +18,30 @@ const LoginForm = () => {
 
     try {
       const data = await login(username, password);
+      
       if (data.user.accountStatus === 'inactive') {
         navigate('/account-status', { state: { type: 'inactive' } });
-      } else if (data.user.accountStatus === 'banned') {
+        return;
+      } 
+      
+      if (data.user.accountStatus === 'banned') {
         navigate('/account-status', { state: { type: 'banned' } });
+        return; 
+      } 
+
+      const userData = data.user;
+      if (userData?.role === 'staff') {
+        const staffData = data.staff;
+        
+        if (staffData?.workStatus !== 'working') {
+            navigate("/guest");
+            return; 
+        }
+        navigate('/dashboard'); 
       } else {
-        navigate('/dashboard'); // Chỉ vào dashboard nếu ACTIVE
+        navigate('/dashboard'); 
       }
+      
     } catch (err) {
       setError(err.message);
     } finally {

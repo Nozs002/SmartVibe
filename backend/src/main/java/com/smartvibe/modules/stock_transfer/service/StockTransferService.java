@@ -81,10 +81,12 @@ public class StockTransferService {
     // BÊN XUẤT BẤM GỬI HÀNG: PENDING -> SHIPPING (TRỪ KHO XUẤT)
     @Transactional(rollbackFor = Exception.class)
     public void shipTransfer(Long staffBranchId, Long transferId) {
-        validateHeadWarehouse(staffBranchId);
-
         StockTransfer transfer = stockTransferRepository.findById(transferId)
                 .orElseThrow(() -> new AppException(ErrorCode.DOCUMENT_NOT_FOUND));
+
+        if (!staffBranchId.equals(transfer.getFromBranchId())) {
+            throw new AppException(ErrorCode.UNAUTHORIZED_BRANCH_TRANSFER);
+        }
 
         if (!"pending".equals(transfer.getStatus())) {
             throw new AppException(ErrorCode.INVALID_DOCUMENT_STATUS);
@@ -129,10 +131,13 @@ public class StockTransferService {
     // BÊN NHẬN XÁC NHẬN: SHIPPING -> COMPLETED (CỘNG KHO NHẬN)
     @Transactional(rollbackFor = Exception.class)
     public void completeTransfer(Long staffBranchId, Long transferId) {
-        validateHeadWarehouse(staffBranchId);
 
         StockTransfer transfer = stockTransferRepository.findById(transferId)
                 .orElseThrow(() -> new AppException(ErrorCode.DOCUMENT_NOT_FOUND));
+
+        if (!staffBranchId.equals(transfer.getToBranchId())) {
+            throw new AppException(ErrorCode.UNAUTHORIZED_BRANCH_TRANSFER);
+        }
 
         if (!"shipping".equals(transfer.getStatus())) {
             throw new AppException(ErrorCode.INVALID_DOCUMENT_STATUS);

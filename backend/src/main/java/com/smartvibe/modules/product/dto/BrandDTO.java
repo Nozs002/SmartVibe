@@ -10,4 +10,5 @@ import lombok.*;
 public class BrandDTO {
     private Long id;
     private String name;
+    private String logoUrl;
 }

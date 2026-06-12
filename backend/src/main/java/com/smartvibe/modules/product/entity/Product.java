@@ -8,6 +8,9 @@ import org.hibernate.annotations.JdbcTypeCode;
 import java.util.Map;
 
 import org.hibernate.type.SqlTypes;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import org.hibernate.annotations.JdbcTypeCode;
 
 import jakarta.persistence.*;
@@ -37,6 +40,7 @@ public class Product {
     @Column(name = "brand_id")
     private Long brandId;
 
+    @JsonProperty("isSerialized")
     @Column(name = "is_serialized", nullable = false)
     private boolean isSerialized;
 

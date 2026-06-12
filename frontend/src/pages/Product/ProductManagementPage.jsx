@@ -13,13 +13,17 @@ const ProductManagementPage = () => {
   
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  
   const staff = JSON.parse(localStorage.getItem('staff')) || {};
-  const user = JSON.parse(localStorage.getItem('user'))
+  const user = JSON.parse(localStorage.getItem('user')) || {}; // Thêm || {} để tránh lỗi văng app khi user null
 
   let role = user.role;
   if(user.role === 'staff'){
     role = staff.type;
   }
+
+  const isSystemAdmin = user.role === 'system admin';
+  const isHeadManager = role === 'manager' && staff.branchId === 1;
 
   // Fetch Data
   useEffect(() => {
@@ -31,11 +35,12 @@ const ProductManagementPage = () => {
           getData('/inventory/all').catch(() => [])
         ]);
         setCategories(categoriesRes || []);
-        let inventoriesData =[];
-        if (staff.branchId === 1){
+        
+        let inventoriesData = [];
+        if (isSystemAdmin || isHeadManager){
           inventoriesData = inventoriesRes || [];
         } else {
-          inventoriesData = (inventoriesRes || []).filter(i => i.branch.id === staff.branchId);
+          inventoriesData = (inventoriesRes || []).filter(i => i.branch?.id === staff.branchId);
         }
         setInventories(inventoriesData);
       
@@ -46,7 +51,7 @@ const ProductManagementPage = () => {
       }
     };
     fetchInitialData();
-  }, []);
+  }, [isSystemAdmin, isHeadManager, staff.branchId]); 
 
   // Lọc dữ liệu
   const filteredInventories = useMemo(() => {
@@ -62,7 +67,6 @@ const ProductManagementPage = () => {
     
     // Lọc theo Thể loại
     if (selectedCategory !== 'all') {
-    
       const getSubCategoryIds = (parentId, allCategories) => {
         let ids = [String(parentId)];
         const children = allCategories.filter(cat => String(cat.parentId) === String(parentId));
@@ -98,8 +102,9 @@ const ProductManagementPage = () => {
           <h1 className="page-title">Manage Products</h1>
           <p className="page-subtitle">Theo dõi, quản lý sản phẩm và tồn kho</p>
         </div>
-        {((role === 'manager' && staff.branchId === 1) || role === 'warehouse') && (
-          <button className="btn-primary">
+        
+        {(isSystemAdmin || isHeadManager) && (
+          <button className="btn-primary" onClick={() => navigate('/add-product')}>
             <FaPlus /> Thêm sản phẩm
           </button>
         )}
@@ -162,7 +167,6 @@ const ProductManagementPage = () => {
             ))}
           </select>
         </div>
-        {/* Có thể thêm các bộ lọc khác như Status, Price range tùy ý */}
       </div>
 
       {/* 4. Data Table */}

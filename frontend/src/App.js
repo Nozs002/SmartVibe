@@ -25,6 +25,8 @@ import CustomerManagementPage from './pages/Customer/CustomerManagementPage';
 import StaffManagementPage from './pages/Staff/StaffManagementPage';
 import { ToastProvider } from './components/ToastContext';
 import BranchManagementPage from './pages/Branch/BranchManagementPage';
+import AddProductPage from './pages/Product/AddProductPage';
+import GuestDashboard from './pages/GuestDashboard';
 
 function App() {
   return (
@@ -48,6 +50,7 @@ function App() {
         <Route path="/" element={<MainLayout />}>
           {/* Đường dẫn cho Dashboard */}
           <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/guest" element={<GuestDashboard />} />
           
           {/* Đường dẫn cho trang Order */}
           <Route path="/online-order" element={<OnlineOrderPage />} />
@@ -99,6 +102,9 @@ function App() {
 
           {/* Đường dẫn cho trang quản lý chi nhánh */}
           <Route path="/branch" element={<BranchManagementPage />} />
+
+          {/* Đường dẫn cho trang thêm sản phẩm */}
+          <Route path="/add-product" element={<AddProductPage />} />
         </Route>
 
         {/* Nếu người dùng vào trang khác, quay về Login */}

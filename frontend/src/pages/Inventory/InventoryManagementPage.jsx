@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../../styles/Inventory.css';
 import { getData, postData, putData } from '../../services/api'; 
+import { useToast } from '../../components/ToastContext'; // Import hook useToast
 
 const InventoryManagementPage = () => {
   const currentStaff = JSON.parse(localStorage.getItem('staff') || '{"id": 1, "branchId": 1, "type": "staff"}');
@@ -14,6 +15,9 @@ const InventoryManagementPage = () => {
 
   const [docType, setDocType] = useState('import');
   const [details, setDetails] = useState([{ productId: '', quantity: 1, price: 0, serials: '', isSerialized: false }]);
+
+  // Khởi tạo hàm showToast
+  const { showToast } = useToast();
 
   useEffect(() => {
     const fetchHistoryAndPending = async () => {
@@ -66,7 +70,7 @@ const InventoryManagementPage = () => {
         const serialArray = d.serials ? d.serials.split(/[,\n]+/).map(s => s.trim()).filter(s => s !== '') : [];
 
         if (d.isSerialized && serialArray.length !== Number(d.quantity)) {
-          alert(`Lỗi ở dòng số ${index + 1}: Số lượng mã Serial [${serialArray.length}] không khớp với số lượng nhập [${d.quantity}]`);
+          showToast(`Lỗi ở dòng số ${index + 1}: Số lượng mã Serial [${serialArray.length}] không khớp với số lượng nhập [${d.quantity}]`, 'error');
           throw new Error("Invalid serial count");
         }
 
@@ -88,10 +92,10 @@ const InventoryManagementPage = () => {
 
       if (docType === 'import') {
         await postData('/stock-documents/import', stockRequestPayload);
-        alert("Nhập kho thành công!");
+        showToast("Nhập kho thành công!", 'success');
       } else {
         await postData('/stock-documents/export', stockRequestPayload);
-        alert("Tạo phiếu yêu cầu xuất kho thành công! Đang chờ Quản lý phê duyệt.");
+        showToast("Tạo phiếu yêu cầu xuất kho thành công! Đang chờ Quản lý phê duyệt.", 'success');
       }
       
       setNotes('');
@@ -99,7 +103,7 @@ const InventoryManagementPage = () => {
     } catch (error) {
       console.error("Lỗi khi gửi yêu cầu kho:", error);
       if (error.response?.data?.message) {
-        alert("Lỗi hệ thống: " + error.response.data.message);
+        showToast("Lỗi hệ thống: " + error.response.data.message, 'error');
       }
     }
   };
@@ -110,11 +114,15 @@ const InventoryManagementPage = () => {
 
     try {
       await putData(`/stock-documents/approve/${id}`, {});
-      alert(`Đã phê duyệt phiếu xuất kho #${id} thành công!`);
+      showToast(`Đã phê duyệt phiếu xuất kho #${id} thành công!`, 'success');
       setPendingExports(pendingExports.filter(doc => doc.id !== id));
     } catch (error) {
       console.error("Lỗi phê duyệt:", error);
-      if (error.response?.data?.message) alert("Lỗi phê duyệt: " + error.response.data.message);
+      if (error.response?.data?.message) {
+        showToast("Lỗi phê duyệt: " + error.response.data.message, 'error');
+      } else {
+        showToast("Có lỗi xảy ra khi phê duyệt", 'error');
+      }
     }
   };
 

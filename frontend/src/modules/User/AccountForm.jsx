@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import '../../styles/UserManagement.css';
-import { getData } from '../../services/api';
+import { getData, getErrorMessage } from '../../services/api';
+import { useToast } from '../../components/ToastContext';
 
 const AccountForm = ({ onSubmit, onCancel, initialData }) => {
+  const { showToast } = useToast();
   const [formData, setFormData] = useState(
     initialData || {
       username: '',
@@ -27,7 +29,7 @@ const AccountForm = ({ onSubmit, onCancel, initialData }) => {
         const branchData = await getData('/branches/active');
         setBranches(branchData);
       } catch (error) {
-        console.error("Lỗi khi tải danh sách chi nhánh:", error);
+        showToast("Lỗi khi tải danh sách", 'error');
       }
     };
     fetchBranches();
@@ -47,11 +49,11 @@ const AccountForm = ({ onSubmit, onCancel, initialData }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!initialData) {
-      if (!formData.password) return alert("Vui lòng nhập mật khẩu!");
-      if (formData.password !== formData.confirmPassword) return alert("Mật khẩu xác nhận không khớp!");
+      if (!formData.password) return showToast("vui lòng nhập mật khẩu", 'error');;
+      if (formData.password !== formData.confirmPassword) return showToast("Mật khẩu và xác nhận mật khẩu không khớp", 'error');;
       if (formData.role === 'staff') {
-        if (!formData.branchId) return alert("Vui lòng chọn chi nhánh cho nhân viên!");
-        if (!formData.staffType) return alert("Vui lòng chọn chức vụ cho nhân viên!");
+        if (!formData.branchId) return showToast("Vui lòng chọn chi nhánh cho nhân viên!", 'error');;
+        if (!formData.staffType) return showToast("Vui lòng chọn chức vụ cho nhân viên!", 'error');
       }
     }
 
@@ -74,10 +76,12 @@ const AccountForm = ({ onSubmit, onCancel, initialData }) => {
             <input type="text" name="username" value={formData.username || ''} onChange={handleChange} className="input" placeholder="Nhập tên đăng nhập..." disabled={!!initialData} required />
           </div>
           
+          {initialData && (
           <div className="formGroup">
             <label className="label">Họ và tên:</label>
             <input type="text" name="fullname" value={formData.fullname || ''} onChange={handleChange} className="input" placeholder="Nhập họ và tên..." />
           </div>
+          )}
         </div>
 
         <div className="formRow">

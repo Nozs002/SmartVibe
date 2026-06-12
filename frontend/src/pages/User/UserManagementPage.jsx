@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import AccountForm from '../../modules/User/AccountForm';
-import { getData, postData, putData, deleteData, patchData } from '../../services/api';
+import { getData, postData, putData, deleteData, patchData, getErrorMessage } from '../../services/api';
 import '../../styles/UserManagement.css';
 import { register } from '../../services/auth.service';
+import { useToast } from '../../components/ToastContext';
 
 const UserManagementPage = () => {
 
@@ -16,12 +17,15 @@ const UserManagementPage = () => {
   const [filterRole, setFilterRole] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
 
+  const { showToast } = useToast();
+
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         setIsLoading(true);
         const response = await getData('/users/all');
-        setAccounts(response);
+        // Đảm bảo dữ liệu là một mảng
+        setAccounts(response || []);
       } catch (err) {
         console.error('Error fetching users:', err);
       } finally {
@@ -34,35 +38,49 @@ const UserManagementPage = () => {
   const handleSaveAccount = async (accountData) => {
     try {
       if (editingAccount) {
-        const updatedAccount = await putData(`/users/${editingAccount.id}`, accountData);
+        if (!editingAccount.id) {
+          showToast("Lỗi hệ thống: Không tìm thấy ID tài khoản!", "error");
+          return;
+        }
+
+        const response = await putData(`/users/${editingAccount.id}`, accountData);
+        const updatedAccount = response.result ? response.result : response; 
+
         setAccounts(accounts.map((acc) => (acc.id === editingAccount.id ? updatedAccount : acc)));
+        showToast("Cập nhật tài khoản thành công!", "success");
+
       } else {
         if (accountData.role === 'staff') {
-          const newStaff = await postData('/users/staff', accountData);
+          const response = await postData('/users/staff', accountData);
+          // Bóc tách đối tượng nhân viên để đảm bảo lấy được ID
+          const newStaff = response.result ? response.result : response;
           setAccounts([newStaff, ...accounts]);
+          showToast("Tạo tài khoản nhân viên thành công!", "success");
+
         } else {
           const response = await register(accountData);
-          const newAccount = response.result;
+          const newAccount = response.result ? response.result : response;
           setAccounts([newAccount, ...accounts]);
-          alert("Tạo khách hàng thành công!");
+          showToast("Tạo tài khoản khách hàng thành công!", 'success');
         }
       }
       closeModal();
     } catch (err) {
-      alert(err.message || "Lỗi khi lưu tài khoản!");
-      console.error(err);
+      const errorMessage = getErrorMessage(err);
+      showToast(errorMessage, 'error');
     }
   };
 
   const handleApprove = async (id) => {
-    if (window.confirm("Xác nhận duyệt tài khoản này?")) {
       try {
-        const updatedAccount = await patchData(`/users/${id}/status`, null, { status: 'active' });
+        const response = await patchData(`/users/${id}/status`, null, { status: 'active' });
+        const updatedAccount = response.result ? response.result : response;
+        
         setAccounts(accounts.map((acc) => (acc.id === id ? updatedAccount : acc)));
+        showToast("Đã duyệt tài khoản thành công!", "success");
       } catch (err) {
-        alert(err.message || "Lỗi khi duyệt tài khoản!");
+        showToast(getErrorMessage(err), 'error');
       }
-    }
   };
 
   const handleDeleteAccount = async (id) => {
@@ -70,9 +88,9 @@ const UserManagementPage = () => {
       try {
         await deleteData(`/users/${id}`);
         setAccounts(accounts.filter((acc) => acc.id !== id));
+        showToast("Xóa tài khoản thành công!", "success");
       } catch (err) {
-        alert("⚠️ Không thể xóa tài khoản này. Tài khoản đã phát sinh dữ liệu trong hệ thống (nhật ký hoạt động, đơn hàng...). Để bảo toàn lịch sử dữ liệu, vui lòng dùng chức năng 'Khóa tài khoản' (Banned) thay vì xóa");
-        console.error(err.response?.data);
+        showToast("⚠️ Không thể xóa tài khoản này. Tài khoản đã phát sinh dữ liệu trong hệ thống (nhật ký hoạt động, đơn hàng...). Để bảo toàn lịch sử dữ liệu, vui lòng dùng chức năng 'Khóa tài khoản' (Banned) thay vì xóa", 'error');
       }
     }
   };
@@ -183,7 +201,6 @@ const UserManagementPage = () => {
                       </span>
                     </td>
                     <td className="td action-group">
-                      {/* Thêm nút Duyệt nếu trạng thái là inactive */}
                       {account.accountStatus === 'inactive' && (
                         <button 
                           onClick={() => handleApprove(account.id)} 

@@ -124,9 +124,11 @@ public class UserService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .email(request.getEmail())
                 .phone(request.getPhone())
+                .sex("other")
                 .role(role)
                 .accountStatus("inactive")
                 .build();
+
         user = userRepository.save(user);
 
         Staff staff = Staff.builder()

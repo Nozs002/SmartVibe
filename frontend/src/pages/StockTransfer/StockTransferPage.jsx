@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import '../../styles/StockTransfer.css';
 import { getData, postData, putData } from '../../services/api'; 
+import { useToast } from '../../components/ToastContext'; // Thêm import useToast
 
 const StockTransferPage = () => {
   const currentStaff = JSON.parse(localStorage.getItem('staff') || '{"id": 1, "branchId": 1, "type": "staff"}');
   const isHeadWarehouse = Number(currentStaff.branchId) === 1;
+
+  // Khởi tạo hàm showToast
+  const { showToast } = useToast();
 
   // Nếu không phải kho tổng, tab mặc định là TRANSFER_LIST
   const [activeTab, setActiveTab] = useState(isHeadWarehouse ? 'TRANSFER_STOCK' : 'TRANSFER_LIST');
@@ -52,7 +56,7 @@ const StockTransferPage = () => {
     setTransferDetails(transferDetails.filter((_, index) => index !== indexToRemove));
   };
 
-const handleSubmitTransfer = async (e) => {
+  const handleSubmitTransfer = async (e) => {
     e.preventDefault();
     if (!isHeadWarehouse) return;
 
@@ -71,20 +75,19 @@ const handleSubmitTransfer = async (e) => {
         items: payloadItems
       };
 
-      // XÓA PHẦN HEADERS, CHỈ CẦN GỬI PAYLOAD
       await postData('/stock-transfers/create', payload);
       
-      alert("Tạo phiếu điều phối kho thành công!");
+      showToast("Tạo phiếu điều phối kho thành công!", 'success');
       setTransferDetails([{ productId: '', quantity: 1, serials: '', isSerialized: false }]);
       setTargetFromBranch('');
       setTargetToBranch('');
       setActiveTab('TRANSFER_LIST');
     } catch (error) {
-      alert("Thao tác thất bại: " + (error.response?.data?.message || "Lỗi mạng"));
+      showToast("Thao tác thất bại: " + (error.response?.data?.message || "Lỗi mạng"), 'error');
     }
   };
 
-const handleUpdateTransferStatus = async (id, action) => {
+  const handleUpdateTransferStatus = async (id, action) => {
     const isConfirm = window.confirm(`Bạn xác nhận muốn ${action === 'ship' ? 'xuất kho vận chuyển' : 'nhận hàng vào kho'} đối với phiếu #${id}?`);
     if (!isConfirm) return;
 
@@ -92,10 +95,10 @@ const handleUpdateTransferStatus = async (id, action) => {
       const payloadBody = { staffBranchId: currentStaff.branchId };
       await putData(`/stock-transfers/${id}/${action}`, payloadBody);
       
-      alert("Cập nhật trạng thái điều phối thành công!");
+      showToast("Cập nhật trạng thái điều phối thành công!", 'success');
       fetchTransferTickets(); 
     } catch (error) {
-      alert("Lỗi thao tác: " + (error.response?.data?.message || "Bạn không có quyền thực hiện hoặc lỗi hệ thống"));
+      showToast("Lỗi thao tác: " + (error.response?.data?.message || "Bạn không có quyền thực hiện hoặc lỗi hệ thống"), 'error');
     }
   };
 
@@ -108,7 +111,7 @@ const handleUpdateTransferStatus = async (id, action) => {
         setIsModalOpen(true);
       }
     } catch (error) {
-      alert("Lỗi tải chi tiết lệnh điều chuyển!");
+      showToast("Lỗi tải chi tiết lệnh điều chuyển!", 'error');
     }
   };
 
@@ -227,11 +230,8 @@ const handleUpdateTransferStatus = async (id, action) => {
               </thead>
               <tbody>
                 {transferTickets.map(ticket => {
-                  // Phân quyền hiển thị nút:
-                  // Nút Xuất: Dành cho Kho Xuất (hoặc kho tổng can thiệp)
-                  const canShip = currentStaff.branchId === ticket.fromBranchId || isHeadWarehouse;
-                  // Nút Nhận: Dành cho Kho Nhận (hoặc kho tổng can thiệp)
-                  const canComplete = currentStaff.branchId === ticket.toBranchId || isHeadWarehouse;
+                  const canShip = currentStaff.branchId === ticket.fromBranchId;
+                  const canComplete = currentStaff.branchId === ticket.toBranchId;
 
                   return (
                     <tr key={ticket.id} className="st-tr">
@@ -256,7 +256,6 @@ const handleUpdateTransferStatus = async (id, action) => {
                       <td className="text-center">
                         <div className="st-action-group">
                           
-                          {/* ĐÂY LÀ NÚT XEM CHI TIẾT */}
                           <button 
                             onClick={() => handleViewDetails(ticket.id)} 
                             className="st-action-btn btn-info"
