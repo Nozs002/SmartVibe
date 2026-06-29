@@ -150,7 +150,9 @@ public class OnlineOrderService {
                 .customer(onlineOrder.getCustomer()).shippingProvider(order.getShippingProvider())
                 .trackingCode(order.getTrackingCode()).shippingFee(order.getShippingFee())
                 .customerName(order.getCustomerName()).build();
+
         createOrderDetailandRemoveCartItems(onlineOrder.getCartItemDTO(), order.getId());
+
         return createdOrder;
     }
 
@@ -167,11 +169,8 @@ public class OnlineOrderService {
             BigDecimal price = item.getProductDTO().getPrice();
 
             if (item.getProductDTO().isSerialized()) {
-                // Hàm đã chạy vào đây
-                System.out.println("====================================== Có tại serial");
                 List<ProductItem> availableItems = productItemRepository.findByProductIdAndStatus(productId, "in stock",
                         PageRequest.of(0, quantity));
-                System.out.println("====================================== Số lượng hàng có sẵn: " + availableItems.size());
 
                 if (availableItems.size() < quantity) {
                     throw new AppException(ErrorCode.NOT_ENOUGH_SERIALS);

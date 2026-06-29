@@ -82,13 +82,19 @@ public class CartService {
 
     public CartItemDTO addCartItem(CartItemDTO cartItemDTO) {
         Optional<Cart> cartOpt = cartRepository.findByCustomerId(cartItemDTO.getCartId());
+        Cart cart;
         if (cartOpt.isEmpty()) {
-            throw new AppException(ErrorCode.CART_NOT_FOUND);
+            Cart newCart = Cart.builder()
+                        .customerId(cartItemDTO.getCartId())
+                        .build();
+            cart = cartRepository.save(newCart);
+        }
+        else {
+            cart = cartOpt.get(); 
         }
         if (cartItemDTO.getQuantity() > cartItemDTO.getProductDTO().getStock()) {
             throw new AppException(ErrorCode.PRODUCT_STOCK_NOT_ENOUGH);
         }
-        Cart cart = cartOpt.get();
         CartItem newCartItem = CartItem.builder().cartId(cart.getId()).productId(cartItemDTO.getProductDTO().getId())
                 .quantity(cartItemDTO.getQuantity()).build();
         // Check if the product is already in the cart

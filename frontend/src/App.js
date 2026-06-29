@@ -27,6 +27,9 @@ import { ToastProvider } from './components/ToastContext';
 import BranchManagementPage from './pages/Branch/BranchManagementPage';
 import AddProductPage from './pages/Product/AddProductPage';
 import GuestDashboard from './pages/GuestDashboard';
+import ContactSupportPage from './pages/Support/ContactSupportPage';
+import PosScreen from './pages/Pos/PosScreen';
+import TechSupportDashboard from './pages/Support/TechSupportDashboard';
 
 function App() {
   return (
@@ -105,6 +108,15 @@ function App() {
 
           {/* Đường dẫn cho trang thêm sản phẩm */}
           <Route path="/add-product" element={<AddProductPage />} />
+
+          {/* Đường dẫn cho trang liên hệ hỗ trợ */}
+          <Route path="/contact" element={<ContactSupportPage />} />
+
+          {/* Đường dẫn cho trang thêm sản phẩm */}
+          <Route path="/pos" element={<PosScreen />} />
+
+          {/* Đường dẫn cho trang tiếp nhận phiếu hỗ trợ */}
+          <Route path="/tech-support" element={<TechSupportDashboard />} />
         </Route>
 
         {/* Nếu người dùng vào trang khác, quay về Login */}

@@ -1,85 +1,142 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
-import { Link , useNavigate} from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import '../styles/Dashboard.css'; 
-import { 
-  FaTruck, FaCartPlus, FaCompass
-} from 'react-icons/fa';
+import { FaTruck, FaCartPlus, FaCompass } from 'react-icons/fa';
+import { getData, getDataWithCondition } from '../services/api'; 
+import { useToast } from '../components/ToastContext';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
-const AdminDashboard = () => (
-  <>
-    <div className="welcome-banner">
-      <div className="welcome-text">
-        <h1>Welcome back, Admin! 👋</h1>
-        <p>Here's what's happening with your store today</p>
+
+const AdminDashboard = () => {
+  const [stats, setStats] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const { showToast } = useToast();
+
+  useEffect(() => {
+    const fetchDashboardStats = async () => {
+      try {
+        setIsLoading(true);
+        const response = await getData('/dashboard/admin'); 
+        setStats(response.result || response);
+      } catch (error) {
+        showToast("Không thể kết nối đến máy chủ để lấy thống kê", "error");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchDashboardStats();
+  }, []);
+
+  const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
+    const date = new Date(dateString);
+    const today = new Date();
+    
+    if (date.toDateString() === today.toDateString()) {
+      return "Hôm nay";
+    }
+    return date.toLocaleDateString('vi-VN');
+  };
+
+  const getStatusBadge = (status) => {
+    switch (status) {
+      case 'active': return <span className="badge blue">Đang hoạt động</span>;
+      case 'inactive': return <span className="badge yellow">Chờ phê duyệt</span>;
+      case 'banned': return <span className="badge red" style={{ backgroundColor: '#fee2e2', color: '#dc2626' }}>Bị khóa</span>;
+      default: return <span className="badge grey">Chưa rõ</span>;
+    }
+  };
+
+  if (isLoading || !stats) {
+    return <div style={{ padding: '40px', textAlign: 'center', color: '#64748b' }}>Đang tải dữ liệu tổng quan...</div>;
+  }
+
+  return (
+    <>
+      <div className="welcome-banner">
+        <div className="welcome-text">
+          <h1>Welcome back, Admin! 👋</h1>
+          <p>Here's what's happening with your system today</p>
+        </div>
+        <div className="orders-today">
+          <h2>{stats.totalUsers}</h2><span>Tất cả người dùng</span>
+        </div>
       </div>
-      <div className="orders-today">
-        <h2>152</h2><span>Đơn hàng hôm nay</span>
-      </div>
-    </div>
-     <div className="bottom-row">
+      
+      <div className="bottom-row">
         <div className="card">
           <div className="card-header"><span className="card-title">Tài khoản theo trạng thái</span></div>
           <div className="status-grid">
             <div className="status-card active">
-              <h4>0</h4><p>Đang hoạt động</p>
+              <h4>{stats.activeUsers}</h4><p>Đang hoạt động</p>
             </div>
             <div className="status-card inactive">
-              <h4>1</h4><p>Chờ phê duyệt</p>
+              <h4>{stats.inactiveUsers}</h4><p>Chờ phê duyệt</p>
             </div>
             <div className="status-card banned">
-              <h4>1</h4><p>Bị khóa</p>
+              <h4>{stats.bannedUsers}</h4><p>Bị khóa</p>
             </div>
             <div className="status-card others">
-              <h4>100</h4><p>Tất cả tài khoản</p>
+              <h4>{stats.totalUsers}</h4><p>Tất cả tài khoản</p>
             </div>
           </div>
         </div>
 
         <div className="card">
           <div className="card-header">
-            <span className="card-title">Tài khoản mới hôm nay</span>
+            <span className="card-title">Tài khoản mới đăng ký</span>
             <Link to="/user-management" className="btn-sm">Xem tất cả</Link>
           </div>
           <div className="order-list">
-            <div className="order-item">
-              <div className="order-info">
-                <h5>tuandepzai</h5>
-                <p>Tuong Phung</p>
-              </div>
-              <div className="order-status-right">
-                <h5>Hôm nay</h5>
-                <span className="badge yellow">Chờ phê duyệt</span>
-              </div>
-            </div>
-            <div className="order-item">
-              <div className="order-info">
-                <h5>Huy dở hơi</h5>
-                <p>Khách hàng 1</p>
-              </div>
-              <div className="order-status-right">
-                <h5>13/5/2026</h5>
-                <span className="badge blue">Đã phê duyệt</span>
-              </div>
-            </div>
+            {stats.recentUsers && stats.recentUsers.length > 0 ? (
+              stats.recentUsers.map((user, index) => (
+                <div className="order-item" key={index}>
+                  <div className="order-info">
+                    <h5>{user.username}</h5>
+                    <p>{user.fullname}</p>
+                  </div>
+                  <div className="order-status-right">
+                    <h5 style={{ textAlign: 'right' }}>{formatDate(user.createdAt)}</h5>
+                    {getStatusBadge(user.status)}
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p style={{ textAlign: 'center', color: '#94a3b8', padding: '15px 0' }}>Chưa có tài khoản mới nào.</p>
+            )}
           </div>
         </div>
       </div>
 
-      {/* Middle Row */}
       <div className="middle-row">
         <div className="card">
           <div className="card-header">
-            <span className="card-title">User Overview</span>
+            <span className="card-title">Biểu đồ tăng trưởng (7 ngày)</span>
             <div style={{ background: '#f4f7fe', padding: '4px', borderRadius: '8px' }}>
               <button className="btn-sm" style={{ background: '#4318FF', color: 'white', marginRight: '5px' }}>7 Days</button>
-              <button className="btn-sm" style={{ color: '#8f9bba', background: 'transparent' }}>30 Days</button>
             </div>
           </div>
-          <div className="chart-placeholder">
-            <i className="fa-solid fa-chart-column" style={{ fontSize: '40px', marginBottom: '15px', color: '#cbd5e1' }}></i>
-            <p>User chart will be here</p>
-            <span style={{ fontSize: '12px', opacity: 0.7, marginTop: '5px' }}>Chart.js integration coming soon</span>
+          
+          <div style={{ width: '100%', height: '300px', marginTop: '20px' }}>
+            {stats.userGrowthChart && stats.userGrowthChart.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={stats.userGrowthChart} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                  <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12 }} dy={10} />
+                  <YAxis allowDecimals={false} axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12 }} />
+                  <Tooltip 
+                    cursor={{ fill: '#f1f5f9' }}
+                    contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                  />
+                  <Bar dataKey="count" fill="#4318FF" radius={[4, 4, 0, 0]} barSize={30} name="Tài khoản mới" />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8' }}>
+                Đang tải dữ liệu biểu đồ...
+              </div>
+            )}
           </div>
         </div>
 
@@ -90,47 +147,103 @@ const AdminDashboard = () => (
           <Link to="/audit-management" className="action-btn btn-purple"><i className="fa-solid fa-users"></i> Quản lý lịch sử thao tác</Link>
         </div>
       </div>
-  </>
-);
+    </>
+  );
+};
 
-// STAFF
-const StaffDashboard = () => (
-  <>
-    <div className="welcome-banner" style={{ background: 'linear-gradient(135deg, #3b82f6, #06b6d4)' }}>
-      <div className="welcome-text">
-        <h1>Chào ca làm việc, Staff! ☕</h1>
-        <p>Có một vài đơn hàng đang chờ bạn xử lý.</p>
-      </div>
-    </div>
+const StaffDashboard = () => {
+  const [stats, setStats] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const { showToast } = useToast();
 
-    <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
-      <div className="stat-card">
-        <div className="stat-info"><p>Đơn chờ xác nhận</p><h3>5</h3><span className="trend pending" style={{color: '#f59e0b'}}>Cần xử lý ngay</span></div>
-        <div className="stat-icon" style={{ background: '#fffbeb', color: '#f59e0b' }}><i className="fa-solid fa-clock"></i></div>
-      </div>
-      <div className="stat-card">
-        <div className="stat-info"><p>Đang chuẩn bị</p><h3>2</h3></div>
-        <div className="stat-icon" style={{ background: '#dbeafe', color: '#3b82f6' }}><i className="fa-solid fa-box"></i></div>
-      </div>
-      <div className="stat-card">
-        <div className="stat-info"><p>Hoàn thành hôm nay</p><h3>18</h3></div>
-        <div className="stat-icon" style={{ background: '#d1fae5', color: '#10b981' }}><i className="fa-solid fa-check-double"></i></div>
-      </div>
-    </div>
+  const currentStaff = JSON.parse(localStorage.getItem('staff') || '{"branchId": 1}');
 
-    <div className="middle-row" style={{ gridTemplateColumns: '1fr' }}>
-      <div className="card">
-        <div className="card-header"><span className="card-title">Hành động nhanh</span></div>
-        <div style={{ display: 'flex', gap: '10px' }}>
-           <button className="action-btn btn-blue" style={{ width: 'auto' }}><i className="fa-solid fa-qrcode"></i> Quét mã đơn hàng</button>
-           <button className="action-btn btn-green" style={{ width: 'auto' }}><i className="fa-solid fa-clipboard-check"></i> Tạo đơn tại quầy</button>
+  useEffect(() => {
+    const fetchStaffStats = async () => {
+      try {
+        setIsLoading(true);
+        const response = await getDataWithCondition('/dashboard/staff', { 
+          branchId: currentStaff.branchId 
+        });
+        setStats(response || []);
+      } catch (error) {
+        showToast("Không thể tải dữ liệu điều chuyển kho", "error");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchStaffStats();
+  }, [currentStaff.branchId, showToast]);
+
+  if (isLoading || !stats) {
+    return <div style={{ padding: '40px', textAlign: 'center', color: '#64748b' }}>Đang tải công việc hôm nay...</div>;
+  }
+
+  return (
+    <>
+      <div className="welcome-banner" style={{ background: 'linear-gradient(135deg, #3b82f6, #06b6d4)' }}>
+        <div className="welcome-text">
+          <h1>Chào ca làm việc, Warehouse! ☕</h1>
+          <p>Có một vài lệnh điều chuyển kho đang chờ bạn xử lý tại Chi nhánh {currentStaff.branchId}.</p>
         </div>
       </div>
-    </div>
-  </>
-);
 
-//CUSTOMER
+      <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
+        <div className="stat-card">
+          <div className="stat-info">
+            <p>Đơn chờ xác nhận</p>
+            <h3>{stats.pendingTransfers}</h3>
+            {stats.pendingTransfers > 0 && (
+              <span className="trend pending" style={{color: '#f59e0b'}}>Cần xử lý ngay</span>
+            )}
+          </div>
+          <div className="stat-icon" style={{ background: '#fffbeb', color: '#f59e0b' }}>
+            <i className="fa-solid fa-clock"></i>
+          </div>
+        </div>
+        
+        <div className="stat-card">
+          <div className="stat-info">
+            <p>Đang xuất đi / Chờ nhận</p>
+            <h3>{stats.shippingTransfers}</h3>
+          </div>
+          <div className="stat-icon" style={{ background: '#dbeafe', color: '#3b82f6' }}>
+            <i className="fa-solid fa-box"></i>
+          </div>
+        </div>
+        
+        <div className="stat-card">
+          <div className="stat-info">
+            <p>Hoàn thành / Đã lưu kho</p>
+            <h3>{stats.completedTransfers}</h3>
+          </div>
+          <div className="stat-icon" style={{ background: '#d1fae5', color: '#10b981' }}>
+            <i className="fa-solid fa-check-double"></i>
+          </div>
+        </div>
+      </div>
+
+      <div className="middle-row" style={{ gridTemplateColumns: '1fr' }}>
+        <div className="card">
+          <div className="card-header"><span className="card-title">Hành động nhanh</span></div>
+          <div style={{ display: 'flex', gap: '10px' }}>
+             <Link to="/stock-transfer" className="action-btn btn-blue" style={{ width: 'auto' }}>
+               <i className="fa-solid fa-truck-fast"></i> Xử lý Lệnh Điều Chuyển
+             </Link>
+             <Link to="/warehouse" className="action-btn btn-indigo" style={{ width: 'auto' }}>
+               <i className="fa-solid fa-qrcode"></i> Tạo phiếu nhập/xuất kho
+             </Link>
+             <Link to="/products"  className="action-btn btn-green" style={{ width: 'auto' }}>
+               <i className="fa-solid fa-clipboard-check"></i> Tra cứu tồn kho sản phẩm
+             </Link>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
 const CustomerDashboard = ({customer, onNavigate, user}) => (
   <>
     <div className="welcome-banner" style={{ background: 'linear-gradient(135deg, #10b981, #047857)' }}>
@@ -209,9 +322,9 @@ const SalesDashboard = () => (
     <div className="middle-row">
       <div className="card">
         <div className="card-header"><span className="card-title">Hành động nhanh (POS)</span></div>
-        <Link to="/pos" className="action-btn btn-blue" style={{ textDecoration: 'none' }}><i className="fa-solid fa-cash-register"></i> Mở giao diện Bán Hàng (POS)</Link>
+        {/* <Link to="/pos" className="action-btn btn-blue" style={{ textDecoration: 'none' }}><i className="fa-solid fa-cash-register"></i> Mở giao diện Bán Hàng (POS)</Link> */}
         <Link to="/customers" className="action-btn btn-green" style={{ textDecoration: 'none' }}><i className="fa-solid fa-id-card"></i> Tra cứu thành viên</Link>
-        <Link to="/inventory-check" className="action-btn btn-purple" style={{ textDecoration: 'none' }}><i className="fa-solid fa-box-open"></i> Kiểm tra tồn kho nhanh</Link>
+        <Link to="/products" className="action-btn btn-purple" style={{ textDecoration: 'none' }}><i className="fa-solid fa-box-open"></i> Kiểm tra sản phẩm nhanh</Link>
       </div>
 
       <div className="card">
@@ -231,54 +344,129 @@ const SalesDashboard = () => (
   </>
 );
 
-// QUẢN LÝ (MANAGER)
-const ManagerDashboard = () => (
-  <>
-    <div className="welcome-banner" style={{ background: 'linear-gradient(135deg, #8b5cf6, #6d28d9)' }}>
-      <div className="welcome-text">
-        <h1>Tổng quan Cửa hàng 👋</h1>
-        <p>Chi nhánh: Quận 1, TP.HCM</p>
-      </div>
-      <div className="orders-today">
-        <h2>85%</h2><span>Hiệu suất</span>
-      </div>
-    </div>
 
-    <div className="stats-grid">
-      <div className="stat-card">
-        <div className="stat-info"><p>Tổng doanh thu</p><h3>12.500 đ</h3><span className="trend green">+15% so với hôm qua</span></div>
-        <div className="stat-icon" style={{ background: '#d1fae5', color: '#10b981' }}><i className="fa-solid fa-chart-line"></i></div>
-      </div>
-      <div className="stat-card">
-        <div className="stat-info"><p>Nhân sự đang làm</p><h3>5/6</h3><span className="trend blue">Ca Sáng</span></div>
-        <div className="stat-icon" style={{ background: '#e0e7ff', color: '#6366f1' }}><i className="fa-solid fa-user-clock"></i></div>
-      </div>
-      <div className="stat-card">
-        <div className="stat-info"><p>Cảnh báo kho</p><h3>3</h3><span className="trend pending" style={{color: '#f59e0b'}}>Sắp hết nguyên liệu</span></div>
-        <div className="stat-icon" style={{ background: '#fffbeb', color: '#f59e0b' }}><i className="fa-solid fa-triangle-exclamation"></i></div>
-      </div>
-    </div>
+const ManagerDashboard = () => {
+  const [stats, setStats] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const { showToast } = useToast();
+  const navigate = useNavigate();
 
-    <div className="middle-row" style={{ gridTemplateColumns: '1fr 1fr' }}>
-      <div className="card">
-        <div className="card-header"><span className="card-title">Duyệt yêu cầu</span></div>
-        <div className="order-list">
-          <div className="order-item">
-            <div className="order-info"><h5>Nguyễn Văn A (Sales)</h5><p>Xin nghỉ phép ngày 15/05</p></div>
-            <button className="btn-sm" style={{ background: '#3b82f6', color: 'white' }}>Duyệt</button>
-          </div>
+  const currentStaff = JSON.parse(localStorage.getItem('staff') || '{"branchId": 1}');
+
+  useEffect(() => {
+    const fetchManagerStats = async () => {
+      try {
+        setIsLoading(true);
+        // Gọi API sử dụng getDataWithCondition y như Staff
+        const response = await getDataWithCondition('/dashboard/manager', { 
+          branchId: currentStaff.branchId 
+        });
+        setStats(response || {});
+      } catch (error) {
+        console.error("Lỗi lấy dữ liệu Manager dashboard:", error);
+        showToast("Không thể tải dữ liệu quản lý", "error");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchManagerStats();
+  }, [currentStaff.branchId, showToast]);
+
+  // Hàm format tiền tệ VNĐ
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+  };
+
+  if (isLoading || !stats) {
+    return <div style={{ padding: '40px', textAlign: 'center', color: '#64748b' }}>Đang tải dữ liệu tổng quan chi nhánh...</div>;
+  }
+
+  return (
+    <>
+      <div className="welcome-banner" style={{ background: 'linear-gradient(135deg, #8b5cf6, #6d28d9)' }}>
+        <div className="welcome-text">
+          <h1>Tổng quan Cửa hàng 👋</h1>
+          <p>Chi nhánh quản lý: {stats.branchName || `Chi nhánh ${currentStaff.branchId}`}</p>
+        </div>
+        <div className="orders-today">
+          <h2>85%</h2><span>Hiệu suất</span>
         </div>
       </div>
-      <div className="card">
-        <div className="card-header"><span className="card-title">Công cụ Quản lý</span></div>
-        <Link to="/staff-shifts" className="action-btn btn-indigo" style={{ textDecoration: 'none' }}><i className="fa-solid fa-calendar-days"></i> Phân ca làm việc</Link>
-        <Link to="/reports" className="action-btn btn-blue" style={{ textDecoration: 'none' }}><i className="fa-solid fa-file-export"></i> Xuất báo cáo ngày</Link>
-      </div>
-    </div>
-  </>
-);
 
-// NHÂN VIÊN KỸ THUẬT (TECHNICAL STAFF)
+      <div className="stats-grid">
+        <div className="stat-card">
+          <div className="stat-info">
+            <p>Tổng doanh thu (Tạm tính)</p>
+            <h3>{formatCurrency(stats.totalRevenue || 0)}</h3>
+            <span className="trend green">+15% so với hôm qua</span>
+          </div>
+          <div className="stat-icon" style={{ background: '#d1fae5', color: '#10b981' }}><i className="fa-solid fa-chart-line"></i></div>
+        </div>
+        
+        <div className="stat-card">
+          <div className="stat-info">
+            <p>Nhân sự đang làm</p>
+            <h3>{stats.activeStaff || 0}/{stats.totalStaff || 0}</h3>
+            <span className="trend blue">Ca hiện tại</span>
+          </div>
+          <div className="stat-icon" style={{ background: '#e0e7ff', color: '#6366f1' }}><i className="fa-solid fa-user-clock"></i></div>
+        </div>
+        
+        <div className="stat-card">
+          <div className="stat-info">
+            <p>Cảnh báo kho (Sắp hết)</p>
+            <h3>{stats.lowStockAlerts || 0} mã</h3>
+            {stats.lowStockAlerts > 0 ? (
+              <span className="trend pending" style={{color: '#f59e0b'}}>Cần nhập hàng ngay</span>
+            ) : (
+              <span className="trend green">Kho hàng ổn định</span>
+            )}
+          </div>
+          <div className="stat-icon" style={{ background: '#fffbeb', color: '#f59e0b' }}><i className="fa-solid fa-triangle-exclamation"></i></div>
+        </div>
+      </div>
+
+      <div className="middle-row" style={{ gridTemplateColumns: '1fr 1fr' }}>
+        <div className="card">
+          <div className="card-header">
+            <span className="card-title">Duyệt yêu cầu Xuất Kho</span>
+          </div>
+          <div className="order-list">
+            {stats.pendingApprovals && stats.pendingApprovals.length > 0 ? (
+              stats.pendingApprovals.map((req, index) => (
+                <div className="order-item" key={index}>
+                  <div className="order-info">
+                    <h5>Phiếu xuất #{req.documentId} (Nhân viên: {req.staffId})</h5>
+                    <p>{req.note || "Không có ghi chú"}</p>
+                  </div>
+                  {/* Bấm duyệt sẽ chuyển thẳng sang trang Quản lý Kho (tab APPROVAL) */}
+                  <button 
+                    className="btn-sm" 
+                    style={{ background: '#3b82f6', color: 'white' }}
+                    onClick={() => navigate('/warehouse')}
+                  >
+                    Xem & Duyệt
+                  </button>
+                </div>
+              ))
+            ) : (
+              <p style={{ textAlign: 'center', color: '#94a3b8', padding: '15px 0' }}>Không có yêu cầu nào cần duyệt.</p>
+            )}
+          </div>
+        </div>
+        
+        <div className="card">
+          <div className="card-header"><span className="card-title">Công cụ Quản lý</span></div>
+          <Link to="/staff-shifts" className="action-btn btn-indigo" style={{ textDecoration: 'none' }}><i className="fa-solid fa-calendar-days"></i> Phân ca làm việc</Link>
+          <Link to="/warehouse" className="action-btn btn-blue" style={{ textDecoration: 'none' }}><i className="fa-solid fa-boxes-stacked"></i> Quản lý Vận hành Kho</Link>
+          <Link to="/reports" className="action-btn btn-green" style={{ textDecoration: 'none' }}><i className="fa-solid fa-file-export"></i> Xuất báo cáo ngày</Link>
+        </div>
+      </div>
+    </>
+  );
+};
+
 const TechDashboard = () => (
   <>
     <div className="welcome-banner" style={{ background: 'linear-gradient(135deg, #475569, #1e293b)' }}>
@@ -329,17 +517,16 @@ const TechDashboard = () => (
 
 const DashboardPage = () => {
   const navigate = useNavigate();
-  const [userRole, setUserRole] = useState('admin');
-  const customer = JSON.parse(localStorage.getItem("customer") || {});
-  const user = JSON.parse(localStorage.getItem("user") || {});
-
+  const [userRole, setUserRole] = useState(null);
+  const customer = JSON.parse(localStorage.getItem("customer") || "{}");
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('user'));
+    const storedUser = JSON.parse(localStorage.getItem('user'));
 
-    if (user) {
-      const role = user.role;
-      if(role === 'admin') {
+    if (storedUser) {
+      const role = storedUser.role;
+      if(role === 'system admin' || role === 'admin') {
         setUserRole('admin');
       }
       else if(role === 'staff') {
@@ -348,7 +535,7 @@ const DashboardPage = () => {
           if(staff.type === 'manager') {
             setUserRole('manager');
           }
-          else if(staff.type === 'tech') {
+          else if(staff.type === 'technical' || staff.type === 'tech') {
             setUserRole('tech');
           }
           else if(staff.type === 'sales') {
@@ -380,23 +567,12 @@ const DashboardPage = () => {
         case 'sales':
             return <SalesDashboard />;
       default:
-        return <div>Lỗi: Không xác định được vai trò người dùng.</div>;
+        return <div style={{padding: '20px'}}>Lỗi: Không xác định được vai trò người dùng.</div>;
     }
   };
 
   return (
     <div className="dashboard-container">
-      <div style={{ marginBottom: '20px', display: 'flex', gap: '10px' }}>
-        <span>Test UI: </span>
-        <button onClick={() => setUserRole('admin')} className="btn-sm">View as Admin</button>
-        <button onClick={() => setUserRole('warehouse')} className="btn-sm">View as Warehouse</button>
-        <button onClick={() => setUserRole('customer')} className="btn-sm">View as Customer</button>
-        <button onClick={() => setUserRole('manager')} className="btn-sm">View as Manager</button>
-        <button onClick={() => setUserRole('tech')} className="btn-sm">View as Tech Staff</button>
-        <button onClick={() => setUserRole('sales')} className="btn-sm">View as Sales</button>
-      </div>
-
-      {/*hiển thị Dashboard*/}
       {renderDashboardByRole()}
     </div>
   );

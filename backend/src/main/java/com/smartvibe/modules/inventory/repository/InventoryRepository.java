@@ -42,4 +42,6 @@ public interface InventoryRepository extends JpaRepository<Inventory, Long> {
        "LEFT JOIN Branch b ON i.branchId = b.id " +
        "JOIN Product p ON i.productId = p.id WHERE i.productId = :productId ")
     List<InventoryDTO> getAvailableStockByProductId(@Param("productId") Long productId);
+
+    long countByBranchIdAndQuantityAvailableLessThanEqual(Long branchId, Long threshold);
 }

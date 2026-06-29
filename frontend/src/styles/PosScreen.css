@@ -1,0 +1,273 @@
+/* PosScreen.css */
+.pos-container {
+    display: flex;
+    height: 100vh; /* Tràn viền toàn màn hình */
+    background-color: #f0f2f5;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    gap: 20px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* ================= CỘT TRÁI (GIỎ HÀNG) ================= */
+.pos-left {
+    flex: 7;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.search-section {
+    padding: 20px;
+    background: #fafafa;
+    border-bottom: 1px solid #eaeaea;
+}
+
+.search-input-wrapper {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 0 15px;
+    transition: all 0.3s;
+}
+
+.search-input-wrapper:focus-within {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.search-input-wrapper input {
+    width: 100%;
+    padding: 15px 10px;
+    border: none;
+    outline: none;
+    font-size: 16px;
+}
+
+.cart-table-container {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.cart-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.cart-table th {
+    text-align: left;
+    padding: 15px 20px;
+    background: #fff;
+    color: #666;
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+    border-bottom: 2px solid #eaeaea;
+    z-index: 10;
+}
+
+.cart-table td {
+    padding: 15px 20px;
+    border-bottom: 1px solid #f5f5f5;
+    vertical-align: middle;
+}
+
+.serial-tag {
+    display: inline-block;
+    background: #e3f2fd;
+    color: #1976d2;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.btn-remove {
+    background: none;
+    border: none;
+    color: #ff4d4f;
+    cursor: pointer;
+    font-size: 18px;
+    padding: 5px;
+    border-radius: 5px;
+    transition: background 0.2s;
+}
+
+.btn-remove:hover {
+    background: #fff1f0;
+}
+
+/* ================= CỘT PHẢI (THANH TOÁN) ================= */
+.pos-right {
+    flex: 3;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+}
+
+.pos-right h2 {
+    margin-top: 0;
+    color: #333;
+    font-size: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px dashed #ccc;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #555;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 15px;
+    box-sizing: border-box;
+}
+
+.summary-section {
+    margin-top: auto; /* Đẩy phần tổng tiền xuống dưới cùng */
+    padding-top: 20px;
+    border-top: 2px solid #eaeaea;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    color: #666;
+}
+
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+    margin-bottom: 20px;
+    font-size: 24px;
+    font-weight: 700;
+    color: #d32f2f;
+}
+
+.btn-checkout {
+    width: 100%;
+    padding: 16px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.1s;
+}
+
+.btn-checkout:hover {
+    background: #0056b3;
+}
+
+.btn-checkout:active {
+    transform: scale(0.98);
+}
+
+/* Thêm vào cuối file PosScreen.css cũ của bạn */
+
+/* --- TÌM KIẾM KHÁCH HÀNG --- */
+.customer-section {
+    background: #f4f6f8;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #e1e4e8;
+}
+
+.customer-search-wrapper {
+    display: flex;
+    gap: 10px;
+}
+
+.customer-search-wrapper input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.btn-search {
+    padding: 10px 15px;
+    background: #1890ff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.customer-info-card {
+    margin-top: 10px;
+    background: #fff;
+    padding: 10px;
+    border-radius: 6px;
+    border-left: 4px solid #52c41a;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.customer-info-card span {
+    font-weight: bold;
+    color: #333;
+}
+
+/* --- XỬ LÝ SỐ LƯỢNG & SERIAL --- */
+.qty-input {
+    width: 60px;
+    padding: 5px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.serial-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 5px;
+}
+
+.serial-tag {
+    display: inline-flex;
+    align-items: center;
+    background: #e6f7ff;
+    color: #1890ff;
+    border: 1px solid #91d5ff;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+}
+
+.serial-remove {
+    margin-left: 5px;
+    color: #ff4d4f;
+    cursor: pointer;
+    font-weight: bold;
+}
+.serial-remove:hover {
+    color: #cf1322;
+}

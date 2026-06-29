@@ -15,7 +15,7 @@ const ChangePasswordForm = () => {
     confirmPassword: ''
   });
 
-  // 3. ĐỊNH NGHĨA HÀM handleChange (Để sửa lỗi Line 30, 49, 67)
+  // 3. ĐỊNH NGHĨA HÀM handleChange 
   const handleChange = (e) => {
     setFormData({ 
       ...formData, 
@@ -23,7 +23,7 @@ const ChangePasswordForm = () => {
     });
   };
 
-  // 4. ĐỊNH NGHĨA HÀM handleSubmit (Để sửa lỗi Line 20)
+  // 4. ĐỊNH NGHĨA HÀM handleSubmit 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (formData.newPassword !== formData.confirmPassword) {
@@ -31,7 +31,6 @@ const ChangePasswordForm = () => {
       return;
     }
     console.log("Dữ liệu gửi lên Backend:", formData);
-    // Tại đây bạn sẽ gọi API: authService.changePassword(formData)
   };
 
   return (

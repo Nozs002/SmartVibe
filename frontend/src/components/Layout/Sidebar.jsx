@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { 
   FaThLarge, FaShoppingCart, FaBoxOpen, 
-  FaUsers, FaChartBar, FaCog, FaUserShield, FaSignOutAlt, FaBars, FaHeadset, FaStore, FaClipboardList, FaExchangeAlt, FaWarehouse, FaUserTie
+  FaUsers, FaChartBar, FaCog, FaUserShield, FaSignOutAlt, FaBars, FaHeadset, FaStore, FaClipboardList, FaExchangeAlt, FaWarehouse, FaUserTie, FaCashRegister, FaTools
 } from 'react-icons/fa';
 import '../../styles/Sidebar.css';
 
@@ -36,11 +36,11 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
         { path: '/order-management', name: 'Quản lý đơn hàng', icon: <FaShoppingCart />, allowedRoles: ['manager', 'sales'] },
         { path: '/products', name: 'Quản lý sản phẩm', icon: <FaBoxOpen />, allowedRoles: ['manager', 'warehouse', 'sales'] },
         { path: '/customers', name: 'Quản lý khách hàng', icon: <FaUsers />, allowedRoles: ['manager', 'sales', 'system admin'] },
+        { path: '/pos', name: 'Bán hàng tại quầy', icon: <FaCashRegister />, allowedRoles: ['manager', 'sales'] },
         // { path: '/reports', name: 'Báo cáo doanh thu', icon: <FaChartBar />, allowedRoles: ['manager'] },
         { path: '/user-management', name: 'Quản lý tài khoản', icon: <FaUserShield />, allowedRoles: ['system admin'] },
         // { path: '/settings', name: 'Cài đặt hệ thống', icon: <FaCog />, allowedRoles: ['system admin'] },
         { path: '/online-order', name: 'Mua hàng', icon: <FaShoppingCart />, allowedRoles: ['customer'] },
-        { path: '/contact', name: 'Liên hệ hỗ trợ', icon: <FaHeadset/>, allowedRoles: ['customer'] },
         { path: '/staff', name: 'Quản lý nhân viên', icon: <FaUserTie />, allowedRoles: ['manager', 'system admin'] },
         { path: '/order-history', name: 'Lịch sử mua hàng', icon: <FaClipboardList />, allowedRoles:['customer']},
         { path: '/stock-transfer', name: 'Quản lý chuyển kho', icon: <FaExchangeAlt />, allowedRoles: ['manager', 'warehouse'] },
@@ -51,7 +51,9 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
             icon: <FaStore/>, 
             allowedRoles: ['manager', 'system admin'],
             requireHeadManager: true
-        }
+        },
+        { path: '/tech-support', name: 'Tiếp nhận phiếu hỗ trợ', icon: <FaTools />, allowedRoles: ['manager', 'technical'] },
+        { path: '/contact', name: 'Liên hệ hỗ trợ', icon: <FaHeadset/>, allowedRoles: ['customer'] }
     ];
 
     const filteredMenuItems = allMenuItems.filter(item => {

@@ -23,4 +23,7 @@ public interface StockTransferRepository extends org.springframework.data.jpa.re
            "WHERE t.fromBranchId = :branchId OR t.toBranchId = :branchId " +
            "ORDER BY t.createdAt DESC")
     List<StockTransferResponseDTO> findTransfersWithBranchNames(@Param("branchId") Long branchId);
+
+    @Query("SELECT COUNT(st) FROM StockTransfer st WHERE st.status = :status AND (st.fromBranchId = :branchId OR st.toBranchId = :branchId)")
+    long countByStatusAndBranch(@Param("status") String status, @Param("branchId") Long branchId);
 }

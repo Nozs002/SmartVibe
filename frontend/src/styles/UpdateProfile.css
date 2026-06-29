@@ -1,44 +1,29 @@
-/* Container của Page */
-/* Container bao quanh toàn bộ trang */
+
 .cp-page-container {
   display: flex;
-  justify-content: center; /* Căn giữa card theo chiều ngang */
-  align-items: flex-start; /* Đẩy card lên phía trên một chút thay vì nằm giữa màn hình */
-  min-height: calc(100vh - 70px); /* Full màn hình trừ đi chiều cao Navbar */
-  background-color: #f4f7fe; /* Màu nền nhẹ nhàng cho hệ thống quản trị */
+  justify-content: center; 
+  align-items: flex-start; 
+  min-height: calc(100vh - 70px); 
+  background-color: #f4f7fe; 
   padding: 40px 20px;
   width: 100%;
 }
 
-/* Card trắng chứa Form */
 .cp-card {
   background: #ffffff;
   width: 100%;
-  max-width: 700px; /* Độ rộng lý tưởng để form không quá loãng */
+  max-width: 700px; 
   padding: 40px;
   border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); /* Hiệu ứng bóng đổ nhẹ hiện đại */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); 
   transition: transform 0.3s ease;
 }
 
-/* Hiệu ứng hover nhẹ cho card (Tùy chọn) */
+
 .cp-card:hover {
   transform: translateY(-5px);
 }
 
-/* Đảm bảo responsive trên màn hình nhỏ */
-@media (max-width: 768px) {
-  .cp-page-container {
-    padding: 20px 10px;
-  }
-
-  .cp-card {
-    padding: 20px;
-    border-radius: 0; /* Trên mobile nên để phẳng để tối ưu diện tích */
-  }
-}
-
-/* Container chính của Form */
 .update-form {
   display: flex;
   flex-direction: column;
@@ -46,7 +31,6 @@
   width: 100%;
 }
 
-/* Phần Avatar */
 .avatar-section {
   text-align: center;
   margin-bottom: 10px;
@@ -66,7 +50,6 @@
   object-fit: cover;
   border: 3px solid #007bff;
   background-color: #fff;
-  /* Tránh lỗi ảnh vỡ hiển thị text placeholder xấu */
   font-size: 10px;
   color: transparent;
 }
@@ -93,7 +76,6 @@
   transform: scale(1.1);
 }
 
-/* Tiêu đề Chỉnh sửa hồ sơ */
 .avatar-section h3 {
   font-size: 1.5rem;
   font-weight: 700;
@@ -101,7 +83,7 @@
   margin: 0;
 }
 
-/* Bố cục Grid cho các ô nhập liệu */
+
 .form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr; /* Chia làm 2 cột */
@@ -219,12 +201,3 @@
   font-size: 18px;
 }
 
-/* Responsive cho màn hình điện thoại */
-@media (max-width: 600px) {
-  .form-grid {
-    grid-template-columns: 1fr; /* Chuyển về 1 cột trên mobile */
-  }
-  .full-width {
-    grid-column: span 1;
-  }
-}
